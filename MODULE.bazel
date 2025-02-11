@@ -1,0 +1,28 @@
+module(
+    name = "docs_obazl",
+    version = "1.0.0",
+    compatibility_level = 1,
+    bazel_compatibility = [">=6.4.0"]
+)
+
+## bcr deps:
+bazel_dep(name = "platforms",    version = "0.0.8")
+bazel_dep(name = "bazel_skylib", version = "1.4.2")
+bazel_dep(name = "stardoc",      version = "0.6.2")
+
+## obazl deps:
+bazel_dep(name = "rules_ocaml",  version = "2.0.0")
+bazel_dep(name = "tools_ocaml",  version = "2.0.0")
+
+bazel_dep(name = "pandoc",       version = "1.0.0")
+pandoc = use_extension("@pandoc//extensions:pandoc.bzl",
+                       "pandoc")
+pandoc.config()
+use_repo(pandoc, "pandoc__")
+
+bazel_dep(name = "dita",       version = "1.0.0")
+dita = use_extension("@dita//extensions:dita.bzl",
+                       "dita")
+dita.config()
+use_repo(dita, "dita__")
+

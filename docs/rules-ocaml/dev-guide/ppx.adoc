@@ -1,9 +1,10 @@
-= ppx
+= Ppx support
 :page-permalink: /:path/ppx
-:page-layout: page_rules_ocaml
+:page-parent: ['../dev-guide']
+:page-layout: page_rules_ocaml_dg
 :page-pkg: rules_ocaml
 :page-doc: dg
-:page-sidebar: false
+:page-sidebar: rules_ocaml_dg_sbdata
 :page-tags: [formatting]
 :page-keywords: notes, tips, cautions, warnings, admonitions
 :page-last_updated: June 30, 2022

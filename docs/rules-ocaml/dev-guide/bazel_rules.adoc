@@ -1,0 +1,15 @@
+= Structure and Function of Bazel Rules
+:page-permalink: /:path/bazel_rules
+:page-pkg: rules_ocaml
+:page-doc: dg
+:page-parent: ['../dev-guide']
+:page-layout: page_rules_ocaml_dg
+:page-sidebar: rules_ocaml_dg_sbdata
+:page-tags: [formatting]
+:page-keywords: notes, tips, cautions, warnings, admonitions
+:page-last_updated: Feb 11, 2025
+:toc: true
+
+A Bazel link:https://bazel.build/rules/rules-tutorial[rule,window=_blank] can be
+thought of as an implementation function sandwiched between an API and
+one or more SPIs (Service Provider Interfaces).

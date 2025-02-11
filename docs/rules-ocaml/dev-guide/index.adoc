@@ -1,16 +1,18 @@
 = Developer Guide: rules_ocaml
 :page-permalink: /:path/index.html
-:page-layout: page_rules_ocaml
+:page-layout: page_rules_ocaml_dg
 :page-pkg: rules_ocaml
 :page-doc: dg
-:page-sidebar: false
+:page-sidebar: rules_ocaml_dg_sbdata
 :page-tags: [formatting]
 :page-keywords: notes, tips, cautions, warnings, admonitions
-:page-last_updated: June 30, 2022
+:page-last_updated: Feb 11, 2025
 :toc: true
 
-== Topics
 
-* link:ppx[PPX]
-* link:toolchains[Toolchains]
-* link:cc_deps[CC Dependencies]
+Audiences:
+
+* Developers who would like to extend `+rules_ocaml+` by defining custom rules or macros;
+* Contributors who would like to help develop, maintain, or document `+rules_ocaml+`;
+* Anybody curious about how it works.
+

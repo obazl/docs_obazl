@@ -68,6 +68,10 @@ any _link_ actions (which are the build actions of rule `ocaml_binary`).
 
 === Modules
 
+=== Archiving
+
+=== Linking Executables
+
 
 == Module Dependencies
 
@@ -186,6 +190,42 @@ So by analogy we will call a collection of modules satisfying a structure's SPI 
 == Cross-module Optimization
 
 
+== Fragile dependencies
+
+The problem: if direct and indirect dependencies are treated the same,
+then a source file could reference symbols in indirect deps. Then
+changes in those deps may break the compilation. If the depgraph is
+large finding and fixing the problem could be difficult.
+
+Policy: restrict dependencies to direct deps only. So source may not
+refer to a symbol defined in an indirect dep.
+
+That's what the new -H option is for (introduced in 5.2).
+
+Fragile deps may also be introduced indirectly, so to speak.  Example:
+
+----
+(* A.ml : imported hidden *)
+type t = Toto
+
+(* B.mli: imported visible *)
+val f : A.t -> unit
+
+(* C.ml: being type-checked *)
+let () = B.f Toto
+----
+(src: https://github.com/ocaml/ocaml/pull/12246)
+
+
+In this example C has a direct dependency on B and an indirect
+dependency on A, so we should have ocamlc -I path/to/b -H path/to/a.
+
+But B.f (in C src) introduces a fragile dependency of C on A. If the
+type of t changes, the compile will fail. Since the dep graph could be
+deep this could be hard to diagnose. Adding A as a direct dep of C
+will not help.
+
+Nice to have: a warning about the fragile dependency.
 
 
 == References

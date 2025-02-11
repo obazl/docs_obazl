@@ -2,7 +2,7 @@ entries:
 - title: tools_opam
   part: Dev Guide
   product: tools_opam
-  url:  /docs_obazl/tools-opam/user-guide
+  url:  /docs_obazl/tools-opam/dev-guide
   version: 2.0
   levels: one
   folders:

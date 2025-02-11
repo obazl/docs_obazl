@@ -1,4 +1,4 @@
-= OCaml: The Standard Distribution
+= The OCaml SDK: Understanding the toolset and build protocols
 :page-permalink: /:path/index
 :page-layout: page_ocaml
 :page-pkg: ocaml
@@ -10,11 +10,11 @@
 :toc: true
 
 
-== Toolsuite & Build discipline
+== Toolset & Build protocol
 
 === The OCaml Compilers
 
 === Other Tools
 
-=== Build Discipline
+=== Build Protocol
 

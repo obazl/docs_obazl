@@ -1,12 +1,13 @@
-= toolchains
+= Bazel toolchains: modeling the OCaml toolsuite
 :page-permalink: /:path/toolchains
-:page-layout: page_rules_ocaml
 :page-pkg: rules_ocaml
 :page-doc: dg
-:page-sidebar: false
+:page-parent: ['../dev-guide']
+:page-layout: page_rules_ocaml_dg
+:page-sidebar: rules_ocaml_dg_sbdata
 :page-tags: [formatting]
 :page-keywords: notes, tips, cautions, warnings, admonitions
-:page-last_updated: June 30, 2022
+:page-last_updated: Feb 11, 2025
 :toc: true
 
 Hosts:
@@ -15,7 +16,7 @@ Hosts:
 * buildhost - where the build tools run. Bazel vernacular: "exec"
 * targethost - platform targeted by build tools.  Bazel vernacular: "target"
 
-== toolchain modeling
+== Toolchain modeling
 
 * binding constraints: a set of constraints that, when satisfied, bind
   a toolchain adapter to `ctx.toolchains[<toolchain type>]`. Toolchain
@@ -154,4 +155,4 @@ platform(name = "macos_x86_64",
          ])
 ----
 
-== platforms
+== Platforms

@@ -1,0 +1,37 @@
+entries:
+- title: rules_ocaml
+  part: Dev Guide
+  product: rules_ocaml
+  url:  /docs_obazl/rules-ocaml/dev-guide
+  version: 2.0
+  levels: two
+  folders:
+
+  - title: Topics
+    open: true
+    output: web
+    folderitems:
+
+    - title: Understanding Bazel rules
+      url: bazel_rules
+      output: web
+
+    - title: Platforms
+      url: platforms
+      output: web
+
+    - title: Toolchains
+      url: toolchains
+      output: web
+
+    - title: C/C++ dependencies
+      url: cc_deps
+      output: web
+
+    - title: Ppx support
+      url: ppx
+      output: web
+
+    - title: Namespacing
+      url: namespacing
+      output: web

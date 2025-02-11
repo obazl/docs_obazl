@@ -24,6 +24,6 @@ entries:
       url: dependency-models
       output: web
 
-    - title: Build Discipline
-      url: build-discipline
+    - title: Build Protocols
+      url: build-protocols
       output: web

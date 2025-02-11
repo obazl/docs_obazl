@@ -2,12 +2,15 @@
 :page-permalink: /
 :page-tags: [bazel]
 :page-keywords: notes, tips, cautions, warnings, admonitions
-:page-last_updated: May 2, 2022
+:page-last_updated: Feb 10, 2025
 :page-sidebar: false
 :page-toc: true
 :toc: true
 
-This site documents the OBazl toolsuite, version 2.
+This site documents the OBazl toolsuite, version 5.0.0.
+
+WARNING: Version 5.0.0 is *_alpha_* software as of Feb 10, 2025.
+Meaning it works, but there are changes in progress. Do not use in production, but please do test.
 
 // The OBazl rules
 // are deliberately low-level, in keeping with the goal of giving the
@@ -20,14 +23,20 @@ This site documents the OBazl toolsuite, version 2.
 // Most such inconveniences can and will be addressed over time by
 // tooling built on the foundation of the primitive rules.
 
-link:changelog[Changes] from version 1.
+link:changelog[CHANGES] from previous versions.
 
 WARNING: This documentation is a Work-In-Progress.  Things will be
 a little messy and incomplete.
 
-== link:ocaml[OCaml: The Standard Distribution]
+== link:status[Status]
 
-== link:bazel/user-guide[Bazel Guide]
+== link:ocaml[The OCaml SDK: Understanding the toolset and build protocols]
+
+* link:toolchains-ocaml[OBazl toolchains: modeling the OCaml SDK]
+
+== link:bazel/user-guide[Bazel for OCaml developers]
+
+A concise overview for OCaml users new to Bazel.
 
 == https://github.com/obazl/rules_ocaml[@rules_ocaml,window=_blank]
 
@@ -35,20 +44,32 @@ a little messy and incomplete.
 * link:rules-ocaml/reference[Reference Manual]
 * link:rules-ocaml/dev-guide[Developer Guide]
 
-== https://github.com/obazl/tools-ocaml[@tools_ocaml,window=_blank]
+== Seamless, zero-config opam integration
+
+https://github.com/obazl/tools-opam[@tools_opam,window=_blank]
 
 // * link:tools-ocaml/user-guide[User Guide]
 * link:tools-ocaml/reference[Reference Manual]
 
 
-== https://github.com/bazelbuild/rules_cc[@rules_cc,window=_blank]
+== Using OCaml with other languages
+
+=== C/C++ integration
+
+https://github.com/bazelbuild/rules_cc[@rules_cc,window=_blank]
 
 * link:rules-cc/user-guide[User Guide]
 
-== link:https://github.com/obazl/coswitch[@coswitch]:  opam integration
+// == link:https://github.com/obazl/coswitch[@coswitch,window=_blank]:  opam integration
 
-* link:coswitch/user-guide[User Guide]
-* link:tools-opam/reference[Reference Manual]
+// * link:coswitch/user-guide[User Guide]
+// * link:tools-opam/reference[Reference Manual]
+
+=== Jsoo and Javascript integration
+
+...todo...
+
+=== Rust
 
 == tools_obazl:
 
@@ -56,19 +77,20 @@ a little messy and incomplete.
 * link:tools-obazl/reference[Reference Manual]
 * link:https://github.com/obazl/tools_obazl[https://github.com/obazl/tools_obazl,window=_blank]
 
-== mibl:
+== Related tools
+=== mibl
 
 Scheme APIs for working with Dune files (and in the future, OPAM files).
 
 * link:https://github.com/obazl/mibl[https://github.com/obazl/mibl,window=_blank]
 
-== sunlark:
+=== sunlark
 
 Scheme API for working with BUILD.bazel files.
 
 * link:https://github.com/obazl/sunlark[https://github.com/obazl/sunlark,window=_blank]
 
-== sealark:
+=== sealark
 
 Starlark parser written in C11.
 

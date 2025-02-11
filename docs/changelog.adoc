@@ -16,13 +16,14 @@ toc: false
 
 === Breaking Changes
 
+* The tool for OPAM integration is link:https://github.com/obazl/coswitch[coswitch]
+
 * renaming
   ** `ocaml_module` attributes `src` and `intf` renamed to `struct` and `sig`, respectively
-  ** `modules` attribute of `ocaml_library` and `ocaml_archive` renamed to `manifest`
+  ** `modules` attribute of `ocaml_library` renamed to `manifest`
   ** rule `ocaml_interface` renamed to `ocaml_signature`
   ** `deps_adjunct` renamed to `ppx_codeps` (i.e. co-dependencies)
-  ** OPAM package labels now have the form `@pkg//:pkg`; subpackages
-  have the form `@pkg//subpkg`, or ``@pkg//subpkg1/subpkg2`; for
+  ** OPAM package labels have changed. See link:https://github.com/obazl/coswitch[coswitch] for more information.
   example, `ppx_deriving.eq -> @ppx_deriving//eq`, `mtime.clock.os ->
   @mtime//clock/os`. To make these targets available the new
   link:/tools-opam/user-guide[OPAM bootstrapper tool,window=_blank]
@@ -30,11 +31,14 @@ toc: false
 * namespacing support has been thoroughly revised, see below for details
 
 * deletions
-  ** all `ppx_*` rules except `ppx_executable` removed
   ** attribute `deps_opam` removed; opam deps are no longer special, and are treated like any other dep
   ** attribute `deps_adjunct_opam` removed
 
 === Non-breaking changes
+
+* Rule `ocaml_archive` is deprecated and will be removed in a future version. Use instead `ocaml_library` with attribute `archived=True`.
+
+* Rule `ocaml_ns_archive` is deprecated and will be removed in a future version. Use instead `ocaml_ns_library` with attribute `archived=True`.
 
 * Toolchain support has changed drastically, but this should not
 effect existing code, except insofar as OPAM dependencies must be
@@ -45,6 +49,8 @@ the OCaml compilers directly, via the toolchain interface. This change
 should not affect existing build code.
 
 === New stuff
+
+* The new link:https://github.com/obazl/coswitch[coswitch] tool generates code implementing OPAM-integrated toolchains.
 
 * bottom-up namespacing
 
@@ -57,3 +63,4 @@ should not affect existing build code.
   ** link:/rules-ocaml/reference/ocaml-rules#_ocaml_yacc[ocaml_yacc]
   ** link:/rules-ocaml/reference/ocaml-rules#_ocaml_test[ocaml_test]
 
+* Rules for third-party tools (e.g. menhir) are in link:https://github.com/obazl/tools_ocaml[tools_ocaml]

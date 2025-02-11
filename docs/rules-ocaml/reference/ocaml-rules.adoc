@@ -6,10 +6,10 @@
 :page-doc: refman
 :page-tags: [configation,defaults]
 :page-keywords: notes, tips, cautions, warnings, admonitions
-:page-last_updated: June 2, 2022
+:page-last_updated: Feb 1, 2024
 :page-toc: false
 
-**WARNING** Beta version - subject to change
+**WARNING** Beta version - incomplete and subject to change
 
 == Configurable defaults
 

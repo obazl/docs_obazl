@@ -3,7 +3,7 @@
 :page-layout: page_rules_ocaml
 :page-pkg: rules_ocaml
 :page-doc: ug
-:page-sidebar: false
+:page-sidebar: sidebar_rules_ocaml_ug
 :page-tags: [formatting]
 :page-keywords: notes, tips, cautions, warnings, admonitions
 :page-last_updated: June 1, 2022
@@ -73,9 +73,8 @@ NB: compositionality:  rules v. build actions
 
 OBazl includes two rulesets:
 
-// * a `bootstrap` ruleset (rule names prefixed by `bootstrap_`)
-* the standard ruleset (rule names prefixed by `ocaml_` or `ppx_`)
-* `tools_ocaml` - rules for third-party tools like `cppo`, `menhir`, etc.
+* link:https://github.com/obazl/rules_ocaml/tree/5.0.0.alpha[rules_ocaml,window=_blank] (Version 5.0.0.alpha)
+* link:https://github.com/obazl/rules_ppx/tree/5.0.0.alpha[rules_ppx,window=_blank] (Version 5.0.0.alpha)
 
 // === rules_bootstrap
 

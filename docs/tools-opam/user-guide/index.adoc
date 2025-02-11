@@ -8,6 +8,8 @@
 :page-last_updated: June 16, 2022
 :page-toc: false
 
+WARNING: OBSOLETE. See link:https://github.com/obazl/coswitch[coswitch] instead.
+
 // * link:opam-overview[OPAM Overview]
 * link:coswitches[OPAM Switches & OBazl Coswitches]: seamless OPAM integration
 

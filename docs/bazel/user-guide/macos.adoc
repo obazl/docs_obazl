@@ -14,7 +14,7 @@
 
 IMPORTANT: Because the OCaml compilers may call a compiler (linker/assember), setting these Bazel switches may not be enough to eliminate those pesky "object was built for newer version.." (see below).  You may also need to pass some options to the linker using `-ccopt` (TODO: details)
 
-link:https://www.smileykeith.com/2021/03/08/locking-xcode-in-bazel/[Locking Xcode versions in Bazel,window="_blank"] blog post, March 2021
+link:https://www.smileykeith.com/2021/03/08/locking-xcode-in-bazel/[Locking Xcode versions in Bazel,window="_blank"] blog post, March 2021; slightly outdated
 
 "Bazel discovers your currently installed Xcode versions by running
 xcode_locator, and then generating a BUILD file that contains an entry
@@ -22,13 +22,16 @@ for every version you currently have installed... In order to enforce
 developers use the same version, you can short circuit bazel's Xcode
 discovery and instead reference a local target that you provide."
 
-NB: xcode-locator is a Bazel tool, not a macos tool
+NB: xcode-locator is a Bazel tool, not a macos tool.
 
+WARNING: the blog article is based on pre-bzlmod versions; it lists this command:
 `cat bazel-$(basename $PWD)/external/local_config_xcode/BUILD`
+To use it with bzlmod replace `external/local_config_xcode` with `external/bazel_tools\~xcode_configure_extension\~local_config_xcode`
+
 
 To retrieve the build number from your current Xcode version:
 
-`xcodebuild -version | tail -1 | cut -d " " -f3`
+`xcodebuild -version`
 
 NOTE: better to use `--macos_sdk_version`? see below
 

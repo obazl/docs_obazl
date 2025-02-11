@@ -3,15 +3,8 @@
 
 <ul id="mysidebar" class="nav">
   <li class="sidebarTitle">
-    {% if page.parent %}
     <a href="{{page.parent[0]}}">
-    {% else %}
-    <a href=".">
-      {% endif %}
-      {% if {{page.doc}} == "ug" %}Guide:{% endif %}
-      {% if {{page.doc}} == "dg" %}Dev Guide:{% endif %}
-      {% if {{page.doc}} == "refman" %}Reference:{% endif %}
-      {{page.pkg}}
+      Dev Guide: {{page.pkg}}
     </a>
   </li>
   {% for entry in sidebar %}
