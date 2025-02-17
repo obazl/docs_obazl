@@ -1,0 +1,21 @@
+entries:
+- title: tools_obazl
+  part: User Guide
+  product: tools_obazl
+  url:  /docs_obazl/tools-obazl/user-guide
+  version: 2.0
+  levels: one
+  folders:
+
+  - title: Topics
+    open: true
+    output: web
+    folderitems:
+
+    - title: Inspection
+      url: inspection
+      output: web
+
+    - title: Codegen
+      url: codegen
+      output: web

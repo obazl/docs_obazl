@@ -1,17 +1,14 @@
----
-layout: page_tools_opam
-pkg: tools_opam
-doc: ug
-// sidebar: sidebar_tools_opam
-title: Coswitches
-permalink: tools-opam/user-guide/coswitches
-tags: [coswitch]
-keywords: notes, tips, cautions, warnings, admonitions
-last_updated: April 21, 2022
-toc: false
----
-
 = Coswitches
+:page-permalink: /:path/coswitches
+:page-pkg: tools_opam
+:page-doc: ug
+:page-parent: ['../user-guide']
+:page-layout: page_tools_opam
+:page-sidebar: tools_opam_ug_sbdata
+:page-tags: [formatting]
+:page-keywords: notes, tips, cautions, warnings, admonitions
+:page-last_updated: Feb 11, 2025
+:toc: true
 
 == Switches & Coswitches
 

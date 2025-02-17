@@ -90,7 +90,9 @@
 
         <!-- Content Column -->
         <div class="{{content_col_size}}" id="tg-sb-content">
-          <h1>{{page.title}}</h1>
+          <h1>{{page.title}}
+          <span id="timestamp">Last updated {{page.last_updated}}</span>
+          </h1>
     <!-- { % unless page.toc == false %} -->
     <!-- { % include toc.html %} -->
     <!-- { % endunless %} -->

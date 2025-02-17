@@ -1,0 +1,16 @@
+= Code generation
+:page-permalink: /:path/codegen
+:page-layout: page_tools_obazl
+:page-pkg: tools_obazl
+:page-doc: ug
+:page-sidebar: tools_obazl_ug_sbdata
+:page-tags: [formatting]
+:page-keywords: notes, tips, cautions, warnings, admonitions
+:page-last_updated: June 24, 2022
+:toc: true
+
+== @obazl//new
+
+Examples:
+
+...

@@ -4,7 +4,7 @@ entries:
   product: rules_ocaml
   url:  /docs_obazl/rules-ocaml/dev-guide
   version: 2.0
-  levels: two
+  levels: four
   folders:
 
   - title: Topics
@@ -12,26 +12,69 @@ entries:
     output: web
     folderitems:
 
-    - title: Understanding Bazel rules
-      url: bazel_rules
+    - title: Dev environment & workflow
+      open: true
+      url: workflow
+      output: web
+      levels: two
+      subfolders:
+
+      - title: Understanding Bazel
+        open: true
+        output: web
+        subfolderitems:
+
+        - title: Rules
+          url: bazel_rules
+          output: web
+
+        - title: Configurations
+          output: web
+
+        - title: Constraints
+          url: constraints
+          output: web
+
+        - title: Depsets
+          url: depsets
+          output: web
+
+        - title: Macros
+          url: macros
+          output: web
+
+        - title: Platforms
+          url: platforms
+          output: web
+
+        - title: Providers
+          url: providers
+          output: web
+
+        - title: Toolchains
+          url: toolchains
+          output: web
+
+        - title: Transitions
+          url: transitions
+          output: web
+
+    - title: Rules for OCaml
+      url: rules_ocaml
       output: web
 
-    - title: Platforms
-      url: platforms
-      output: web
-
-    - title: Toolchains
-      url: toolchains
-      output: web
-
-    - title: C/C++ dependencies
-      url: cc_deps
+    - title: Namespacing
+      url: namespacing
       output: web
 
     - title: Ppx support
       url: ppx
       output: web
 
-    - title: Namespacing
-      url: namespacing
+    - title: Extending rules_ocaml
+      url: extending
+      output: web
+
+    - title: C/C++ dependencies
+      url: cc_deps
       output: web

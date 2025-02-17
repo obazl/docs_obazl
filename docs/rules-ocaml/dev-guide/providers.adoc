@@ -1,13 +1,13 @@
-= Namespacing
-:page-permalink: /:path/namespacing
+= Providers
+:page-permalink: /:path/providers
 :page-layout: page_rules_ocaml
 :page-pkg: rules_ocaml
 :page-doc: dg
-:page-parent: ['../dev-guide']
 :page-sidebar: rules_ocaml_dg_sbdata
+:page-parent: ['../dev-guide']
 :page-tags: [formatting]
 :page-keywords: notes, tips, cautions, warnings, admonitions
 :page-last_updated: Feb 11, 2025
 :toc: true
 
-todo...
+Providers express SPIs (Service Provider Interraces)

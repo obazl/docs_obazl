@@ -44,17 +44,38 @@ A concise overview for OCaml users new to Bazel.
 * link:rules-ocaml/reference[Reference Manual]
 * link:rules-ocaml/dev-guide[Developer Guide]
 
-== Seamless, zero-config opam integration
+== https://github.com/obazl/rules_ppx/tree/5.0.0.alpha[@rules_ppx,window=_blank]
 
-https://github.com/obazl/tools-opam[@tools_opam,window=_blank]
+* link:rules-ppx/user-guide[User Guide]
+* link:rules-ppx/reference[Reference Manual]
+* link:rules-ppx/dev-guide[Developer Guide]
 
-// * link:tools-ocaml/user-guide[User Guide]
-* link:tools-ocaml/reference[Reference Manual]
+== Extensions
+
+Custom rules and macros that extend `rules_ocaml`.
+
+* link:https://github.com/obazl/obazl_menhir/tree/2024.07.15.beta[obazl_menhir]
+
+* link:https://github.com/obazl/obazl_cppo/tree/1.8.0.beta[obazl_cppo]
+
+
+== link:https://github.com/obazl/tools_opam/tree/1.0.0.alpha[@tools_opam,window=_blank]: seamless, zero-config opam integration
+
+// * link:tools-opam/user-guide[User Guide]
+// * link:tools-opam/reference[Reference Manual]
+
+
+== link:https://github.com/obazl/tools_obazl[@tools_obazl,window=_blank]
+
+Cargo-like capabiities for OCaml.
+
+* link:tools-obazl/user-guide[User Guide]
+* link:tools-obazl/reference[Reference Manual]
 
 
 == Using OCaml with other languages
 
-=== C/C++ integration
+=== C/C++
 
 https://github.com/bazelbuild/rules_cc[@rules_cc,window=_blank]
 
@@ -65,17 +86,11 @@ https://github.com/bazelbuild/rules_cc[@rules_cc,window=_blank]
 // * link:coswitch/user-guide[User Guide]
 // * link:tools-opam/reference[Reference Manual]
 
-=== Jsoo and Javascript integration
+=== Javascript
 
 ...todo...
 
 === Rust
-
-== tools_obazl:
-
-* link:tools-obazl/user-guide[User Guide]
-* link:tools-obazl/reference[Reference Manual]
-* link:https://github.com/obazl/tools_obazl[https://github.com/obazl/tools_obazl,window=_blank]
 
 == Related tools
 === mibl

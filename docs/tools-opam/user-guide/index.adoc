@@ -1,25 +1,25 @@
 = User Guide: tools_opam
 :page-permalink: /:path/index.html
-:page-layout: page_tools_opam
 :page-pkg: tools_opam
 :page-doc: ug
+:page-layout: page_tools_opam
+:page-sidebar: tools_opam_ug_sbdata
+:page-tags: [opam,tools]
 :page-otags: [opam,tools]
 :page-keywords: notes, tips, cautions, warnings, admonitions
-:page-last_updated: June 16, 2022
-:page-toc: false
-
-WARNING: OBSOLETE. See link:https://github.com/obazl/coswitch[coswitch] instead.
+:page-last_updated: Feb 11, 2025
+:toc: true
 
 // * link:opam-overview[OPAM Overview]
-* link:coswitches[OPAM Switches & OBazl Coswitches]: seamless OPAM integration
+
+Github: link:https://github.com/obazl/tools_opam/tree/1.0.0.alpha[tools_opam,window=_blank]
+
+// * link:coswitches[OPAM Switches & OBazl Coswitches]: seamless OPAM integration
 
 * link:opam-configuration[OPAM configuration]
-* link:local-switches[OPAM Local Switches]
-* link:opam-interrogation[Interrogating OPAM configurations]
+// * link:local-switches[OPAM Local Switches]
+// * link:opam-interrogation[Interrogating OPAM configurations]
 
-
-WARNING: if you move a project directory that has a here switch, you
-must run `bazel run @opam//here:refresh` after the move.
 
 The `tools_opam` package provides:
 

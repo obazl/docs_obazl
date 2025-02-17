@@ -1,5 +1,3 @@
-[Reference Manual](index.md)
-
 = OCaml Providers
 **WARNING** Beta version - subject to change
 

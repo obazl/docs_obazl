@@ -1,0 +1,184 @@
+= Development environment and workflow
+:page-permalink: /:path/workflow
+:page-layout: page_rules_ocaml
+:page-pkg: rules_ocaml
+:page-doc: dg
+:page-sidebar: rules_ocaml_dg_sbdata
+:page-parent: ['../dev-guide']
+:page-tags: [formatting]
+:page-keywords: notes, tips, cautions, warnings, admonitions
+:page-last_updated: Feb 11, 2025
+:toc: true
+
+Currently, released versions of OBazl rules and tools are registered in
+the https://github.com/obazl/registry[OBazl registry,window=_blank]. Eventually
+they will be migrated to the https://registry.bazel.build/[Bazel
+Central Registry,window=_blank], but in the meantime, to use them you must put the
+following in a <<_bazelrc>> file:
+
+----
+common --registry=https://raw.githubusercontent.com/obazl/registry/main/
+common --registry=https://bcr.bazel.build
+----
+
+However, code under development is not published to any registry and
+so cannot be accessed via the `bzlmod` package management system. But
+OBazl is open-source and development is public, so you are welcome to
+fork a repository and offer contributions or just eavesdrop.
+
+To use unreleased versions of a module (whether `rules_ocaml` or one
+of the other OBazl modules) you must use one of the following methods:
+
+* Use the `git_override` method in your
+  `MODULE.bazel` file, specifying the branch you want; or
+* Fork/clone the repo to your local drive, and then use either
+  ** `local_path_override` in your `MODULE.bazel` file, or
+  ** `--override_module` option on the command line or in a bazelrc file.
+
+WARNING: Even if you use one of these methods, you must nonetheless
+always use the `--registry` directives as shown above. This is because
+the module may itself depend on resources only accessible
+in those registries.
+
+The next section describes the configuration I use for development using these techniques.
+
+== Using dev versions of the repos
+
+I develop primarily on a Mac (arm) and test on Linux (Ubuntu, x86).
+
+I use the following branches, ordered by decreasing instability:
+
+* `<version>.dev` is where active development takes place.  I sometimes push "checkpoint" commits on this branch just to save my code, so code on this branch may build incorrectly or may fail to build.
+* `<version>.alpha`. I promote dev code to this branch when it works for me and I think it should work for others.  Code on this branch may not have been tested on both platforms.  It is also subject to change; for example an attribute may be renamed. I do not cut github prelease archives from this branch.
+* `<version>.beta` is the branch I use to cut prerelease (release candidate) archives
+  tagged as `<version>.rc.n`.
+* `main` is used to cut release archives.
+
+For example, to depend directly on the `5.0.0.alpha` branch of the
+`rules_ocaml` repo:
+
+[source="starlark", title="MODULE.bazel"]
+----
+bazel_dep(name = "rules_ocaml", version = "5.0.0")
+git_override(module_name = "rules_ocaml",
+             branch = "5.0.0.alpha",                                     <1>
+             remote = "https://github.com/obazl/rules_ocaml.git")
+----
+<1> You can depend on whichever branch you prefer.
+
+The override tells Bazel to use the head commit of the named branch.
+Since that may change, if you use this method, you will need to run
+`bazel clean --expunge` in order to pick up any new commits on the
+branch you are using.
+
+Alternatively, you can fork the `rules_ocaml` repo and clone it to
+your local machine (for example, to `/home/<uid>/obazl/rules_ocaml`),
+and then use either `local_path_override` in your `MODULE.bazel` or
+`--override_module` in `.bazelrc`.
+
+For example:
+
+[source="starlark",title="MODULE.bazel"]
+----
+bazel_dep(name = "rules_ocaml", version = "5.0.0")
+local_path_override(module_name = "rules_ocaml", path="/home/<uid>/obazl/rules_ocaml")
+----
+
+or you can omit the `local_path_override` directive and instead do this:
+[source="starlark", title=".bazelrc"]
+----
+common --override_module=rules_ocaml=/home/<uid>/obazl/rules_ocaml
+----
+
+If you use this method, you will of course need to sync your fork with
+the upstream repo in order to pick up any new commits.
+
+IMPORTANT: Be sure to check out the branch of interest after cloning!
+When you use overrides like this, version compatibility checks are
+disabled - you get whatever you ask for. This is especially important
+if you are working with multiple modules with interdependencies. For
+example, `tools_opam` and `rules_ocaml` - the former depends on the
+latter. If you override both of them to point to local copies, it's up
+to you to make sure the local copies are correctly configured.
+
+
+== bazelrc
+
+See link:https://bazel.build/run/bazelrc[Write bazelrc configuration files,window=_blank] for more information.
+
+You home bazelrc file is the place to specify configurations you use across multiple Bazel projects. Mine contains:
+
+[source="starlark", title = "$HOME/.bazelrc"]
+----
+common --symlink_prefix=.bazel/
+common --color=yes
+common:show --subcommands=True
+common:show --verbose_failures
+common:showpp --subcommands=pretty_print
+common:showpp --verbose_failures
+test:showt --test_output=all
+test:showt --keep_going
+
+common:q --noshow_progress
+common:q --noshow_loading_progress
+common:q --show_result=99
+## ui events: fatal, error, warning, info, progress, debug,
+## start, finish, subcommand, stdout, stderr, pass, fail,
+## timeout, cancelled or depchecker
+common:q --ui_event_filters=-info
+common:q --ui_event_filters=-progress
+common:q --ui_event_filters=-subcommand
+common:q --ui_event_filters=-fail
+# common:q --ui_event_filters=-error
+# common:q --ui_event_filters=-stdout
+# common:q --ui_event_filters=-stderr
+----
+
+The `show*` configuration groups (see
+link:https://bazel.build/run/bazelrc#config[--config]) make it easy to
+toggle verbosity for particular build commands, e.g.
+
+    $ bazel build mwe/hello:Hello --config=showpp
+
+By default, `bazel test` will only print the pass/fail result of
+tests, and will stop at the first failure. Passing `--config=showt`
+tells bazel to print a little more information for each test,
+including anything written to `stdout`, and to keep going even when
+tests fail.
+
+The `q` (quiet) config group suppresses all Bazel messages except
+those written to `stdout` and `stderr`.
+
+For example, if you run `+$ bazel build mwe/...+` (NB: three dots)
+then Bazel will build all the targets in the `mwe` package, but it
+will only print summary information such as
+
+----
+INFO: Analyzed 55 targets (0 packages loaded, 0 targets configured).
+INFO: Found 55 targets...
+INFO: Elapsed time: 0.072s, Critical Path: 0.00s
+INFO: 1 process: 1 internal.
+INFO: Build completed successfully, 1 total action
+----
+
+Passing `--config=q` sets `--show_result=99`, which tells Bazel to
+print information about output files. So [nowrap]`+$ bazel build mwe/...
+--config=q+` will print information about each target:
+
+----
+$ bazel build mwe/... --config=q
+Target //mwe/hello_library:hello.exe up-to-date:
+  .bazel/bin/mwe/hello_library/hello.exe
+Target //mwe/hello_ns_archive:test up-to-date:
+  .bazel/bin/mwe/hello_ns_archive/test
+Target //mwe/hello_ns_library:libHello up-to-date:
+  .bazel/out/darwin_arm64-fastbuild-ST-e73fda9ac620/bin/mwe/hello_ns_library/__obazl/LibHello__Easy.cmx
+  .bazel/out/darwin_arm64-fastbuild-ST-e73fda9ac620/bin/mwe/hello_ns_library/__obazl/LibHello__Simple.cmx
+Target //mwe/hello_library:Easy up-to-date:
+  .bazel/bin/mwe/hello_library/__obazl/Easy.cmx
+...
+----
+
+
+
+

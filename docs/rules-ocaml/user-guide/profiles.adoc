@@ -1,4 +1,4 @@
-= Configuration Profiles
+= Profiles
 :page-permalink: rules-ocaml/user-guide/profiles
 :page-layout: page_rules_ocaml
 :page-pkg: rules_ocaml
@@ -6,7 +6,12 @@
 :page-tags: [profiles]
 :page-keywords: notes, tips, cautions, warnings, admonitions
 :page-last_updated: May 2, 2022
-:page-toc: false
+:page-toc: true
+:toc: true
+
+
+
+== Configuration groups
 
 A Configuration Profile (or "group") is a collection of build options and
 configuration rules. You can define such profiles by tagging
@@ -38,3 +43,8 @@ Documentation on build options and `--config` are buried at the bottom
 of
 link:https://docs.bazel.build/versions/master/guide.html#bazelrc-syntax-and-semantics[.bazelrc
 syntax and semantics].
+
+== Build profiles
+
+Implemented as toolchains...
+

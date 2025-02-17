@@ -1,5 +1,5 @@
-= Namespacing
-:page-permalink: /:path/namespacing
+= Configurations
+:page-permalink: /:path/configurations
 :page-layout: page_rules_ocaml
 :page-pkg: rules_ocaml
 :page-doc: dg
@@ -10,4 +10,6 @@
 :page-last_updated: Feb 11, 2025
 :toc: true
 
-todo...
+
+https://bazel.build/extending/config[Configurations]
+

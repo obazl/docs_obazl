@@ -1,12 +1,13 @@
 = OPAM Configuration
 :page-permalink: /:path/opam-configuration
-:page-layout: page_tools_opam
 :page-pkg: tools_opam
 :page-doc: ug
-:page-tags: [opam,configuration]
+:page-parent: ['../user-guide']
+:page-layout: page_tools_opam
+:page-sidebar: tools_opam_ug_sbdata
+:page-tags: [formatting]
 :page-keywords: notes, tips, cautions, warnings, admonitions
-:page-last_updated: May 14, 2022
-:toc-title:
+:page-last_updated: Feb 11, 2025
 :toc: true
 
 OBazl supports three kinds of OPAM switch configuration:
@@ -16,12 +17,11 @@ OBazl supports three kinds of OPAM switch configuration:
 * Local switch - installed in `_opam`, a subdirectory of a specified directory, usually `$(PWD)`
 ** The installation directory containing `_opam` is treated as the name of the switch
 ** Local switches use information in the system OPAM root `~/.opam`, e.g. `~/.opam/repo`
-* Here switch -  installed in `<projroot>/.opam`
-** TODO: make it `<projroot>/.obazl.d/_opam`
-** Here switch initialization also creates an OPAM root, so they are
+* XDG switch -  installed in `$XDG_DATA_HOME`
+** XDG switch initialization also creates an OPAM root, so they are
    independent of the system OPAM root
 
-All three may be used as the basis of a project's OBazl coswitch.
+All three may be used as the basis of an OBazl project.
 
 == System Switches
 
@@ -41,13 +41,6 @@ This creates a switch in the global OPAM installation (default
 location: `$HOME/.opam`), named `$(PWD)` and located at
 `$(PWD)/_opam`. To see the expanded switch name, run `$ opam switch
 show`.
-
-OBazl can be configured to use a local directory switch as a project
-`here-coswitch`; see
-link:/tools-opam/user-guide/here-configuration[Here-coswitch
-configuration] and
-link:/tools-opam/reference/here-create[@opam//here:create] for more
-information.
 
 === Compiler build variants
 
@@ -143,6 +136,6 @@ Examples:
 
 See link:https://discuss.ocaml.org/t/experimental-new-layout-for-the-ocaml-variants-packages-in-opam-repository/6779[Experimental new layout for the ocaml-variants packages in opam-repository] for more information.
 
-== Here switches
+== XDG switches
 
 

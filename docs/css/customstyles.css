@@ -350,7 +350,7 @@ blockquote {
 }
 
 .navlist {
-    padding-bottom: 2em !important;
+    /* padding-bottom: 2em !important; */
 }
 /* navgoco sidebar styles (customized) */
 .nav, .nav ul, .nav li {

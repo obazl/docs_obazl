@@ -1,0 +1,34 @@
+= Bazel rules for OCaml
+:page-permalink: /:path/rules_ocaml
+:page-layout: page_rules_ocaml
+:page-pkg: rules_ocaml
+:page-doc: dg
+:page-parent: ['../dev-guide']
+:page-sidebar: rules_ocaml_dg_sbdata
+:page-tags: [formatting]
+:page-keywords: notes, tips, cautions, warnings, admonitions
+:page-last_updated: Feb 11, 2025
+:toc: true
+
+Basic tasks: compile, archive, link.
+
+Extended tasks: namespacing; ppx and other preprocessing; installation; packaging for distribution
+
+Other: opam integration and deployment
+
+Related tasks: deriving interfaces from `.ml` files;  ocamlobjinfo; -bin-annot; odoc; etc.
+
+== Primitives
+
+* ocaml_signature
+  ** with support for namespacing
+* ocaml_module
+  ** with support for namespacing
+* ocaml_ns
+* ocaml_library
+  ** with support for archiving
+* ocaml_import
+
+== Extensions
+
+* rules_ppx

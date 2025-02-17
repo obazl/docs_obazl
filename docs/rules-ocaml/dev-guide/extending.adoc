@@ -1,5 +1,5 @@
-= Namespacing
-:page-permalink: /:path/namespacing
+= Extending `rules_ocaml`
+:page-permalink: /:path/extending
 :page-layout: page_rules_ocaml
 :page-pkg: rules_ocaml
 :page-doc: dg
@@ -10,4 +10,6 @@
 :page-last_updated: Feb 11, 2025
 :toc: true
 
-todo...
+== Custom rules
+
+== Macros

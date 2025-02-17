@@ -1,5 +1,5 @@
-= Namespacing
-:page-permalink: /:path/namespacing
+= Macros
+:page-permalink: /:path/macros
 :page-layout: page_rules_ocaml
 :page-pkg: rules_ocaml
 :page-doc: dg
@@ -10,4 +10,6 @@
 :page-last_updated: Feb 11, 2025
 :toc: true
 
-todo...
+
+https://bazel.build/extending/macros[Macros,window=_blank"]
+

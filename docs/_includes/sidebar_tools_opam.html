@@ -1,10 +1,10 @@
 {% capture sbar %}sidebar_{{page.pkg}}_{{page.doc}}{% endcapture %}
-{% assign sidebar = site.data.sidebars[sbar].entries %}
+{% assign sidebar = site.data.sidebars[page.sidebar].entries %}
 
 <ul id="mysidebar" class="nav">
   <li class="sidebarTitle">
     <a href="{{sidebar[0].url}}">
-      {% if {{page.doc}} == "ug" %}Guide:{% endif %}
+      {% if {{page.doc}} == "ug" %}GUIDE:{% endif %}
       {% if {{page.doc}} == "dg" %}Dev Guide:{% endif %}
       {% if {{page.doc}} == "refman" %}Reference:{% endif %}
       {{page.pkg}}
@@ -13,7 +13,7 @@
   {% for entry in sidebar %}
   {% for folder in entry.folders %}
   {% if folder.output contains "web" %}
-  <li>
+  <li class="active">
     <a class="folder"
        title="{{folder.title}}" href="#">{{folder.title}}</a>
       <ul class="navlist">
