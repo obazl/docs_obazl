@@ -90,9 +90,9 @@ jobs:
       #     # if the repo you are deploying to is <username>.github.io, uncomment the line below.
       #     # if you are including the line below, make sure your source files are NOT in the master branch:
       #     publish_branch: gh-pages
-      # - name: Upload artifact
-      #   uses: actions/upload-artifact@v4
-      #   name: my-artifact-${{ matrix.runs-on }}
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        path: _site
 
   # Deployment job
   deploy:
