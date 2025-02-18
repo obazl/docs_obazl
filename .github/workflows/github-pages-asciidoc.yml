@@ -91,7 +91,7 @@ jobs:
       #     # if you are including the line below, make sure your source files are NOT in the master branch:
       #     publish_branch: gh-pages
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-artifact@v4
 
   # Deployment job
   deploy:
