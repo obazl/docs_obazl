@@ -1,0 +1,20 @@
+= OCaml profiling
+:page-permalink: /:path/ocaml_profiling
+:page-layout: page_rules_ocaml
+:page-pkg: rules_ocaml
+:page-doc: dg
+:page-sidebar: rules_ocaml_dg_sbdata
+:page-parent: ['../dev-guide']
+:page-tags: [formatting]
+:page-keywords: notes, tips, cautions, warnings, admonitions
+:page-last_updated: Feb 11, 2025
+:toc: true
+
+
+== Overview
+
+See https://ocaml.org/manual/5.3/profil.html[Profiling (ocamlprof)]
+
+
+
+

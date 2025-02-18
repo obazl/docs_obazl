@@ -1,0 +1,89 @@
+= OBazl toolchains: modeling the OCaml SDK
+:page-permalink: /:path/index
+:page-layout: page_ocaml
+:page-pkg: ocaml
+:page-doc: ocaml
+:page-tags: [ocaml,toolchain]
+:page-keywords: notes, tips, cautions, warnings, admonitions
+:page-last_updated: May 16, 2022
+:toc-title:
+:toc: true
+
+
+== Bazel toolchain concepts
+
+link:https://bazel.build/extending/platforms[Platforms]
+
+link:https://bazel.build/extending/toolchains[Toolchains]
+
+link:https://bazel.build/reference/be/platforms-and-toolchains[Platforms and Toolchains Rules]
+
+== ocaml compilers
+
+=== standard compiler names:
+
+Standard naming schema: `ocaml<emitter>.<executor>`, where `<emitter>`
+is `c` or `opt`, and `<executor>` is `byte` or `opt`. The bazel rules
+use standard naming for compiler names: `ocamlc.byte`,
+`ocamlopt.byte`, `ocamlopt.opt`, `ocamlc.opt`.
+
+The profiling compilers are also use the standard names:
+`ocamlcp.byte`, `ocamlcp.opt`, `ocamloptp.byte`, `ocamloptp.opt`.
+
+Names for flambda-enabled compilers use `optx`:
+
+* `ocamloptx.byte` - vm executor, flambda emitter (emits flambda-optimized native code)
+* `ocamloptx.opt` - native executor (un-optimized), flambda emitter
+* `ocamlc.optx` - flambda-optimized native executor, bytecode emitter
+* `ocamlopt.optx` - flambda-optimized native executor, emitting (non-flambda) native code
+* `ocamloptx.optx` - flambda-optimized native executor, emitting flambda-optimized native code
+
+
+=== OCamlCC Bazel naming conventions
+
+Bazel rules and non-compiler build targets (e.g. test targets) use the
+following abbreviations:
+
+* `vv` - vm executor and emitter: `ocamlc.byte`
+* `vs` - vm executor, sys emitter:  `ocamlopt.byte`
+* `ss` - sys executor, sys emitter: `ocamlopt.opt`
+* `sv` - sys executor, vm emitter: `ocamlc.opt`
+
+Flambda uses 'x':
+
+* `vx` - vm executor, flambda emitter:  `ocamloptx.byte`
+* `xx` - flambda executor, flambda emitter: `ocamloptx.optx`
+* `xv` - flambda executor, vm emitter: `ocamlc.optx`
+* `xs` - flambda executor, sys emitter: `ocamlopt.optx`
+* `sx` - sys executor, flambda emitter: `ocamloptx.opt`
+
+
+
+== Platforms
+
+A Bazel platform is a named collection of "constraints". For example:
+
+[source="starlark"]
+----
+platform(name = "ocamlopt.opt",
+         parents = ["@local_config_platform//:host"],
+         constraint_values = [
+             "@rules_ocaml//platform/arch:sys",
+             "@rules_ocaml//platform/executor:sys",
+             "@rules_ocaml//platform/emitter:sys"
+         ])
+----
+
+What this means, essentially, is that *if* platform `ocamlopt.opt` is "activated",
+then the listed `constraint_value`s will be satistfied - i.e. set to True.
+
+Platforms are activated by passing them as the value of
+`--host_platform` or `--platforms`. For example:
+
+[source="starlark"]
+----
+$ bazel build //pkg:tgt --host_platform=@rules_ocaml//platform:ocamlc.opt --platforms=@rules_ocaml//platform:ocamlc.byte
+----
+
+The toolchain selection mechanism chooses a toolchain based on
+whatever constraints happen to be satisfied.

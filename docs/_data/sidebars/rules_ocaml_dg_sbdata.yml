@@ -19,6 +19,35 @@ entries:
       levels: two
       subfolders:
 
+      - title: OCaml build protocols
+        open: true
+        output: web
+        subfolderitems:
+
+        - title: Compilation
+          url: ocaml_compilation
+          output: web
+
+        - title: Archiving
+          url: ocaml_archiving
+          output: web
+
+        - title: Linkage
+          url: ocaml_linkage
+          output: web
+
+        - title: Runtimes
+          url: ocaml_runtimes
+          output: web
+
+        - title: Profiling
+          url: ocaml_profiling
+          output: web
+
+        - title: CC dependencies
+          url: ocaml_ccdeps
+          output: web
+
       - title: Understanding Bazel
         open: true
         output: web
@@ -28,7 +57,12 @@ entries:
           url: bazel_rules
           output: web
 
+        - title: Aspects
+          url: aspects
+          output: web
+
         - title: Configurations
+          url: configurations
           output: web
 
         - title: Constraints
@@ -61,6 +95,10 @@ entries:
 
     - title: Rules for OCaml
       url: rules_ocaml
+      output: web
+
+    - title: Linkage
+      url: linkage
       output: web
 
     - title: Namespacing

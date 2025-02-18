@@ -1,0 +1,71 @@
+= OCaml runtimes
+:page-permalink: /:path/ocaml_runtimes
+:page-layout: page_rules_ocaml
+:page-pkg: rules_ocaml
+:page-doc: dg
+:page-sidebar: rules_ocaml_dg_sbdata
+:page-parent: ['../dev-guide']
+:page-tags: [formatting]
+:page-keywords: notes, tips, cautions, warnings, admonitions
+:page-last_updated: Feb 11, 2025
+:toc: true
+
+
+== Overview
+
+What is a "runtime"?
+
+You can see how the runtimes are linked by passing `+-verbose+`.
+
+The standard distribution comes with the following libraries:
+
+=== Native
+
+* `libasmrun.a` - the standard runtime library
+* `libasmrund.a` - debug runtime
+* `libasmruni.a` - instrumented runtime
+
+* `libasmrun_pic.a` - undocumented
+* `libasmrun_shared.so` - undocumented
+
+
+=== Bytecode
+
+* `libcamlrun.a` - the standard runtime library
+* `libcamlrund.a` - debug runtime
+* `libcamlruni.a` - instrumented runtime
+
+* `libcamlrun_pic.a` - undocumented
+* `libcamlrun_shared.so` - undocumented
+
+[NOTE]
+====
+In addition to the runtime libraries listed above, the standard
+distribution includes similar variations of the VM (interpreter):
+
+* `ocamlrun` - the standard interpreter
+* `ocamlrund` - debug interpreter
+* `ocamlruni` - instrumented instrumented
+
+I _think_ this just means that the interpreter was linked with one of
+the libs listed above, but I'm not sure.
+====
+
+== Debug runtime
+
+* `-runtime-variant d` works for all four compilers?
+
+For bytecode executables, running with `ocamlrund` has the same effect?
+
+
+
+== Instrumented runtime
+
+* `-runtime-variant i`
+
+Manual:
+
+* prior to 5.0.0: https://ocaml.org/manual/4.14/instrumented-runtime.html[Runtime tracing with the instrumented runtime] (Chapter 23 in Manual version 4.14; chapter numbering may differ in previous versions.)
+
+* 5.0.0 introduced "runtime events" so the chapter title changed: https://ocaml.org/manual/5.1/runtime-tracing.html[Chapter 25: Runtime tracing with runtime events]
+

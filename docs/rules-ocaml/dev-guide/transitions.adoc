@@ -12,3 +12,51 @@
 
 
 https://bazel.build/extending/config#user-defined-transitions[User-defined transitions]
+
+
+What does *not* work: target platforms with unconstrained emitter.
+
+Scenario: sys>vm => vm>any. Since the buildhost emitter is vm, the
+target host executor must be vm. Since we're building ordinary code,
+which will not itself emit any code when run on the target platform,
+the target emitter is irrelevant, so we call it "any", and omit any
+constraint on `@rules_ocaml//platform/emitter`:
+
+----
+platform(name = "vm>any",
+         parents = ["@local_config_platform//:host"],
+         constraint_values = [
+             "@rules_ocaml//platform/arch:sys",
+             "@rules_ocaml//platform/executor:vm",
+         ])
+
+platform(name = "sys>any",
+         parents = ["@local_config_platform//:host"],
+         constraint_values = [
+             "@rules_ocaml//platform/arch:sys",
+             "@rules_ocaml//platform/executor:sys",
+         ])
+----
+
+The problem with this is that the emitter constraint defaults to
+`sys`. Which means that `vm>any` will effectivley resolve to `vm>sys`.
+This won't work, because any targets that select on
+`@rules_ocaml//platform/emitter` will get the value for the target
+platform, which for `vm>any` will be the default, `sys`, when what
+they really need is the emitter of the build platform.
+
+But, the easy fix for this is to change ocaml_imports to select on
+executor. Since the target platform executor is always the same as the
+build platform emitter, this is what we want. The import targets need
+to select the archive needed in the build env, but they are evaluated
+in the target platform context.
+
+What about cross-compiling compilers or other tools that have an
+emitter that emits code? Even then, the tool transition ensures that
+build tools will be built with target executor == build emitter.
+
+Question: ppx executables emit binary ASTs. Are they the same for both
+executors? I.e. if the ppx runs on the vm does it emit the same binary
+AST as when it is built to run natively? IOW a ppx.exe is like a
+compiler, it translates from one language to another. So it has an
+executor and an emitter.
