@@ -84,7 +84,7 @@ jobs:
       - name: 🚀 deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
-          # github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./_site
           destination_dir: ./
       #     # if the repo you are deploying to is <username>.github.io, uncomment the line below.
