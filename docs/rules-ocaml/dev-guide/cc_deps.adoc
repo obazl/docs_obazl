@@ -1,9 +1,9 @@
 = C/C++ (cc) dependencies
 :page-permalink: /:path/cc_deps
+:page-layout: page_rules_ocaml
 :page-pkg: rules_ocaml
 :page-doc: dg
 :page-parent: ['../dev-guide']
-:page-layout: page_rules_ocaml_dg
 :page-sidebar: rules_ocaml_dg_sbdata
 :page-tags: [formatting]
 :page-keywords: notes, tips, cautions, warnings, admonitions
