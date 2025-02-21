@@ -25,6 +25,7 @@ entries:
         subfolderitems:
 
         - title: Compilation
+          parent: workflow
           url: ocaml_compilation
           output: web
 
@@ -98,7 +99,7 @@ entries:
       output: web
 
     - title: Linkage
-      url: linkage
+      url: obazl_linkage
       output: web
 
     - title: Namespacing

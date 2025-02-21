@@ -21,6 +21,10 @@ choose from among standard, debug, and instrumented system runtimes,
 and where foreign libraries are involved, can choose between static
 and dynamic linking.
 
+Invoking the compiler (`ocamlc`, `ocamlopt`) without `-c` or `-a`
+tells it to produce an executable (unless you also pass `-output-obj`
+or [.nowrap]`+-output-complete-obj+`; see below).
+
 == Common options
 
 https://ocaml.org/manual/5.3/comp.html#s%3Acomp-options[5.3.13 (ocamlc options),window=_blank], https://ocaml.org/manual/5.3/native.html#s:native-options[5.3.16.2 (ocamlopt options), window=_blank]
@@ -42,9 +46,7 @@ https://ocaml.org/manual/5.3/comp.html#s%3Acomp-options[5.3.13 (ocamlc options),
 
 This is the default. “The output of the linking phase is a regular
 Unix or Windows executable file. It does not need ocamlrun to run.”
-Invoking `ocamlopt` without `-c` or `-a` tells it to produce an
-executable (unless you also pass `-output-obj` or
-[.nowrap]`+-output-complete-obj+`; see below).
+
 
 * `-nodynlink` “Allow the compiler to use some optimizations that are valid only for code that is statically linked to produce a non-relocatable executable. The generated code cannot be linked to produce a shared library nor a position-independent executable (PIE). Many operating systems produce PIEs by default, causing errors when linking code compiled with -nodynlink. Either do not use `-nodynlink` or pass the option `-ccopt -no-pie` at link-time.” (https://ocaml.org/manual/5.3/native.html[5.3.16 (ocamlopt)])
 
@@ -60,9 +62,13 @@ executable (unless you also pass `-output-obj` or
 
 ==== executable
 
+This is the default. “The output of the linking phase is a file
+containing compiled bytecode that can be executed by the OCaml
+bytecode interpreter: the command named `ocamlrun`.”
+
 * default: “[T]he linker produces bytecode that is intended to be executed with the shared runtime system, `ocamlrun`.” If the application code depends on foreign (C/C++) libraries, the linker will record their names in the bytecode executable, and `ocamlrun` will dynamically load and link them when the program is launched.  For more information, see https://ocaml.org/manual/5.3/runtime.html#s:ocamlrun-dllpath[5.3.15.3 Dynamic loading of shared libraries,window=_blank].
 
-* `-custom`. “[T]he linker produces an output file that contains both the runtime system and the bytecode for the program.” That is, effectively embeds `ocamlrun` in the output, which can be executed directly.
+* `-custom`. “[T]he linker produces an output file that contains both the runtime system and the bytecode for the program.” That is, effectively embeds `ocamlrun` in the output, which can be executed directly. If the application code depends on foreign (C/C++) libraries,  the linker will statically link them into the executable.
 +
 https://ocaml.org/manual/5.3/comp.html#s%3Acomp-options[5.3.13 (ocamlc options),window=_blank]:
 +
@@ -86,7 +92,33 @@ See https://ocaml.org/manual/5.3/intfc.html#ss:staticlink-c-code[5.3.22.1.3 Stat
 * `-output-complete-obj`. “Same as -output-obj option except the object file produced includes the runtime and autolink libraries.”
 
 
-=== Linking foreign libraries
+== Foreign library linkage
+
+NOTE: “Foreign library” means a static (`.a`) or shared (`.so`, `.dll` on Windows) library, whether produced from C/C++ code or some other language, e.g. Rust.
+
+There are three ways to tell the linker about foreign libraries:
+
+* Static libraries:
+  ** Native binaries: pass directly on the command line (e.g. `libfoo.a`);
+  ** Bytecode binaries (`-custom` mode):
+     ***  pass directly on the command line;
+     *** pass using `-cclib -l__name__`
+      **** If the library is not located in one of the standard
+            library directories, also pass `-ccopt -L__dir__`
+
+* Shared libraries:
+  ** Native binaries: pass on command line (e.g. `libfoo.so`)
+  ** Bytecode binaries: (default mode)
+    *** pass directly on command line
+    *** “a library named `dll__name__.so` (respectively, `.dll`)
+        residing in one of the standard library directories can also
+        be specified as `-dllib -l__name__`.”
+    *** `-dllpath __dir__` may be used to add a directory `__dir__` to
+        the run-time search path for shared C libraries. “The `-dllpath`
+        option simply stores `__dir__` in the produced executable file,
+        where ocamlrun can find it and use it as described in https://ocaml.org/manual/5.3/runtime.html#s%3Aocamlrun-dllpath[section 15.3].”
+    *** Question: can we pass shared libs in `-custom` mode?
+
 
 Manual:
 
@@ -107,6 +139,8 @@ We have two cc link options:
 
 I.e. dynamic means run-time linkage; static means build-time linkage.
 
+Scenarios:
+
 * case: no cclib deps
 * case: static (.a) cclib deps
    ** subcase: link dynamic
@@ -124,28 +158,30 @@ See Manual, https://ocaml.org/manual/5.3/comp.html[Chapter 13 Batch Compilation,
 
 ==== CLI Options
 
-* -custom
-+
-Link in “custom runtime” mode. In the default linking mode, the linker produces bytecode that is intended to be executed with the shared runtime system, ocamlrun. In the custom runtime mode, the linker produces an output file that contains both the runtime system and the bytecode for the program. The resulting file is larger, but it can be executed directly, even if the ocamlrun command is not installed. Moreover, the “custom runtime” mode enables static linking of OCaml code with user-defined C functions, as described in chapter 22.
-
 * `-cclib -l__libname__`
 +
 Pass the `-l__libname__` option to the C linker when linking in
 “custom runtime” mode (see the -custom option). This causes the given
-C library to be linked with the program.
+C library to be linked with the program at build-time.
 +
 NOTE: The library can be either an archive (`.a`) or a shared lib (`.so`) (?)
 
 * `-ccopt __option__`
 +
-Pass the given option to the C compiler and linker. When linking in “custom runtime” mode, for instance -ccopt -Ldir causes the C linker to search for C libraries in directory dir. (See the -custom option.)
+Pass the given option to the C compiler and linker. When linking in
+“custom runtime” mode, for instance `-ccopt -L__dir__` causes the C
+linker to search for C libraries in directory `__dir__`. (See the `-custom`
+option.)
 
 * `-cc __ccomp__`
 +
-Use ccomp as the C linker when linking in “custom runtime” mode (see the -custom option) and as the C compiler for compiling .c source files. When linking object files produced by a C++ compiler (such as g++ or clang++), it is recommended to use -cc c++.
+Use ccomp as the C linker when linking in “custom runtime” mode (see
+the `-custom` option) and as the C compiler for compiling `.c` source
+files. When linking object files produced by a C\++ compiler (such as
+g\++ or clang\++), it is recommended to use `-cc c++`.
 +
-IMPORTANT: OBazl never uses the OCaml compiler as a C compiler, so
-this option is not relevant for OBazl users.
+IMPORTANT: OBazl never uses the OCaml compiler to compile C/C++ code,
+so this option is not relevant for OBazl users.
 
 === Load-time shared-object linkage
 

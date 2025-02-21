@@ -30,6 +30,8 @@
           {% elsif folderitem.type == "empty" %}
           <li class="y"><a title="{{folderitem.title}}" href="{{folderitem.url | remove: "/"}}">{{folderitem.title}}</a></li>
 
+          {% elsif page.name contains folderitem.url  %}
+          <li class="sb-navitem active"><a title="{{folderitem.title}}" href="{{folderitem.url | remove: "/"}}">{{folderitem.title}}</a></li>
           {% else %}
           <li class="sb-navitem"><a title="{{folderitem.title}}" href="{{folderitem.url | remove: "/"}}">{{folderitem.title}}</a></li>
           {% endif %}
@@ -42,11 +44,14 @@
                   {% for subfolderitem in subfolders.subfolderitems %}
                   {% if subfolderitem.output contains "web" %}
                   {% if subfolderitem.external_url %}
+                  {% assign suburl = "foo" %}
                   <li><a title="{{subfolderitem.title}}" href="{{subfolderitem.external_url}}" target="_blank" rel="noopener">{{subfolderitem.title}}</a></li>
                   {% elsif page.url == subfolderitem.url %}
-                  <li class="active"><a title="{{subfolderitem.title}}" href="{{subfolderitem.url | remove: "/"}}">{{subfolderitem.title}}</a></li>
+                  <li class="active"><a title="{{subfolderitem.title}}" href="{{subfolderitem.url | remove: "/"}}">{{subfolderitem.url}}</a></li>
+                  {% elsif page.name contains subfolderitem.url ".adoc"  %}
+                  <li class="sb-navitem active"><a title="{{subfolderitem.title}}" href="{{subfolderitem.url | remove: "/"}}">{{ subfolderitem.title }}</a></li>
                   {% else %}
-                  <li class="sb-navitem"><a title="{{subfolderitem.title}}" href="{{subfolderitem.url | remove: "/"}}">{{subfolderitem.title}}</a></li>
+                  <li class="sb-navitem"><a title="{{subfolderitem.title}}" href="{{subfolderitem.url | remove: "/"}}">{{ subfolderitem.title }}</a></li>
                   {% endif %}
                   {% endif %}
                   {% endfor %}
@@ -67,10 +72,18 @@
          <!-- </p> -->
          <!-- -->
 </ul>
+<!-- <pre>
+{{ page | inspect }}
+</pre>
+-->
 
 <!-- this highlights the active parent class in the navgoco sidebar. this is critical so that the parent expands when you're viewing a page. This must appear below the sidebar code above. Otherwise, if placed inside customscripts.js, the script runs before the sidebar code runs and the class never gets inserted.-->
-<script>$("li.active").parents('li').toggleClass("active");
-$("li.subfolders").toggleClass("active");
+<script>
+  $("li.sb-navitem.active").parents('li').addClass("active");
+  <!-- $("li.active").parents('li').css("background-color", "red"); -->
+  <!-- $("li.active").parents('li.subfolders').toggleClass("active"); -->
+  <!-- $("li.subfolders.active").parents('li').toggleClass("active"); -->
+<!-- $("li.subfolders").toggleClass("active"); -->
 </script>
 
 {% comment %} Copyright 2021 Google LLC {% endcomment %}
