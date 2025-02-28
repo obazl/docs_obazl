@@ -9,7 +9,7 @@
 :page-keywords: notes, tips, cautions, warnings, admonitions
 :page-last_updated: Feb 11, 2025
 :toc: true
-
+:toclevels: 3
 
 == Overview
 
@@ -17,6 +17,15 @@ What is a "runtime"?
 
 You can see how the runtimes are linked by passing `+-verbose+`.
 
+TODO: `+-with-runtime+` and `+-without-runtime+`.
+
+VM: `+-without-runtime+` removes the `#!` line at top of file, so that
+it can only be executed by explicitly using `ocamlrun`.
+
+Demo: ns/bottomup/ns_aliases/rgb
+
+
+== System runtimes
 The standard distribution comes with the following libraries:
 
 === Native
@@ -38,20 +47,7 @@ The standard distribution comes with the following libraries:
 * `libcamlrun_pic.a` - undocumented
 * `libcamlrun_shared.so` - undocumented
 
-[NOTE]
-====
-In addition to the runtime libraries listed above, the standard
-distribution includes similar variations of the VM (interpreter):
-
-* `ocamlrun` - the standard interpreter
-* `ocamlrund` - debug interpreter
-* `ocamlruni` - instrumented instrumented
-
-I _think_ this just means that the interpreter was linked with one of
-the libs listed above, but I'm not sure.
-====
-
-== Debug runtime
+=== Debug runtime
 
 * `-runtime-variant d` works for all four compilers?
 
@@ -59,7 +55,7 @@ For bytecode executables, running with `ocamlrund` has the same effect?
 
 
 
-== Instrumented runtime
+=== Instrumented runtime
 
 * `-runtime-variant i`
 
@@ -69,3 +65,70 @@ Manual:
 
 * 5.0.0 introduced "runtime events" so the chapter title changed: https://ocaml.org/manual/5.1/runtime-tracing.html[Chapter 25: Runtime tracing with runtime events]
 
+
+== VM runtimes
+
+=== Standard VM Runtimes
+
+In addition to the runtime libraries listed above, the standard
+distribution includes similar variations of the VM (interpreter),
+which is often referred to as a “runtime”:
+
+* `ocamlrun` - the standard interpreter
+* `ocamlrund` - debug interpreter
+* `ocamlruni` - instrumented instrumented
+
+I _think_ this just means that the interpreter was linked with one of
+the libs listed above, but I'm not sure.
+
+=== User-Defined VM Runtimes
+
+* `+-make-runtime+`
+* `+-use-runtime+`
+
+== Application runtimes
+
+Every executable needs a runtime. For VM executables, that’s one of
+the `ocamlrun` variants (or a UDVM); for native executables, the
+runtime code is inserted into the executable by the OCaml linker.
+
+NOTE: What exactly comprises the native runtime code?
+
+NOTE: Where is the C runtime lib (e.g. `-lcrt0.o`) in all this? See https://www.reddit.com/r/C_Programming/comments/187a7qq/what_exactly_is_the_c_runtime/  (No crt0 on macos? fully static linking not supported)
+
+If you pass `-verbose` to the OCaml linker, you’ll see something like this (macos):
+
+----
+cc -c -Wno-trigraphs
+-o '/var/folders/wz/dx0cgvqx5qn802qmc3d4hcfr0000gr/T/camlstartup9b8d17.o'
+'/var/folders/wz/dx0cgvqx5qn802qmc3d4hcfr0000gr/T/camlstartup48e20c.s'
+
+cc -O2 -fno-strict-aliasing -fwrapv -pthread
+-o 'bazel-out/darwin_arm64-fastbuild-ST-c365da17cd31/bin/ns/bottomup/ns_aliases/rgb/test.exe'
+...
+-L/Users/gar/.local/share/obazl/opam/2.3.0/root/5.1.0/lib/ocaml
+'/var/folders/wz/dx0cgvqx5qn802qmc3d4hcfr0000gr/T/camlstartup9b8d17.o'
+'/Users/gar/.local/share/obazl/opam/2.3.0/root/5.1.0/lib/ocaml/std_exit.o'
+...
+'/Users/gar/.local/share/obazl/opam/2.3.0/root/5.1.0/lib/ocaml/stdlib.a'
+'/Users/gar/.local/share/obazl/opam/2.3.0/root/5.1.0/lib/ocaml/libasmrun.a'
+...
+----
+
+This tells us two things: first, that OCaml generates the assembler
+file `camlstartup48e20c.s`, which must be assembled and linked into
+the executable, and second, that the OCaml native linker in fact delegates
+the final link step to the `cc` linker.
+
+To inspect that mysterious `camlstartup48e20c.s` file, use the
+(undocumented) option `+-dstartup+`. OCaml will then save the file
+under name `<exename>.startup.s` in the output directory that contains
+the `<exename>` output; in this example, `test.exe.startup.s`.
+
+To pass options to the `cc` commands that OCaml generates, use
+`-ccopt`. For example to pass `+--verbose+` to the (linux) linker:
+`+opts = ["-ccopt", "-Wl,--verbose"]+`. On macos, the linker flags are
+`+-t+`, `+-print_statistics+`, etc.
+
+
+Which show that 

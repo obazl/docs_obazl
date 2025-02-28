@@ -1,0 +1,46 @@
+= Status
+---
+:page-permalink: /status
+:page-tags: [status]
+:page-keywords: notes, tips, cautions, warnings, admonitions
+:page-last_updated: May 2, 2022
+:page-sidebar: false
+:page-last_updated: Feb 12, 2024
+:page-toc: true
+:toc: true
+---
+
+// layout: rules_ocaml_ug
+// title: Status
+// permalink: /status
+// tags: [status]
+// keywords: notes, tips, cautions, warnings, admonitions
+// last_updated: Feb 12, 2024
+// sidebar: false
+// :pa
+// toc: true
+// ---
+
+
+
+== link:https://github.com/obazl/rules_ocaml[rules_ocaml,window=_blank]
+
+Version 5.0.0.alpha available for testing 2/10/2025.  See link:https://github.com/obazl/rules_ocaml/tree/3.0.0.beta/docs[rules_ocaml/docs,window=_blank] for status information and roadmap.
+
+== link:https://github.com/obazl/tools_opam[tools_opam,window=_blank]
+
+OPAM integration. Version 1.0.0.alpha available for testing Feb 10 2025.
+
+== link:https://github.com/obazl/coswitch[coswitch,window=_blank]
+
+IMPORTANT: Retired!  Replaced by `tools_opam`.
+
+== link:https://github.com/obazl/tools_ocaml[tools_ocaml,window=_blank]
+
+The `rules_ocaml` repository contains rules for tools in the standard OCaml distribitions only.  Third-party tools (e.g. the link:https://gallium.inria.fr/~fpottier/menhir[menhir] parser-generator) may require custom Bazel rules. link:https://github.com/obazl/tools_ocaml[tools_ocaml,window=_blank] is intended as a repository for such rules.
+
+== other tools
+=== link:https://github.com/obazl/mibl[mibl,window=_blank]
+
+
+=== link:https://github.com/obazl/tools_obazl[tools_obazl,window=_blank]

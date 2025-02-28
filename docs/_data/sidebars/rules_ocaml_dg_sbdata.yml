@@ -19,13 +19,17 @@ entries:
       levels: two
       subfolders:
 
-      - title: OCaml build protocols
+      - title: "OCaml: tools & protocols"
         open: true
+        url: ocaml_overview
         output: web
         subfolderitems:
 
+        - title: Build protocols
+          url: ocaml_build_protocols
+          output: web
+
         - title: Compilation
-          parent: workflow
           url: ocaml_compilation
           output: web
 
@@ -36,6 +40,25 @@ entries:
         - title: Linkage
           url: ocaml_linkage
           output: web
+          subsubfolderitems:
+          - title: ToC
+            url: "#toc"
+            output: web
+          - title: Common options
+            url: "#_common-options"
+            output: web
+          - title: Native binaries
+            url: "#_native-binaries"
+            output: web
+          - title: Bytecode binaries
+            url: "#_bytecode-binaries"
+            output: web
+          - title: Foreign library linkage
+            url: "#_foreign-library-linkage"
+            output: web
+          - title: Diagnostics
+            url: "#_diagnostics"
+            output: web
 
         - title: Runtimes
           url: ocaml_runtimes
@@ -47,6 +70,10 @@ entries:
 
         - title: CC dependencies
           url: ocaml_ccdeps
+          output: web
+
+        - title: Namespacing
+          url: ocaml_namespacing
           output: web
 
       - title: Understanding Bazel
@@ -94,26 +121,59 @@ entries:
           url: transitions
           output: web
 
-    - title: Rules for OCaml
-      url: rules_ocaml
-      output: web
+      - title: rules_ocaml
+        url: rules_ocaml
+        output: web
+        levels: three
+        subfolderitems:
 
-    - title: Linkage
-      url: obazl_linkage
-      output: web
+        - title: Compilation
+          open: true
+          output: web
+          subsubfolderitems:
 
-    - title: Namespacing
-      url: namespacing
-      output: web
+          - title: Signatures
+            url: obazl_signatures
+            output: web
 
-    - title: Ppx support
-      url: ppx
-      output: web
+          - title: Structures
+            url: obazl_structures
+            output: web
+
+        - title: Linkage
+          url: obazl_linkage
+          output: web
+
+        - title: Namespacing support
+          url: obazl_namespacing
+          output: web
+          subsubfolderitems:
+
+          - title: Terminology
+            url: "#_terminology"
+            output: web
+
+          - title: Defining
+            url: "#_defining-a-namespace-library-ocaml_ns"
+            output: web
+
+          - title: NS aliasing
+            url: "#_ns-aliasing"
+            output: web
+
+          - title: Private namespaces
+            url: "#_private-namespaces"
+            output: web
+
+        - title: Ppx support
+          url: ppx
+          output: web
+
+        - title: C/C++ dependencies
+          url: cc_deps
+          output: web
 
     - title: Extending rules_ocaml
       url: extending
       output: web
 
-    - title: C/C++ dependencies
-      url: cc_deps
-      output: web

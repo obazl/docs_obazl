@@ -1,0 +1,50 @@
+= OCaml build tools & protocols
+:page-permalink: /:path/ocaml_build_protocols
+:page-layout: page_rules_ocaml
+:page-pkg: rules_ocaml
+:page-doc: dg
+:page-sidebar: rules_ocaml_dg_sbdata
+:page-parent: ['../dev-guide']
+:page-tags: [formatting]
+:page-keywords: notes, tips, cautions, warnings, admonitions
+:page-last_updated: Feb 11, 2025
+:toc: true
+
+
+Building software involves interfaces and protocols. The interfaces
+are determined by the command-line syntaxes of the tools. But
+constructing a good command line is not enough. To take the obvious
+example, to compile a module you construct a command line that
+contains all of its dependencies - that’s interface. But before you can execute that
+command, you must build the dependencies - that’s protocol.
+
+Build protocols also involve __discovery__ of such information as the
+location of dependencies in the file system. To depend on a module,
+you not only have to build it, you have to add the directory that
+contains it to the compiler’s search path by adding [nowrap]`-I path/to/dir`
+to the command line. But `path/to/dir` must be discovered by the build
+system.
+
+In Bazel, discovery of such information is an active process: the
+implementation of the rule that compiles modules is given a set of
+dependencies, which it must interrogate (using the Bazel API) in order
+to obtain paths and other information.
+
+Build protocol also involves configuration of the build environment.
+For example, in the case of Bazel it is not enough to discover a
+dependency and its location, and then construct a command line. The
+dependency must also be explicitly registered as an input to the build
+action, which can be thought of as a kind of configuration action. To
+ensure replicability, Bazel ensures that only registered inputs will
+be accessible to build actions. A correctly-constructed command line
+whose inputs are not registered will fail because the build tool will
+not be able to find its inputs.
+
+Each of the build tools in the OCaml distribution has its own
+command-line syntax and protocol.
+
+The task for any build tool is to integrate OCaml’s build tools and
+protocols into its own interfaces and protocols. Bazel has a strict
+set of protocols that do not correspond exactly to OCaml’s build
+protocols, so a major design task for OBazl is to make them get along.
+

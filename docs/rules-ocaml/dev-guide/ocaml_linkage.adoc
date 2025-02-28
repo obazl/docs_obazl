@@ -12,14 +12,21 @@
 
 Linking is the most complex build action. Not only can the linker
 produce either native or bytecode executables, it can also emit C
-object files that can then be linked to and called by C programs.
-Furthermore, for bytecode linking, it can embed the vm interpreter
-(`ocamlrun`) in the emitted bytecode executable; alternatively, it can
-build a customized version of the interpreter containing the foreign
-libraries needed by the application code. In all cases, the user can
-choose from among standard, debug, and instrumented system runtimes,
-and where foreign libraries are involved, can choose between static
-and dynamic linking.
+object files (from the same inputs) that can then be linked to and
+called by C programs. Furthermore, for bytecode linking, it can embed
+the vm interpreter (`ocamlrun`) in the emitted bytecode executable;
+alternatively, it can build a customized version of the interpreter
+containing the foreign libraries needed by the application code. In
+all cases, the user can choose from among standard, debug, and
+instrumented system runtimes, and where foreign libraries are
+involved, can choose between static and dynamic linking.
+
+The OCaml tools can also emit a “packed” module, which can be
+considered a kind of binary output.
+
+NB: design choices. One `ocaml_binary` with attributes to control
+output type, or one rule for each type, e.g. `ocaml_executable`,
+`ocaml_pack`, `ocaml_obj`, etc.
 
 Invoking the compiler (`ocamlc`, `ocamlopt`) without `-c` or `-a`
 tells it to produce an executable (unless you also pass `-output-obj`
@@ -40,9 +47,7 @@ https://ocaml.org/manual/5.3/comp.html#s%3Acomp-options[5.3.13 (ocamlc options),
 
 == Native binaries
 
-=== What to build
-
-==== executable
+=== Executables
 
 This is the default. “The output of the linking phase is a regular
 Unix or Windows executable file. It does not need ocamlrun to run.”
@@ -50,7 +55,7 @@ Unix or Windows executable file. It does not need ocamlrun to run.”
 
 * `-nodynlink` “Allow the compiler to use some optimizations that are valid only for code that is statically linked to produce a non-relocatable executable. The generated code cannot be linked to produce a shared library nor a position-independent executable (PIE). Many operating systems produce PIEs by default, causing errors when linking code compiled with -nodynlink. Either do not use `-nodynlink` or pass the option `-ccopt -no-pie` at link-time.” (https://ocaml.org/manual/5.3/native.html[5.3.16 (ocamlopt)])
 
-==== C object
+=== C objects
 
 * `-output-obj`. “Cause the linker to produce a C object file instead of a native/bytecode executable file.”
 * `-output-complete-obj`. “Same as -output-obj option except the object file produced includes the runtime and autolink libraries.”
@@ -58,9 +63,8 @@ Unix or Windows executable file. It does not need ocamlrun to run.”
 
 == Bytecode binaries
 
-=== What to build
 
-==== executable
+=== Executables
 
 This is the default. “The output of the linking phase is a file
 containing compiled bytecode that can be executed by the OCaml
@@ -86,7 +90,7 @@ See https://ocaml.org/manual/5.3/intfc.html#ss:staticlink-c-code[5.3.22.1.3 Stat
 
 * `-output-complete-exe`.  “Build a self-contained executable by linking a C object file containing the bytecode program, the OCaml runtime system and any other static C code given to ocamlc. The resulting effect is similar to -custom, except that the bytecode is embedded in the C code so it is no longer accessible to tools such as ocamldebug. On the other hand, the resulting binary is resistant to strip.”
 
-==== C object
+=== C objects
 
 * `-output-obj`. “Cause the linker to produce a C object file instead of a native/bytecode executable file.”
 * `-output-complete-obj`. “Same as -output-obj option except the object file produced includes the runtime and autolink libraries.”
@@ -96,7 +100,31 @@ See https://ocaml.org/manual/5.3/intfc.html#ss:staticlink-c-code[5.3.22.1.3 Stat
 
 NOTE: “Foreign library” means a static (`.a`) or shared (`.so`, `.dll` on Windows) library, whether produced from C/C++ code or some other language, e.g. Rust.
 
-There are three ways to tell the linker about foreign libraries:
+=== The three linkage strategies
+
+* Build-time: static libs. All links are resolved at build-time by the
+  OCaml linker. The OCaml linker is actually a linker driver; it does
+  not do the job itself, but delegates it to the linker of the CC
+  toolchain. You can see the command it uses by passing `-verbose`.
+
+* Load-time: shared objects. Links are resolved by the system
+  loader-linker when the program is launched. This is conventionally
+  called dynamic linkage, but it’s only partially dynamic. At
+  build-time, the OCaml (i.e. CC) linker partially resolves links,
+  which are then fully resolved by the system linker at load-time.
++
+IMPORTANT: For native executables, this strategy requires that both
+the OCaml linker and the system loader be informed of the location of
+the DSO! For example, on the mac, we need to pass `-Lpath/to/lib/dir`
+so that the OCaml linker (i.e. the CC linker) can find the DSO at
+build time, and we also need to pass `-rpath path/to/lib/dir` so that
+the dynamic linker (`dyld`) can find the DSO at load/launch time. (In both
+cases, use `-ccopt` to pass the parameter to OCaml.)
++
+* Run-time: shared objects. Linkage is controlled by the application
+  itself at run-time, using `dlopen`, `dlsym`, etc.
+
+So there are three ways to tell OCaml about foreign libraries:
 
 * Static libraries:
   ** Native binaries: pass directly on the command line (e.g. `libfoo.a`);
@@ -107,7 +135,9 @@ There are three ways to tell the linker about foreign libraries:
             library directories, also pass `-ccopt -L__dir__`
 
 * Shared libraries:
-  ** Native binaries: pass on command line (e.g. `libfoo.so`)
+  ** Native binaries:
+    *** the manual says pass on command line (e.g. `libfoo.so`) but this does not work
+    *** pass on cmd line using `-cclib -lfoo -ccopt -Lpath/to/libfoo`
   ** Bytecode binaries: (default mode)
     *** pass directly on command line
     *** “a library named `dll__name__.so` (respectively, `.dll`)
@@ -206,3 +236,18 @@ run-time system ocamlrun at program start-up time.
 +
 Adds the directory `__dir__` to the run-time search path for shared C libraries. At link-time, shared libraries are searched in the standard search path (the one corresponding to the -I option). The `-dllpath` option simply stores dir in the produced executable file, where ocamlrun can find it and use it as described in section 15.3.
 
+== Diagnostics
+
+=== MacOS
+
+Linker options (`man ld`); pass with `+-ccopts+`, with or without `+-verbose+`:
+
+* `-t` Logs each file (object, archive, or dylib) the linker loads.  Useful for debugging problems with search paths where the wrong library is loaded.
+* `-why_load` Log why each object file in a static library is loaded. That is, what symbol was needed.  Also called -whyload for compatibility.
+* `-why_live symbol_name` Logs a chain of references to symbol_name.
+  Only applicable with -dead_strip . It can help debug why something
+  that you think should be dead strip removed is not removed. See
+  -exported_symbols_list for syntax and use of wildcards.
+* `-print_statistics` Logs information about the amount of memory and time the linker used.
+* `-order_file_statistics` Logs information about the processing of a -order_file.
+* `-map map_file_path` Writes a map file to the specified path which details all symbols and their addresses in the output image.

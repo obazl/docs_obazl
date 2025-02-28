@@ -13,6 +13,18 @@ $('#mysidebar').height($(".nav").height());
 //     contentDiv.innerHTML = await fetchHtmlAsText("home.html");
 // }
 
+window.addEventListener('hashchange', function(e){
+    tgt = $(":target").attr('id')
+    var oldHash = e.oldURL.split('#')[1] || "";
+    // console.log("oldhash: " + oldHash)
+    if (oldHash) {
+        oldli = "li." + oldHash
+        // console.log("li: " + oldli)
+        $(oldli).removeClass("active")
+    }
+    $("li." + tgt).addClass("active")
+})
+
 // window.addEventListener("scroll", function () {
 
 //     console.log("hello");

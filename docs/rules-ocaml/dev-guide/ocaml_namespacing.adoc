@@ -1,0 +1,89 @@
+= OCaml namespacing
+:page-permalink: /:path/ocaml_namespacing
+:page-layout: page_rules_ocaml
+:page-pkg: rules_ocaml
+:page-doc: dg
+:page-sidebar: rules_ocaml_dg_sbdata
+:page-parent: ['../dev-guide']
+:page-tags: [formatting]
+:page-keywords: notes, tips, cautions, warnings, admonitions
+:page-last_updated: Feb 11, 2025
+:toc: true
+
+
+== Overview
+
+The OCaml __language__ is fully namespaced. Every module determines a
+namespace, and all code must be written within a module.
+
+However, the mapping from OCaml namespaces (modules) to the filesystem
+is more restricted. Unlike many languages (Java, Rust, Go, etc.), the
+OCaml language does not define a mapping from module paths like
+`A.B.f` to a directory hierarchy in the file system. Instead, the
+OCaml __compiler__ defines a mapping from single modules to the file
+system. When it tries to compile `A.B.f`, it does not look for `f` in
+`a/b.ml`; instead it looks for a definition of `A` in the current
+file; if it does not find one, it searches the file system (in the
+directories set using the `-I` compiler option) for a compiled module
+named `A`. Specifically, it looks for `a.cmi` (or equivalently
+`A.cmi`). If it finds what it’s looking for, it then proceeds to look
+for a definition of `B`, in similar fashion, and proceeds in the same
+way until it finds a definition of `f`.
+
+In other words, the search space for the compiler (and linker) is
+flat. The drawback of this flat-namespace implementation is that a
+project may contain multiple modules with the same name, for example
+`foo/a.ml` and `bar/a.ml`. Then you may end up with both `A` modules
+in the search path, with no reliable way to control which one the
+compiler finds. You can avoid this in your own code by using unique
+names, but you cannot do much to eliminate the possibility that
+external libraries may introduce name clashes.
+
+One way around this problem is to use pseudo-namespacing in your file
+names. Instead of `foo/a.ml` and `foo/b.ml`, you use `+foo__a.ml+`
+and `+foo_b.ml+` or similar. This does not eliminate the
+possibility of name clashes (a library you use might have the same
+names) but it reduces it considerably. The major drawback of this
+method is that you must use the same name in your code, writing
+`+Foo__a.Foo__b.f+` instead of `A.B.f`.
+
+== Type-level module aliases
+
+Version 4.02 of the compiler introduced
+https://ocaml.org/manual/5.3/modulealias.html#s:module-alias[Type-level
+module aliases], which can be used to emulate filesystem-based
+namespacing.
+
+== Implementation techniques
+
+Module aliasing is a very flexible technique that can be used in ways
+that are not possible in languages with predefined language/filesystem
+mapping.
+
+=== Open accessibility
+
+In most languages with predefined filesystem namespacing, an object like
+`a/b/c` can only be accessed via its fully qualified name. But in
+OCaml, it is possible to access the components of a namespace
+directly, without namespace qualification. That’s because segmented
+names like `A.B.C` always resolve to a single compiled module, e.g.
+`+a__B__C+` or `+b__C+`. So if you have a namespace with a large
+number of components, you always have the option of depending directly
+on just one or a few of its components, rather than relying on the
+entire namespace (i.e. as a library).
+
+=== Composability
+
+OCaml pseudo-namespaces are composable. Suppose module `C` is in
+namespace `B`, so it can be accessed as `B.C` (which might resolve to
+`+b__C+` for example). Then `B` can be included in namespace `A`, so
+that `C` can also be accessed as `A.B.C`. For example, `a.ml` might
+contain aliasing equation `+module B = B+`, and since `+B.ml+` already
+contains aliasing equation `+module C = B__C+`, both `B.C` and `A.B.C`
+will resolve to `+b__C+`.
+
+=== Private namespaces
+
+Example: https://github.com/ocaml/ocaml-re[ocaml-re], a regular
+expression library for OCaml.
+

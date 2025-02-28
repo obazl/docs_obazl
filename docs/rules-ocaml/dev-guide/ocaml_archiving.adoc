@@ -11,6 +11,49 @@
 :toc: true
 
 
+OCaml archives that contain modules that depend on foreign (CC)
+libraries may embed information about those dependencies in the
+archive metadata (`.cma/.cmxa` files). The protocol is that when such
+archives are used to build an executable, the OCaml linker will
+extract that dependency metadata and add it to the link command line,
+as `-lfoo` for example. This entails that the locations of such
+libraries be known to the linker. In most cases involving opam
+libraries, this location will already be known to the linker. This is
+because opam itself follows a kind of protocol; for example, shared
+object files intended for use in bytecode executables must be named
+`dllfoo.so` rather than the more common `libfoo.so`, and opam installs
+them in the `stublibs` subdirectory of the switch in which they are
+installed.
+
+But this is not a requirement; an OCaml archive may depend on foreign
+libraries that are not installed in the `stublibs` directory. In that
+case, the location of the share library may also be recorded in the
+archive metadata. Or not.
+
+So the protocol is roughly this: build the shared object file; build
+the OCaml archive, passing the share object file on the command line
+using `-dllib -lfoo`; then build an executable depending on the
+archive, and the linker will automatically discover the share library
+dependencies and construct the appropriate command line.
+
+Now the problem with this, from a Bazelian perspective, is that the
+metadata involved - the information in the archive file recording
+foreign library dependencies, etc. - is hidden from the build system.
+In order to guarantee replicable builds, Bazel needs to know all
+inputs and outputs of every build action - that’s part of the “Bazel
+protocol”. So using the “standard” build protocol for archives with
+foreign library dependencies undermines the Bazel protocol. It means
+that Bazel will not know that the executable directly depends on the
+foreign libraries. (More exactly, it means that in order for such
+builds to succeed under Bazel, __all__ stublibs must be listed as
+inputs to every “build an executable” action, whether they are needed
+or not.)
+
+More precisely: the only way that Bazel can discover the (hidden)
+foreign library dependencies of an OCaml archive is to actually read
+the archive file, possibly by using `ocamlobjinfo`. (That’s a possible
+future enhancement.)
+
 == Native
 
 == Bytecode

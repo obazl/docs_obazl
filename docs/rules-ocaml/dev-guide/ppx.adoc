@@ -124,4 +124,18 @@ by opam_import? Everywhere else its a matter of toolchain selection,
 which is handled by Bazel.
 
 
+== ppx_inline_test
 
+WARNING: running ppx_inline_test with a bytecode executable, with
+default dynamic linking, will fail with this message:
+----
+You are doing something unexpected with the tests. No tests have
+been run. You should use the inline_tests_runner script to run
+tests.
+----
+The problem is that the lib depends on a C function that indicates
+testing is underway. With standard dynamic linking that code is in a
+shared lib that gets loaded but does not override the default
+implementation (which is in `base`, which ppx_inline_test depends on).
+Static linking (`+-custom+` or `+-output-complete-exe+`) fixes the
+problem.
