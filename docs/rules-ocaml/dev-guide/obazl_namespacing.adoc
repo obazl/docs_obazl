@@ -41,7 +41,7 @@ An ns-lib may contain ns-submodules that are not ns-qualified.
 
 
 
-== Defining a namespace library: `ocaml_ns`
+== Defining ns libraries: `ocaml_ns`
 
 The `+ocaml_ns+` rule defines a namespace.
 
@@ -92,10 +92,102 @@ target , so it will compile `a.ml` to `+foo__A.cmi+` and
 Clients that want to use the namespace can list it in either the
 `deps` or the `open` attribute.
 
-=== NS aliasing
+== Importing ns submodules
 
-With the `+ns_aliases+` attribute you can include other namespaces as
-components of your namespace under new names. For example, suppose
+OCaml has several methods for “importing” modules:
+
+* `include M` - imports and exports all definitions in module M
+* `open M` - imports but does not export  all definitions in module M
+
+OBazl namespace libraries support analogous methods for importing
+modules, which are expressed by attributes on the `ocaml_ns` rule:
+
+=== `+manifest+`
+
+Type: *string_list*
+
+“Endogenous” ns-submodules are modules that elect membership in the ns
+by using the `ns` attribute of the `ocaml_signature` and
+`ocaml_module` rules. Endogenous ns-submodules are namespace-prefixed;
+for example, if `A` is an endogenous ns-submodule of ns `Foo`, then
+`a.ml` will be compile to `foo_A.cmi` etc.
+
+Endogenous ns-submodules must be listed in the `manifest` attribute.
+They must be listed by (unprefixed) name, as strings not labels.
+
+[source="starlark"]
+----
+ocaml_ns(name = "nsRGB", ns = "RGB", manifest = ["Red", "Green", "Blue"])
+----
+
+The ns-submodules must use the `ns` attribute to elect membership in the ns:
+
+[source="starlark"]
+----
+ocaml_module(name = "Red",   ns = ":nsRGB", struct = "red.ml")
+ocaml_module(name = "Green", ns = ":nsRGB", struct = "green.ml")
+ocaml_module(name = "Blue",  ns = ":nsRGB", struct = "blue.ml")
+----
+
+
+
+The generated ns-resolver module (`nsRGB.ml`) will contain:
+
+----
+module Red = RGB__Red
+module Green = RGB__Green
+module Blue = RGB__Blue
+----
+
+
+
+===  `+include+`
+
+Type: *label_keyed_string_dict*
+
+“Exoogenous” ns-submodules are modules that are included in an
+ ns-library, but they do not elect membership and so are not renamed
+ using the ns-prefix of the namespace. But they _may_ be aliased
+ within the namespace library.
+
+For example, suppose the targets listed here in the `include` dictionary
+are plain `ocaml_module` targets, with no namespace election.
+
+[source="starlark"]
+----
+ocaml_ns(
+    name = "nsColors", ns = "Colors",
+    include = {
+        "//ns/bottomup/include/colors/rgb:Red"   : "R",
+        "//ns/bottomup/include/colors/rgb:Green" : "G",
+        "//ns/bottomup/include/colors/rgb:Blue"  : "B",
+    }
+)
+----
+
+The generated ns-resolver module (`Colors.ml`) will contain:
+
+----
+module R = Red
+module G = Green
+module B = Blue
+----
+
+This makes the included modules accessible as `Colors.R`, `Colors.G`,
+and `Colors.B`. The OBazl dependency management logic will ensure that
+the resolved modules - the original `Red.cmi` etc. - are available where needed.
+
+Note that `include` modules can be located anywhere in your project.
+
+
+=== `+ns_manifest+`
+
+Type: *label_keyed_string_dict*
+
+With the `+ns_manifest+` attribute you can include other namespaces as
+components of your namespace under new names.
+
+For example, suppose
 
            //ns/bottomup/embed/colors/rgb:nsRGB
 
@@ -106,39 +198,71 @@ namespace `Foo` like so:
 [source="starlark"]
 ----
 ocaml_ns(
-    name = "nsFoo",
-    ns   = "foo",
-    visibility = ["//visibility:public"],
-    ns_aliases = {"//ns/bottomup/embed/colors/rgb:nsRGB": "RGB"}
+    name = "nsFoo", ns = "foo",
+    ns_manifest = {"//ns/bottomup/embed/colors/rgb:nsRGB": "RGB"}
 )
 ----
 
 This aliases `+Foo.RGB.Red+` to `+Rgb.Red+` etc.
 
-The implementation is simple. The `+ns_aliases+` attribute has type
-`+label_keyed_string_dict+`, which means they keys are labels and the
+The implementation is simple. The `+ns_manifest+` attribute has type
+*label_keyed_string_dict*, which means the keys are labels and the
 values are strings. Since the keys are labels of `+ocaml_ns+` targets,
-the rule implementation can extract the original namespace name, and use it and the string values to construct aliases, e.g.
+the rule implementation can extract the original namespace name, and
+use it and the string values to construct aliases, e.g.
 
     module RGB = Rgb
 
 And since the keys are dependencies, the rule implementation can
 ensure that they are listed as inputs to any compile/link actions.
 
-For an example see https://github.com/obazl/demos_obazl/tree/main/rules_ocaml/ns/bottomup/ns_aliases.
+For an example see https://github.com/obazl/demos_obazl/tree/main/rules_ocaml/ns/bottomup/ns_manifest.
 
-=== Include
+=== `+ns_include+`
 
-=== Open
+Type: *label_list*
 
-=== Hierarchy
+In this example, suppose `+//ns/bottomup/ns_include/colors/rgb:nsRGB+`
+is an `+ocaml_ns+` target, defining a namespace whose name is `RGB`,
+with ns-submodules `RGB.Red`, `RGB.Green`, and `RGB.Blue`. Using
+`+ns_include+` to import this ns is analogous to using OCaml’s
+`include` to import a module and export its contents.
 
-== Private namespaces
+[source="starlark"]
+----
+ocaml_ns(
+    name = "nsColors", ns = "Colors",
+    ns_include = ["//ns/bottomup/ns_include/colors/rgb:nsRGB"]
+)
+----
 
-Private namespaces are visible and accessible only to targets within
-the same Bazel package.
+Because the original ns-resolver module `RGB.ml` contains
 
-To make a namespace private, set the `visibility` attribute of
+----
+module Red = RGB__Red
+module Green = RGB__Green
+module Blue = RGB__Blue
+----
+
+the generated ns-resolver module (`Colors.ml`) will contain:
+
+----
+module Red = RGB__Red
+module Green = RGB__Green
+module Blue = RGB__Blue
+----
+
+This aliases `+Foo.Red+` to the same module as `+RGB.Red+` does, etc.
+
+== Composing ns libraries
+
+== Quasi-private ns libraries
+
+Bazel’s `visibility` attribute controls visibility of build targets.
+Targets marked with [nowrap]`+visibility=["//visibility:private"]+` are
+visible and accessible only to targets within the same Bazel package.
+
+To make a namespace (Bazel-) private, set the `visibility` attribute of
 `+ocaml_ns+` to private:
 
 [source="starlark"]
@@ -151,6 +275,9 @@ ocaml_ns(
 )
 ----
 
+OBazl uses a naming convention to make namespaces quasi-private. I
+learned this from Dune, but it is not specific to any build system.
+
 The namespace resolver module file generated by this target will be
 named `+re__.ml+`, and any ns-submodule `A` in this namespace will
 named `+re__A.ml+` . The trailing `+__+` in the resolver module name
@@ -162,6 +289,16 @@ If the visibility were set to anything other than private, then the
 resolver module file would be named `re.ml` (without the trailing
 `+__+`), but the ns-submodules in the namespace would still be renamed
 with the same prefix (`+re__+`).
+
+Note that there are two concepts in play here, Bazel’s notion of
+visibility, and our internal use of suffix `+__+` to prevent name
+clashes, so ns resolver names like `+foo__.ml+` will not clash with
+`foo.ml`. So that suffix makes the ns quasi-private, not in the sense
+of restricting its visibility (as Bazel’s `visibility` attribute
+does), but in the sense of requiring, of users who want to access it,
+that they use the awkward module name `+Foo__+`.
+
+
 
 If `re.ml` depends on (the ns-submodules in) the namespace, use the
 `open` attribute:
@@ -178,6 +315,10 @@ ocaml_module(
 <1> Since `nsRe` is the label of the private `ocaml_ns` target, which
 produces ns resolver module `+re__.ml+`, this will translate into
 command line option `+-open Re__+`.
+
+WARNING: `+open = [":nsRe"]+` is *NOT* to be confused with `+ns =
+":nsRe"+`! The latter expresses membership in the namespace; the
+former indicates a dependency on the namespace, but not membership.
 
 An alternative strategy for handling the case where you have a module
 with the same name as the ns is to give the namespace a completely
@@ -198,3 +339,23 @@ This would generate resolver module `nsre.ml`, and ns-submodule prefix
 since in this case `open = [":nsRe"]`
 will translate to `+-open
 Nsre+`.
+
+== Implementation
+
+Implementation code is in https://github.com/obazl/rules_ocaml/blob/3.0.0.dev/build/_rules/ocaml_ns_resolver/[impl_ns_resolver.bzl,window=_blank].
+
+Tasks:
+
+* Derive ns name, ns_prefix, fs_prefix, etc.
+* Construct aliasing equations for ns-submodules
+  ** attr `manifest` - use ns_prefix
+  ** attr `include` - exogenous modules, not ns-prefixed
+  ** attr `ns_manifest` - exogenous ns libs, exported under their ns
+  ** attr `open` - exogenous ns libs, submods exported under local ns
+
+The fs prefix will always have suffix `+__+`. It will only be _used_
+for `manifest` elements.
+
+If `visibility` is set to private, then the ns name will match the
+fs_prefix, in having suffix `+__+`.
+

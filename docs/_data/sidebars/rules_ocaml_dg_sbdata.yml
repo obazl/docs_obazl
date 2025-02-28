@@ -148,21 +148,26 @@ entries:
           url: obazl_namespacing
           output: web
           subsubfolderitems:
-
+          - title: ToC
+            url: "#toc"
+            output: web
           - title: Terminology
             url: "#_terminology"
             output: web
-
-          - title: Defining
-            url: "#_defining-a-namespace-library-ocaml_ns"
+          - title: Defining ns libraries
+            url: "#_defining-ns-libraries-ocaml_ns"
             output: web
-
-          - title: NS aliasing
-            url: "#_ns-aliasing"
+          - title: Importing ns submodules
+            url: "#_importing-ns-submodules"
             output: web
-
-          - title: Private namespaces
-            url: "#_private-namespaces"
+          - title: Composing ns libraries
+            url: "#_composing-ns-libraries"
+            output: web
+          - title: Quasi-private ns libraries
+            url: "#_quasi-private-ns-libraries"
+            output: web
+          - title: Implementation
+            url: "#_implementation"
             output: web
 
         - title: Ppx support
