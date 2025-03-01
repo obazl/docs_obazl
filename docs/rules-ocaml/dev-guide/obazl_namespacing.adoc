@@ -50,7 +50,7 @@ The `+ocaml_ns+` rule defines a namespace.
 ocaml_ns(
     name = "nsFoo",
     ns   = "foo",
-    manifest = [":A", ...],
+    submodules = [":A", ...],
     ...
 )
 ----
@@ -60,9 +60,9 @@ ocaml_ns(
   the `ns` attribute. For example, if `+ns = "foo"+`, then the prefix
   will be `+foo__+`. The filesystem prefix will be used to construct
   the filenames (and thus module names) of the ns-submodules listed in
-  the `manifest` list.
+  the `submodules` list.
 * It generates a file containing module aliasing equations for the
-  modules listed in the `manifest` attribute. In this example, `+module
+  modules listed in the `submodules` attribute. In this example, `+module
   A = Foo__A+`. The module prefix `+Foo__+` is formed by capitalizing
   the first character of the filesystem prefix.
 * It passes the filesystem prefix on to clients in its provider
@@ -92,7 +92,7 @@ target , so it will compile `a.ml` to `+foo__A.cmi+` and
 Clients that want to use the namespace can list it in either the
 `deps` or the `open` attribute.
 
-== Importing ns submodules
+== Composing ns libraries
 
 OCaml has several methods for “importing” modules:
 
@@ -102,7 +102,7 @@ OCaml has several methods for “importing” modules:
 OBazl namespace libraries support analogous methods for importing
 modules, which are expressed by attributes on the `ocaml_ns` rule:
 
-=== `+manifest+`
+=== `+submodules+`
 
 Type: *string_list*
 
@@ -112,12 +112,12 @@ by using the `ns` attribute of the `ocaml_signature` and
 for example, if `A` is an endogenous ns-submodule of ns `Foo`, then
 `a.ml` will be compile to `foo_A.cmi` etc.
 
-Endogenous ns-submodules must be listed in the `manifest` attribute.
+Endogenous ns-submodules must be listed in the `submodules` attribute.
 They must be listed by (unprefixed) name, as strings not labels.
 
 [source="starlark"]
 ----
-ocaml_ns(name = "nsRGB", ns = "RGB", manifest = ["Red", "Green", "Blue"])
+ocaml_ns(name = "nsRGB", ns = "RGB", submodules = ["Red", "Green", "Blue"])
 ----
 
 The ns-submodules must use the `ns` attribute to elect membership in the ns:
@@ -141,7 +141,7 @@ module Blue = RGB__Blue
 
 
 
-===  `+include+`
+===  `+import_as+`
 
 Type: *label_keyed_string_dict*
 
@@ -150,17 +150,17 @@ Type: *label_keyed_string_dict*
  using the ns-prefix of the namespace. But they _may_ be aliased
  within the namespace library.
 
-For example, suppose the targets listed here in the `include` dictionary
+For example, suppose the targets listed here in the `import_as` dictionary
 are plain `ocaml_module` targets, with no namespace election.
 
 [source="starlark"]
 ----
 ocaml_ns(
     name = "nsColors", ns = "Colors",
-    include = {
-        "//ns/bottomup/include/colors/rgb:Red"   : "R",
-        "//ns/bottomup/include/colors/rgb:Green" : "G",
-        "//ns/bottomup/include/colors/rgb:Blue"  : "B",
+    import_as = {
+        "//ns/bottomup/import_as/colors/rgb:Red"   : "R",
+        "//ns/bottomup/import_as/colors/rgb:Green" : "G",
+        "//ns/bottomup/import_as/colors/rgb:Blue"  : "B",
     }
 )
 ----
@@ -177,14 +177,14 @@ This makes the included modules accessible as `Colors.R`, `Colors.G`,
 and `Colors.B`. The OBazl dependency management logic will ensure that
 the resolved modules - the original `Red.cmi` etc. - are available where needed.
 
-Note that `include` modules can be located anywhere in your project.
+Note that `import_as` modules can be located anywhere in your project.
 
 
-=== `+ns_manifest+`
+=== `+ns_import_as+`
 
 Type: *label_keyed_string_dict*
 
-With the `+ns_manifest+` attribute you can include other namespaces as
+With the `+ns_import_as+` attribute you can include other namespaces as
 components of your namespace under new names.
 
 For example, suppose
@@ -193,19 +193,19 @@ For example, suppose
 
 is a namespace whose name is `Rgb`, with ns-submodules `Rgb.Red`,
 `Rgb.Green`, and `Rgb.Blue`. You can make this available within
-namespace `Foo` like so:
+namespace `Foo` under the name `Bar` like so:
 
 [source="starlark"]
 ----
 ocaml_ns(
     name = "nsFoo", ns = "foo",
-    ns_manifest = {"//ns/bottomup/embed/colors/rgb:nsRGB": "RGB"}
+    ns_import_as = {"//ns/bottomup/embed/colors/rgb:nsRGB": "Bar"}
 )
 ----
 
-This aliases `+Foo.RGB.Red+` to `+Rgb.Red+` etc.
+This aliases `+Foo.Bar.Red+` to `+Rgb.Red+` etc.
 
-The implementation is simple. The `+ns_manifest+` attribute has type
+The implementation is simple. The `+ns_import_as+` attribute has type
 *label_keyed_string_dict*, which means the keys are labels and the
 values are strings. Since the keys are labels of `+ocaml_ns+` targets,
 the rule implementation can extract the original namespace name, and
@@ -216,23 +216,25 @@ use it and the string values to construct aliases, e.g.
 And since the keys are dependencies, the rule implementation can
 ensure that they are listed as inputs to any compile/link actions.
 
-For an example see https://github.com/obazl/demos_obazl/tree/main/rules_ocaml/ns/bottomup/ns_manifest.
+For an example see https://github.com/obazl/demos_obazl/tree/main/rules_ocaml/ns/bottomup/ns_import_as.
 
-=== `+ns_include+`
+=== `+ns_merge+`
 
 Type: *label_list*
 
-In this example, suppose `+//ns/bottomup/ns_include/colors/rgb:nsRGB+`
+Merges one namespace into another, making its submodules accessible directly.
+
+In this example, suppose `+//ns/bottomup/ns_merge/colors/rgb:nsRGB+`
 is an `+ocaml_ns+` target, defining a namespace whose name is `RGB`,
 with ns-submodules `RGB.Red`, `RGB.Green`, and `RGB.Blue`. Using
-`+ns_include+` to import this ns is analogous to using OCaml’s
+`+ns_merge+` to import this ns is analogous to using OCaml’s
 `include` to import a module and export its contents.
 
 [source="starlark"]
 ----
 ocaml_ns(
     name = "nsColors", ns = "Colors",
-    ns_include = ["//ns/bottomup/ns_include/colors/rgb:nsRGB"]
+    ns_merge = ["//ns/bottomup/ns_merge/colors/rgb:nsRGB"]
 )
 ----
 
@@ -254,7 +256,6 @@ module Blue = RGB__Blue
 
 This aliases `+Foo.Red+` to the same module as `+RGB.Red+` does, etc.
 
-== Composing ns libraries
 
 == Quasi-private ns libraries
 
@@ -348,13 +349,13 @@ Tasks:
 
 * Derive ns name, ns_prefix, fs_prefix, etc.
 * Construct aliasing equations for ns-submodules
-  ** attr `manifest` - use ns_prefix
-  ** attr `include` - exogenous modules, not ns-prefixed
-  ** attr `ns_manifest` - exogenous ns libs, exported under their ns
+  ** attr `submodules` - use ns_prefix
+  ** attr `import_as` - exogenous modules, not ns-prefixed
+  ** attr `ns_import_as` - exogenous ns libs, exported under their ns
   ** attr `open` - exogenous ns libs, submods exported under local ns
 
 The fs prefix will always have suffix `+__+`. It will only be _used_
-for `manifest` elements.
+for `submodules` elements.
 
 If `visibility` is set to private, then the ns name will match the
 fs_prefix, in having suffix `+__+`.

@@ -157,9 +157,6 @@ entries:
           - title: Defining ns libraries
             url: "#_defining-ns-libraries-ocaml_ns"
             output: web
-          - title: Importing ns submodules
-            url: "#_importing-ns-submodules"
-            output: web
           - title: Composing ns libraries
             url: "#_composing-ns-libraries"
             output: web
