@@ -1,0 +1,110 @@
+= C Tools
+:page-permalink: /:path/c_tools
+:page-layout: page_rules_ocaml
+:page-pkg: rules_ocaml
+:page-doc: dg
+:page-sidebar: rules_ocaml_dg_sbdata
+:page-parent: ['../dev-guide']
+:page-tags: [formatting]
+:page-keywords: notes, tips, cautions, warnings, admonitions
+:page-last_updated: Feb 11, 2025
+:toc: true
+
+
+== Linux
+
+== MacOS
+
+The static linker (or “link editor”) is `ld`, the dynamic linker is `dyld`.
+
+Relevant manpages:  `ld(1)`, `dyld(1)`, `dyld_info(1)` (not `dyldinfo`);
+
+=== `xcrun`
+
+“[P]rovides a means to locate or invoke developer tools from the command-line”.
+
+E.g. compare `xcrun -find <tool>` and `which <tool>`.
+
+    xcrun --show-sdk-path
+
+    xcrun --find clang
+          Finds the path to the clang binary in the default SDK.
+
+    xcrun --sdk macosx --show-sdk-path
+          Prints the path to the current Mac OS X SDK.
+
+    xcrun --sdk macosx clang test.c
+        compile using clang from the macosx sdk
+
+
+=== `xcode-select(1)`
+
+
+=== `xcodebuild(1)`
+
+    xcodebuild -showsdks
+
+Lists all available SDKs that Xcode knows about.
+
+
+=== `otool(1)`
+
+“Preferred tool for inspecting Mach-O binaries”
+
+See also `llvm-otool(1)`, `objdump(1)`, etc. “The unambiguous
+invocation of otool(1) can be found as otool-classic(1) and typically
+will be run by using the xcrun(1) utility:
+
+              % xcrun otool-classic -hv file
+
+	-l print the load commands
+	-L print shared libraries used
+	-D print shared library id name
+	-C print linker optimization hints
+
+=== `install_name_tool(1)`
+
+=== `libtool(1)`
+
+“The libtool command takes the specified input object files and
+creates a library for use with the link editor, ld(1).”
+
+* “Libtool with -static is intended to replace ar(5) and ranlib.”
+
+* “To build a dynamically linked library, libtool, runs the link
+editor, ld(1), with -dylib once for each architecture present in the
+input objects and then lipo(1) to create a universal file if needed.”
+
+“To maximize sharing of a dynamically linked shared library the objects should be compiled with the -dynamic flag of cc(1) to produce indirect undefined references and position-independent code.”
+
+=== `lipo`
+
+“Creates or operates on ``universal'' (multi-architecture) files.”
+
+=== `vtool`
+
+“Displays and edits build and source version numbers embedded in the
+Mach-O(5) file format.”
+
+----
+$  vtool -show bazel-bin/src/test.exe
+bazel-bin/src/test.exe:
+Load command 11
+      cmd LC_BUILD_VERSION
+  cmdsize 32
+ platform MACOS
+    minos 14.0
+      sdk 14.5
+   ntools 1
+     tool LD
+  version 1053.12
+Load command 12
+      cmd LC_SOURCE_VERSION
+  cmdsize 16
+  version 0.0
+----
+
+
+
+
+

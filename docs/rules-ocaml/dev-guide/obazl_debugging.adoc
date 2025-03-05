@@ -1,0 +1,76 @@
+= Diagnostics & Debugging
+:page-permalink: /:path/obazl_debugging
+:page-layout: page_rules_ocaml
+:page-pkg: rules_ocaml
+:page-doc: dg
+:page-sidebar: rules_ocaml_dg_sbdata
+:page-parent: ['../dev-guide']
+:page-tags: [formatting]
+:page-keywords: notes, tips, cautions, warnings, admonitions
+:page-last_updated: Feb 11, 2025
+:toc: true
+
+
+NB: OCaml `-verbose` flag means only “‘print calls to external
+commands”; it does not make OCaml itself more verbose. For that you
+can use the (mostly undocumented) `-d` flags like `-dtypedtree`.
+
+    bazel build tgt --output_groups=all
+
+    bazel build pkg/... --show_result=20
+
+    bazel aquery tgt
+
+    bazel build tgt --config=showpp
+
+    bazel query 'deps(tgt)'
+
+    bazel cquery 'src:Hello' --output starlark --starlark:expr='providers(target)'
+
+etc.
+
+== Tools
+
+=== @obazl//inspect
+
+=== Third-party tools
+
+
+== CC libs
+
+=== Linux
+
+=== MacOS
+
+Flags: pass with `+-ccopts+`, with or without `+-verbose+`.
+
+----
+ -Wa,<args> Pass the comma separated arguments in args to the assembler.
+ -Xassembler <arg>        Pass arg to the assembler.
+
+
+ -Wl,<args>        Pass the comma separated arguments in args to the linker.
+ -Xlinker <arg>        Pass arg to the linker.
+
+ -Wp,<args>        Pass the comma separated arguments in args to the preprocessor.
+ -Xpreprocessor <arg>        Pass arg to the preprocessor.
+
+ -Xanalyzer <arg>        Pass arg to the static analyzer.
+
+
+----
+
+cc verbosity: `-v`.  This is for the cc driver, not the tools (compiler, linker, etc.)
+
+Linker verbosity (`man ld`):
+
+* `-t` Logs each file (object, archive, or dylib) the linker loads.  Useful for debugging problems with search paths where the wrong library is loaded.
+* `-why_load` Log why each object file in a static library is loaded. That is, what symbol was needed.  Also called -whyload for compatibility.
+* `-why_live symbol_name` Logs a chain of references to symbol_name.
+  Only applicable with -dead_strip . It can help debug why something
+  that you think should be dead strip removed is not removed. See
+  -exported_symbols_list for syntax and use of wildcards.
+* `-print_statistics` Logs information about the amount of memory and time the linker used.
+* `-order_file_statistics` Logs information about the processing of a -order_file.
+* `-map map_file_path` Writes a map file to the specified path which details all symbols and their addresses in the output image.
+

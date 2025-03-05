@@ -1,0 +1,113 @@
+= Testing
+:page-permalink: /:path/obazl_testing
+:page-layout: page_rules_ocaml
+:page-pkg: rules_ocaml
+:page-doc: dg
+:page-sidebar: rules_ocaml_dg_sbdata
+:page-parent: ['../dev-guide']
+:page-tags: [formatting]
+:page-keywords: notes, tips, cautions, warnings, admonitions
+:page-last_updated: Feb 11, 2025
+:toc: true
+
+
+== `ocaml_test`
+
+Currently, the `ocaml_test` rule takes a compiled “main” module, plus
+prologue and epilogue modules, and links them into a test executable.
+It’s essentially equivalent to the `ocaml_binary` rule.
+
+This works, but a better strategy would be for `ocaml_test` to take a
+structfile as input (no need for a signature for a test executable),
+and to perform two actions: compiling and linking. This would allow us
+to put a transition on the dependencies, which would allow us to
+control the interfaces used by them. This in turn would allow us to
+select the signature used by the modules under test: for testing the
+public interface, use the signature provided on the `ocaml_module`
+target, and for testing the implementation, ignore the provided
+signature and have the compiler generate the principle - most
+general - signature.
+
+== Implementation testing
+
+IMPORTANT: This is a planned enhancement, not currently supported.
+
+A common complaint is that a public interface restricts the testing
+surface of a structure. Test code can only exercise the API exposed by
+the interface.
+
+One way around this is to use `ppx_inline_test` or `ppx_expect`, or
+something similar.
+
+Another option is to maintain separate interfaces, one public and one
+private, for testing purposes. The private interface exposes
+implementation details inaccessible through the public interface.
+
+But since the OCaml compiler will automatically generate the most
+general interface in the absence of an explicitly specified public
+interface, we do not need to maintain a separate, “private” `.mli`
+file for implementation testing. All we need is a method for selecting
+the interface.  That’s something the build system can do.
+
+Here is how that might look under OBazl. Say you have a module `a.ml`
+will dozens of top-level symbols, of which only a subset is exposed by
+`a.mli`. You can write a test file, `a_pubtest.ml` that exercises the
+public API. To test the non-public parts you write `a_privtest.ml`.
+Now the task for the build system is to build `A` with the appropriate
+interface. When you compile, link, and run `a_pubtest.ml`, you want
+`a.ml` to be compiled with `a.mli`; when you compile, link and run
+`a.privtest.ml`, you want `a.ml` to be compiled without any `.mli`
+file, so that the compiler will generate the principle interface that
+exposes all toplevel symbols in `a.ml`.
+
+We can do this in Bazel by using a transition function on the
+dependencies of the test files. Both will depend on `a.ml`. The
+transition function will set a configuration flag, say
+`@rules_ocaml//api`, to either `public` or `private`, depending on
+which test file we’re using. We add a hidden attribute to the
+`ocaml_module` rule, whose value is `@rules_ocaml//api`. Then at
+compile time, the rule can examine that attribute and decide which
+interface to use. If the attribute is set to `private`, then the rule
+will ignore the `sig` attribute, and compile the module as a
+freestanding module. This will have the side-effect of generating the
+most general interface (`.cmi` file) for the module.
+
+To make this work, `ocaml_test` must list the modules under test as
+dependencies of the test module. Currently it does not work that way;
+the test module is compiled separately, by an `ocaml_module` rule, and
+then passed to the `ocaml_test` rule. The modules under test are
+dependencies of the `ocaml_module` rule. So with the current
+implementation there is no way for the `ocaml_test` target to tell the
+modules under test which interface to use. Well, it might be possible,
+but it seems infelicitous. If `ocaml_test` were redesigned to take a
+test source file as input, and to support deps, then we could add an
+attribute to it specifying which API to use, and the transition
+function could transmit that information to dependencies. For example:
+
+----
+ocaml_test(
+    name = "aprivtest",
+    struct = "a_privtest.ml",  # tests the implementation code of A
+    api  = "private",
+    deps = [":A"]
+)
+ocaml_test(
+    name = "apubtest",
+    struct = "a_pubtest.ml",  # tests the public API of A
+    api  = "public",
+    deps = [":A"]
+)
+ocaml_module(
+    name = "A",
+    struct = "a.ml"
+    sig  = "a.mli"
+)
+----
+
+When test `aprivtest` is run, the transition would pass `private` to
+the `ocaml_module` target, which would then disregard the `sig`
+attribute. When test `apubtest` is run, the `ocaml_module` target
+would build the module using `a.mli`. (I believe `a.ml` would only be
+compiled once, but I’m not sure.)
+
+I haven’t tested this, but I think it would work.

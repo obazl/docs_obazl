@@ -175,7 +175,19 @@ entries:
           url: cc_deps
           output: web
 
+        - title: Testing
+          url: obazl_testing
+          output: web
+
+        - title: Diagnostics & Debugging
+          url: obazl_debugging
+          output: web
+
     - title: Extending rules_ocaml
       url: extending
+      output: web
+
+    - title: C tools
+      url: c_tools
       output: web
 
