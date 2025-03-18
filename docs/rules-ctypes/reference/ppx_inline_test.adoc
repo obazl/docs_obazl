@@ -1,0 +1,71 @@
+
+= ppx_inline_test
+:page-permalink: /:path/ppx_inline_test
+:page-layout: page_rules_ocaml
+:page-pkg: rules_ocaml
+:page-doc: refman
+:page-sidebar: rules_ppx_refman_sbdata
+:page-parent: ['../reference']
+:page-tags: [tools,ocaml]
+:page-keywords: notes, tips, cautions, warnings, admonitions
+:page-last_updated: May 25, 2022
+
+## ppx_inline_test
+
+`load("@rules_ppx//build:rules.bzl", "ppx_inline_test")`
+
+[.prototype]
+pass:[
+ppx_inline_test(*, <a href="#ppx_inline_test-name">name</a>, <a href="#ppx_inline_test-data">data</a>, <a href="#ppx_inline_test-archive_deps">archive_deps</a>, <a href="#ppx_inline_test-cc_deps">cc_deps</a>, <a href="#ppx_inline_test-cc_libs">cc_libs</a>, <a href="#ppx_inline_test-cc_linkall">cc_linkall</a>, <a href="#ppx_inline_test-cc_linkopts">cc_linkopts</a>,
+                <a href="#ppx_inline_test-compatible_with">compatible_with</a>, <a href="#ppx_inline_test-data_prefix_map">data_prefix_map</a>, <a href="#ppx_inline_test-deprecation">deprecation</a>, <a href="#ppx_inline_test-diff_cmd">diff_cmd</a>, <a href="#ppx_inline_test-env">env</a>, <a href="#ppx_inline_test-epilogue">epilogue</a>, <a href="#ppx_inline_test-exe">exe</a>,
+                <a href="#ppx_inline_test-exec_compatible_with">exec_compatible_with</a>, <a href="#ppx_inline_test-exec_properties">exec_properties</a>, <a href="#ppx_inline_test-features">features</a>, <a href="#ppx_inline_test-flaky">flaky</a>, <a href="#ppx_inline_test-local">local</a>, <a href="#ppx_inline_test-opts">opts</a>, <a href="#ppx_inline_test-package_metadata">package_metadata</a>,
+                <a href="#ppx_inline_test-prologue">prologue</a>, <a href="#ppx_inline_test-restricted_to">restricted_to</a>, <a href="#ppx_inline_test-runtime">runtime</a>, <a href="#ppx_inline_test-shard_count">shard_count</a>, <a href="#ppx_inline_test-size">size</a>, <a href="#ppx_inline_test-tags">tags</a>, <a href="#ppx_inline_test-target_compatible_with">target_compatible_with</a>,
+                <a href="#ppx_inline_test-testonly">testonly</a>, <a href="#ppx_inline_test-testsuites">testsuites</a>, <a href="#ppx_inline_test-timeout">timeout</a>, <a href="#ppx_inline_test-toolchains">toolchains</a>, <a href="#ppx_inline_test-visibility">visibility</a>, <a href="#ppx_inline_test-vm_linkage">vm_linkage</a>)
+]
+
+
+ppx inline test doc...
+
+=== Attributes
+[.rule_attrs]
+[cols="1,1,1,1,1"]
+|===
+| Name  | Description | Type | Mandatory | Default
+
+| +++<a id="ppx_inline_test-name"></a>+++name
+|  +++A unique name for this macro instance. Normally, this is also the name for the macro's main or only target. The names of any other targets that this macro might create will be this name with a string suffix.+++   | +++<a href="https://bazel.build/concepts/labels#target-names">Name</a>+++ | required | | +++<a id="ppx_inline_test-data"></a>+++data
+|  +++Runtime dependencies: list of labels of data files needed by this executable at runtime.+++   | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++ | optional |  `None` | +++<a id="ppx_inline_test-archive_deps"></a>+++archive_deps
+|  +++Force archiving of library dependencies+++   | +++Boolean+++ | optional |  `None` | +++<a id="ppx_inline_test-cc_deps"></a>+++cc_deps
+|  +++Dictionary specifying C/C++ library dependencies. Key: a target label; value: a linkmode string, which determines which file to link. Valid linkmodes: 'default', 'static', 'dynamic', 'shared' (synonym for 'dynamic'). For more information see [CC Dependencies: Linkmode](../ug/cc_deps.md#linkmode).+++   | +++<a href="https://bazel.build/rules/lib/dict">Dictionary: Label -> String</a>+++ | optional |  `None` | +++<a id="ppx_inline_test-cc_libs"></a>+++cc_libs
+|  -   | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++ | optional |  `None` | +++<a id="ppx_inline_test-cc_linkall"></a>+++cc_linkall
+|  +++True: use `-whole-archive` (GCC toolchain) or `-force_load` (Clang toolchain). Deps in this attribute must also be listed in cc_deps.+++   | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++ | optional |  `None` | +++<a id="ppx_inline_test-cc_linkopts"></a>+++cc_linkopts
+|  +++List of C/C++ link options. E.g. ["-lstd++"].+++   | +++List of strings+++ | optional |  `None` | +++<a id="ppx_inline_test-compatible_with"></a>+++compatible_with
+|  +++<a href="https://bazel.build/reference/be/common-definitions#common.compatible_with">Inherited rule attribute</a>+++   | +++<a href="https://bazel.build/concepts/labels">List of labels</a>; <a href="https://bazel.build/reference/be/common-definitions#configurable-attributes">nonconfigurable</a>+++ | optional |  `None` | +++<a id="ppx_inline_test-data_prefix_map"></a>+++data_prefix_map
+|  +++Map for replacing path prefixes of data files+++   | +++<a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a>+++ | optional |  `None` | +++<a id="ppx_inline_test-deprecation"></a>+++deprecation
+|  +++<a href="https://bazel.build/reference/be/common-definitions#common.deprecation">Inherited rule attribute</a>+++   | +++String; <a href="https://bazel.build/reference/be/common-definitions#configurable-attributes">nonconfigurable</a>+++ | optional |  `None` | +++<a id="ppx_inline_test-diff_cmd"></a>+++diff_cmd
+|  -   | +++<a href="https://bazel.build/concepts/labels">Label</a>+++ | optional |  `None` | +++<a id="ppx_inline_test-env"></a>+++env
+|  +++Env variables+++   | +++<a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a>+++ | optional |  `None` | +++<a id="ppx_inline_test-epilogue"></a>+++epilogue
+|  +++List of OCaml dependencies.+++   | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++ | optional |  `None` | +++<a id="ppx_inline_test-exe"></a>+++exe
+|  +++By default, executable name is derived from 'name' attribute; use this to override.+++   | +++String+++ | optional |  `None` | +++<a id="ppx_inline_test-exec_compatible_with"></a>+++exec_compatible_with
+|  +++<a href="https://bazel.build/reference/be/common-definitions#common.exec_compatible_with">Inherited rule attribute</a>+++   | +++<a href="https://bazel.build/concepts/labels">List of labels</a>; <a href="https://bazel.build/reference/be/common-definitions#configurable-attributes">nonconfigurable</a>+++ | optional |  `None` | +++<a id="ppx_inline_test-exec_properties"></a>+++exec_properties
+|  +++<a href="https://bazel.build/reference/be/common-definitions#common.exec_properties">Inherited rule attribute</a>+++   | +++<a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a>+++ | optional |  `None` | +++<a id="ppx_inline_test-features"></a>+++features
+|  +++<a href="https://bazel.build/reference/be/common-definitions#common.features">Inherited rule attribute</a>+++   | +++List of strings+++ | optional |  `None` | +++<a id="ppx_inline_test-flaky"></a>+++flaky
+|  +++<a href="https://bazel.build/reference/be/common-definitions#test.flaky">Inherited rule attribute</a>+++   | +++Boolean; <a href="https://bazel.build/reference/be/common-definitions#configurable-attributes">nonconfigurable</a>+++ | optional |  `None` | +++<a id="ppx_inline_test-local"></a>+++local
+|  +++<a href="https://bazel.build/reference/be/common-definitions#test.local">Inherited rule attribute</a>+++   | +++Boolean; <a href="https://bazel.build/reference/be/common-definitions#configurable-attributes">nonconfigurable</a>+++ | optional |  `None` | +++<a id="ppx_inline_test-opts"></a>+++opts
+|  +++List of compile options; overrides configurable default options. Supports `+-no-+` prefix for each option; for example, `-no-linkall`.+++   | +++List of strings+++ | optional |  `None` | +++<a id="ppx_inline_test-package_metadata"></a>+++package_metadata
+|  +++<a href="https://bazel.build/reference/be/common-definitions#common.package_metadata">Inherited rule attribute</a>+++   | +++<a href="https://bazel.build/concepts/labels">List of labels</a>; <a href="https://bazel.build/reference/be/common-definitions#configurable-attributes">nonconfigurable</a>+++ | optional |  `None` | +++<a id="ppx_inline_test-prologue"></a>+++prologue
+|  +++List of OCaml dependencies.+++   | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++ | optional |  `None` | +++<a id="ppx_inline_test-restricted_to"></a>+++restricted_to
+|  +++<a href="https://bazel.build/reference/be/common-definitions#common.restricted_to">Inherited rule attribute</a>+++   | +++<a href="https://bazel.build/concepts/labels">List of labels</a>; <a href="https://bazel.build/reference/be/common-definitions#configurable-attributes">nonconfigurable</a>+++ | optional |  `None` | +++<a id="ppx_inline_test-runtime"></a>+++runtime
+|  +++runtime to use+++   | +++<a href="https://bazel.build/concepts/labels">Label</a>+++ | optional |  `None` | +++<a id="ppx_inline_test-shard_count"></a>+++shard_count
+|  +++<a href="https://bazel.build/reference/be/common-definitions#test.shard_count">Inherited rule attribute</a>+++   | +++Integer+++ | optional |  `None` | +++<a id="ppx_inline_test-size"></a>+++size
+|  +++<a href="https://bazel.build/reference/be/common-definitions#test.size">Inherited rule attribute</a>+++   | +++String; <a href="https://bazel.build/reference/be/common-definitions#configurable-attributes">nonconfigurable</a>+++ | optional |  `None` | +++<a id="ppx_inline_test-tags"></a>+++tags
+|  +++<a href="https://bazel.build/reference/be/common-definitions#common.tags">Inherited rule attribute</a>+++   | +++List of strings; <a href="https://bazel.build/reference/be/common-definitions#configurable-attributes">nonconfigurable</a>+++ | optional |  `None` | +++<a id="ppx_inline_test-target_compatible_with"></a>+++target_compatible_with
+|  +++<a href="https://bazel.build/reference/be/common-definitions#common.target_compatible_with">Inherited rule attribute</a>+++   | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++ | optional |  `None` | +++<a id="ppx_inline_test-testonly"></a>+++testonly
+|  +++<a href="https://bazel.build/reference/be/common-definitions#common.testonly">Inherited rule attribute</a>+++   | +++Boolean; <a href="https://bazel.build/reference/be/common-definitions#configurable-attributes">nonconfigurable</a>+++ | optional |  `None` | +++<a id="ppx_inline_test-testsuites"></a>+++testsuites
+|  +++testsuites ...+++   | +++List of strings; <a href="https://bazel.build/reference/be/common-definitions#configurable-attributes">nonconfigurable</a>+++ | required | | +++<a id="ppx_inline_test-timeout"></a>+++timeout
+|  +++<a href="https://bazel.build/reference/be/common-definitions#test.timeout">Inherited rule attribute</a>+++   | +++String; <a href="https://bazel.build/reference/be/common-definitions#configurable-attributes">nonconfigurable</a>+++ | optional |  `None` | +++<a id="ppx_inline_test-toolchains"></a>+++toolchains
+|  +++<a href="https://bazel.build/reference/be/common-definitions#common.toolchains">Inherited rule attribute</a>+++   | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++ | optional |  `None` | +++<a id="ppx_inline_test-visibility"></a>+++visibility
+|  +++The visibility to be passed to this macro's exported targets. It always implicitly includes the location where this macro is instantiated, so this attribute only needs to be explicitly set if you want the macro's targets to be additionally visible somewhere else.+++   | +++<a href="https://bazel.build/concepts/labels">List of labels</a>; <a href="https://bazel.build/reference/be/common-definitions#configurable-attributes">nonconfigurable</a>+++ | optional | | +++<a id="ppx_inline_test-vm_linkage"></a>+++vm_linkage
+|  +++custom, dynamic or static. Custom means link with -custom flag; static with -output-complete-exe+++   | +++String+++ | optional |  `None` |===
+
+

@@ -89,6 +89,10 @@ entries:
   - title: tools_obazl
     open: true
     output: web
+    folderitems:
+    - title: User Guide
+      url: tools-obazl/user-guide
+      output: web
 
   - title: Extensions
     open: true
@@ -98,7 +102,7 @@ entries:
       url: OCamlCcInfo
       output: web
     - title: rules_ctypes
-      url: OCamlCcInfo
+      url: rules-ctypes
       output: web
     - title: rules_jsoo
       open: true
@@ -127,19 +131,35 @@ entries:
     - title: Javascript
       url: OCamlCcInfo
       output: web
-    - title: Ruse
+    - title: Rust
       url: OCamlCcInfo
       output: web
 
-  - title: Providers
+  - title: Demos
     open: true
     output: web
     folderitems:
-
-    - title: OCamlCcInfo
-      url: OCamlCcInfo
+    - title: demos_obazl
+      external_url: https://github.com/obazl/demos_obazl
       output: web
-    - title: OCamlDepsProvider
-      url: OCamlDepsProvider
+    - title: demo_hello
+      external_url: https://github.com/obazl/demo_hello
+      output: web
+    - title: demos_ctypes
+      external_url: https://github.com/obazl/demos_ctypes
+      output: web
+
+  - title: Related tools
+    open: true
+    output: web
+    folderitems:
+    - title: mibl
+      external_url: https://github.com/obazl/mibl
+      output: web
+    - title: sunlark
+      external_url: https://github.com/obazl/sunlark
+      output: web
+    - title: sealark
+      external_url: https://github.com/obazl/sealark
       output: web
 

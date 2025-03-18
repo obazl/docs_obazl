@@ -597,6 +597,41 @@ stardoc(
 )
 
 ################################################################
+stardoc(
+    name = "ctypes_module",
+    input = "@rules_ctypes//build/rules:ctypes.bzl",
+    symbol_names = ["ctypes_module"],
+    out = "ctypes_module.adoc",
+    header_template = "//stardoc/templates/asciidoc:header_empty.vm",
+    macro_template = "//stardoc/templates/asciidoc:macro_ppx_refman.vm",
+    deps  = [
+        "@rules_ocaml//build:stardoc",
+        "@rules_ctypes//build/rules:ctypes_genrule.bzl",
+
+        "@rules_cc//cc:defs.bzl",
+        "@rules_cc//cc:action_names.bzl",
+        "@rules_cc//cc:find_cc_toolchain.bzl",
+        "@rules_cc//cc/common",
+        "@rules_cc//cc/toolchains:toolchain_rules",
+        "@rules_cc//cc:cc_test.bzl",
+        "@rules_cc//cc:cc_binary.bzl",
+        "@rules_cc//cc:cc_import.bzl",
+        "@rules_cc//cc:cc_library.bzl",
+        "@rules_cc//cc:cc_shared_library.bzl",
+        "@rules_cc//cc:objc_import.bzl",
+        "@rules_cc//cc:objc_library.bzl",
+        "@protobuf//bazel:cc_proto_library_bzl",
+
+        "@bazel_tools//tools/cpp:toolchain_utils.bzl",
+        "@bazel_skylib//lib:dicts",
+        "@bazel_skylib//lib:paths",
+        "@bazel_skylib//lib:structs",
+        "@bazel_skylib//rules:common_settings",
+    ],
+)
+
+
+################################################################
 # pandoc(
 #     name = "index",
 #     src = "index_refman.md",

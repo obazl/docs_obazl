@@ -107,7 +107,7 @@ entries:
       url: providers
       output: web
     - title: Toolchains
-      url: toolchains
+      url: toolchains-ocaml
       output: web
     - title: Transitions
       url: transitions

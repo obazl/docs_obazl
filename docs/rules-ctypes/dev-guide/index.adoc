@@ -1,0 +1,19 @@
+= Developer Guide: rules_ctypes
+:page-permalink: /:path/index.html
+:page-layout: page_rules_ocaml
+:page-pkg: rules_ocaml
+:page-doc: dg
+:page-parent: ['../']
+:page-sidebar: rules_ctypes_sbdata
+:page-tags: [formatting]
+:page-keywords: notes, tips, cautions, warnings, admonitions
+:page-last_updated: Feb 11, 2025
+:toc: true
+
+
+AUDIENCES:
+
+* Developers who would like to extend `+rules_ctypes+` by defining custom rules or macros;
+* Contributors who would like to help develop, maintain, or document `+rules_ctypes+`;
+* Anybody curious about how it works.
+

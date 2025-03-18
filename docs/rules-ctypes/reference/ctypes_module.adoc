@@ -1,0 +1,99 @@
+
+= ctypes_module
+:page-permalink: /:path/ctypes_module
+:page-layout: page_rules_ocaml
+:page-pkg: rules_ocaml
+:page-doc: refman
+:page-sidebar: rules_ppx_refman_sbdata
+:page-parent: ['../reference']
+:page-tags: [tools,ocaml]
+:page-keywords: notes, tips, cautions, warnings, admonitions
+:page-last_updated: May 25, 2022
+
+## ctypes_module
+
+`load("@rules_ctypes//build/rules:ctypes.bzl", "ctypes_module")`
+
+[.prototype]
+pass:[
+ctypes_module(*, <a href="#ctypes_module-name">name</a>, <a href="#ctypes_module-api_name">api_name</a>, <a href="#ctypes_module-cchdrs">cchdrs</a>, <a href="#ctypes_module-cclibs">cclibs</a>, <a href="#ctypes_module-functions_module">functions_module</a>, <a href="#ctypes_module-functors">functors</a>, <a href="#ctypes_module-types_module">types_module</a>,
+              <a href="#ctypes_module-visibility">visibility</a>, <a href="#ctypes_module-wrapper">wrapper</a>)
+]
+
+
+== Example
+
+[source="starlark", title="MODULE.bazel"]
+----
+...
+bazel_dep(name = "tools_opam",  version = "1.0.0")
+opam = use_extension("@tools_opam//extensions:opam.bzl", "opam")
+bazel_dep(name = "rules_ctypes", version = "0.23.0")
+use_repo(opam, "opam.ctypes", "opam.ctypes-foreign")
+bazel_dep(name = "zstd", version = "1.5.5")
+...
+----
+
+[source="ocaml", title="zstd_types.ml"]
+----
+module Types (F : Ctypes.TYPE) = struct
+  ...
+end
+----
+
+[source="ocaml", title="zstd_functions.ml"]
+----
+open Ctypes
+module Types = Zstd_types.Types(Zstd_CtypesTYPE)
+module Functions (F : Cstubs.FOREIGN) = struct
+  let version_number = foreign "ZSTD_versionNumber" (void @-> returning int)
+  ...
+end
+----
+
+[source="starlark", title="BUILD.bazel"]
+----
+load("@rules_ocaml//build:rules.bzl", "ocaml_module")
+load("@rules_ctypes//build/rules:ctypes.bzl", "ctypes_module")
+ctypes_module(
+    name     = "zstd",
+    api_name = "zstd_stubs",
+    functors = {"zstd_types.ml"    : "Types",
+                "zstd_functions.ml": "Functions"},
+    cclibs   = ["@zstd"],
+    cchdrs   = ["zstd.h"]
+)
+ocaml_module(
+    name   = "Foo",
+    struct = "foo.ml",
+    deps   = [":zstd_stubs"]
+)
+----
+
+[source="ocaml", title="foo.ml"]
+----
+module F = Zstd_stubs.Functions
+module T = Zstd_stubs.Types
+let version () =
+  let n = F.version_number () in
+    ...
+----
+
+=== Attributes
+[.rule_attrs]
+[cols="1,1,1,1,1"]
+|===
+| Name  | Description | Type | Mandatory | Default
+
+| +++<a id="ctypes_module-name"></a>+++name
+|  +++A unique name for this macro instance. Normally, this is also the name for the macro's main or only target. The names of any other targets that this macro might create will be this name with a string suffix.+++   | +++<a href="https://bazel.build/concepts/labels#target-names">Name</a>+++ | required | | +++<a id="ctypes_module-api_name"></a>+++api_name
+|  +++Name of the main build target. Otherwise, defaults to <name> of this target.+++   | +++String; <a href="https://bazel.build/reference/be/common-definitions#configurable-attributes">nonconfigurable</a>+++ | optional |  `""` | +++<a id="ctypes_module-cchdrs"></a>+++cchdrs
+|  -   | +++List of strings+++ | optional |  `[]` | +++<a id="ctypes_module-cclibs"></a>+++cclibs
+|  -   | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++ | optional |  `[]` | +++<a id="ctypes_module-functions_module"></a>+++functions_module
+|  +++Default: <api_stem>_Functions+++   | +++String; <a href="https://bazel.build/reference/be/common-definitions#configurable-attributes">nonconfigurable</a>+++ | optional |  `""` | +++<a id="ctypes_module-functors"></a>+++functors
+|  +++Keys: filenames; vals: string name of functor. First record: types, second: functions+++   | +++<a href="https://bazel.build/rules/lib/dict">Dictionary: Label -> String</a>; <a href="https://bazel.build/reference/be/common-definitions#configurable-attributes">nonconfigurable</a>+++ | optional |  `{}` | +++<a id="ctypes_module-types_module"></a>+++types_module
+|  +++Default: <api_stem>_Types+++   | +++String; <a href="https://bazel.build/reference/be/common-definitions#configurable-attributes">nonconfigurable</a>+++ | optional |  `""` | +++<a id="ctypes_module-visibility"></a>+++visibility
+|  +++The visibility to be passed to this macro's exported targets. It always implicitly includes the location where this macro is instantiated, so this attribute only needs to be explicitly set if you want the macro's targets to be additionally visible somewhere else.+++   | +++<a href="https://bazel.build/concepts/labels">List of labels</a>; <a href="https://bazel.build/reference/be/common-definitions#configurable-attributes">nonconfigurable</a>+++ | optional | | +++<a id="ctypes_module-wrapper"></a>+++wrapper
+|  +++Embedded in <api_name>.ml, uses module aliases to wrap Types and Functions modules. Default: no embedded wrapper.+++   | +++String; <a href="https://bazel.build/reference/be/common-definitions#configurable-attributes">nonconfigurable</a>+++ | optional |  `""` |===
+
+

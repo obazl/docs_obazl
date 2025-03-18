@@ -1,0 +1,32 @@
+ruleset: rules_ctypes
+entries:
+- title: home
+  part: Home page
+  product: rules_ctypes
+  url:  /docs_obazl/rules-ctypes/
+  version: 2.0
+  levels: four
+  folders:
+
+  - title: rules_ctypes
+    open: true
+    output: web
+    folderitems:
+    - title: User Guide
+      levels: two
+      url: /docs_obazl/rules-ctypes/user-guide
+      output: web
+    - title: Reference
+      levels: two
+      # url: /docs_obazl/rules-ctypes/reference
+      output: web
+      subfolderitems:
+      - title: ctypes_module
+        levels: two
+        url: reference/ctypes_module
+        output: web
+
+    - title: Developer Guide
+      levels: two
+      url: /docs_obazl/rules-ctypes/dev-guide
+      output: web

@@ -80,3 +80,9 @@ ppx_transform:
 	 && cp -fv .bazel/bin/stardoc/ppx_transform.adoc \
 	docs/rules-ppx/reference
 
+################
+ctypes:
+	bazel build //stardoc:ctypes_module --show_result=20 \
+	 && cp -fv .bazel/bin/stardoc/ctypes_module.adoc \
+	docs/rules-ctypes/reference/ctypes_module.adoc
+

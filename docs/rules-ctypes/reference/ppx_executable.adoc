@@ -1,0 +1,103 @@
+
+= ppx_executable
+:page-permalink: /:path/ppx_executable
+:page-layout: page_rules_ocaml
+:page-pkg: rules_ocaml
+:page-doc: refman
+:page-sidebar: rules_ppx_refman_sbdata
+:page-parent: ['../reference']
+:page-tags: [tools,ocaml]
+:page-keywords: notes, tips, cautions, warnings, admonitions
+:page-last_updated: May 25, 2022
+
+`load("@rules_ppx//build:rules.bzl", "ppx_executable")`
+
+[.prototype]
+pass:[
+ppx_executable(<a href="#ppx_executable-name">name</a>, <a href="#ppx_executable-data">data</a>, <a href="#ppx_executable-archive_deps">archive_deps</a>, <a href="#ppx_executable-bin">bin</a>, <a href="#ppx_executable-cc_deps">cc_deps</a>, <a href="#ppx_executable-cc_linkall">cc_linkall</a>, <a href="#ppx_executable-cc_linkopts">cc_linkopts</a>, <a href="#ppx_executable-data_prefix_map">data_prefix_map</a>,
+               <a href="#ppx_executable-env">env</a>, <a href="#ppx_executable-epilogue">epilogue</a>, <a href="#ppx_executable-exe">exe</a>, <a href="#ppx_executable-main">main</a>, <a href="#ppx_executable-opts">opts</a>, <a href="#ppx_executable-ppx_codeps">ppx_codeps</a>, <a href="#ppx_executable-prologue">prologue</a>, <a href="#ppx_executable-runtime">runtime</a>, <a href="#ppx_executable-vm_linkage">vm_linkage</a>)
+]
+
+Generates a PPX executable.  Provides: [OcamlExecutableMarker](providers_ppx.md#ppxexecutableprovider).
+
+
+== Attributes
+
+[.rule_attrs]
+[cols="1,1,1,1,1"]
+|===
+| Name  | Description | Type | Mandatory | Default
+
+| +++<a class="rule-attr" id="ppx_executable-name"></a>+++name
+|  A unique name for this target. | +++<a href="https://bazel.build/concepts/labels#target-names">Name</a>+++
+| required
+| 
+| +++<a class="rule-attr" id="ppx_executable-data"></a>+++data
+|  Runtime data dependencies. E.g. a file used by %%import from ppx_optcomp. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
+| optional
+| []
+| +++<a class="rule-attr" id="ppx_executable-archive_deps"></a>+++archive_deps
+|  - | +++Boolean+++
+| optional
+| False
+| +++<a class="rule-attr" id="ppx_executable-bin"></a>+++bin
+|  Precompiled ppx executable | +++<a href="https://bazel.build/concepts/labels">Label</a>+++
+| optional
+| None
+| +++<a class="rule-attr" id="ppx_executable-cc_deps"></a>+++cc_deps
+|  C/C++ library dependencies | +++<a href="https://bazel.build/rules/lib/dict">Dictionary: Label -> String</a>+++
+| optional
+| {}
+| +++<a class="rule-attr" id="ppx_executable-cc_linkall"></a>+++cc_linkall
+|  True: use `-whole-archive` (GCC toolchain) or `-force_load` (Clang toolchain). Deps in this attribute must also be listed in cc_deps. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
+| optional
+| []
+| +++<a class="rule-attr" id="ppx_executable-cc_linkopts"></a>+++cc_linkopts
+|  List of C/C++ link options. E.g. `["-lstd++"]`. | +++List of strings+++
+| optional
+| []
+| +++<a class="rule-attr" id="ppx_executable-data_prefix_map"></a>+++data_prefix_map
+|  Map for replacing path prefixes of data files.  May be used to strip a path prefix (set value to empty string ""). | +++<a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a>+++
+| optional
+| {}
+| +++<a class="rule-attr" id="ppx_executable-env"></a>+++env
+|  Env variables | +++<a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a>+++
+| optional
+| {}
+| +++<a class="rule-attr" id="ppx_executable-epilogue"></a>+++epilogue
+|  List of OCaml dependencies. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
+| optional
+| []
+| +++<a class="rule-attr" id="ppx_executable-exe"></a>+++exe
+|  Name for output executable file.  Overrides 'name' attribute. | +++String+++
+| optional
+| ""
+| +++<a class="rule-attr" id="ppx_executable-main"></a>+++main
+|  A module to be listed after those in 'prologue' and before those in 'epilogue'. For more information see [Main Module](../ug/ppx.md#main_module). | +++<a href="https://bazel.build/concepts/labels">Label</a>+++
+| required
+| 
+| +++<a class="rule-attr" id="ppx_executable-opts"></a>+++opts
+|  List of compile options; overrides configurable default options. Supports `+-no-+` prefix for each option; for example, `-no-linkall`. | +++List of strings+++
+| optional
+| []
+| +++<a class="rule-attr" id="ppx_executable-ppx_codeps"></a>+++ppx_codeps
+|  List of non-opam adjunct dependencies (labels). | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
+| optional
+| []
+| +++<a class="rule-attr" id="ppx_executable-prologue"></a>+++prologue
+|  List of OCaml dependencies. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
+| optional
+| []
+| +++<a class="rule-attr" id="ppx_executable-runtime"></a>+++runtime
+|  runtime to use | +++<a href="https://bazel.build/concepts/labels">Label</a>+++
+| optional
+| "@rules_ocaml//rt:std"
+| +++<a class="rule-attr" id="ppx_executable-vm_linkage"></a>+++vm_linkage
+|  custom, dynamic or static. Custom means link with -custom flag; static with -output-complete-exe | +++String+++
+| optional
+| "custom"
+
+|===
+
+
+
