@@ -25,7 +25,7 @@
 
 == link:https://github.com/obazl/rules_ocaml[rules_ocaml,window=_blank]
 
-Version 5.0.0.alpha available for testing 2/10/2025.  See link:https://github.com/obazl/rules_ocaml/tree/3.0.0.beta/docs[rules_ocaml/docs,window=_blank] for status information and roadmap.
+Version 3.0.0.beta.1 available for testing 3/19/2025.  See link:https://github.com/obazl/rules_ocaml/tree/3.0.0.beta/docs[rules_ocaml/docs,window=_blank] for status information and roadmap.
 
 == link:https://github.com/obazl/tools_opam[tools_opam,window=_blank]
 
@@ -35,9 +35,9 @@ OPAM integration. Version 1.0.0.alpha available for testing Feb 10 2025.
 
 IMPORTANT: Retired!  Replaced by `tools_opam`.
 
-== link:https://github.com/obazl/tools_ocaml[tools_ocaml,window=_blank]
+// == link:https://github.com/obazl/tools_ocaml[tools_ocaml,window=_blank]
 
-The `rules_ocaml` repository contains rules for tools in the standard OCaml distribitions only.  Third-party tools (e.g. the link:https://gallium.inria.fr/~fpottier/menhir[menhir] parser-generator) may require custom Bazel rules. link:https://github.com/obazl/tools_ocaml[tools_ocaml,window=_blank] is intended as a repository for such rules.
+// The `rules_ocaml` repository contains rules for tools in the standard OCaml distribitions only.  Third-party tools (e.g. the link:https://gallium.inria.fr/~fpottier/menhir[menhir] parser-generator) may require custom Bazel rules. link:https://github.com/obazl/tools_ocaml[tools_ocaml,window=_blank] is intended as a repository for such rules.
 
 == other tools
 === link:https://github.com/obazl/mibl[mibl,window=_blank]

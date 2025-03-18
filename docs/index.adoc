@@ -6,7 +6,7 @@
 :page-sidebar: rules_ocaml_home_sbdata
 :page-tags: [bazel]
 :page-keywords: notes, tips, cautions, warnings, admonitions
-:page-last_updated: Feb 10, 2025
+:page-last_updated: Mar 18, 2025
 :page-toc: true
 :toc: true
 
