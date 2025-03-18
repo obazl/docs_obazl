@@ -1,0 +1,40 @@
+= ${macroName}
+:page-permalink: /:path/${macroName}
+:page-layout: page_rules_ocaml
+:page-pkg: rules_ocaml
+:page-doc: refman
+:page-sidebar: rules_ppx_refman_sbdata
+:page-parent: ['../reference']
+:page-tags: [tools,ocaml]
+:page-keywords: notes, tips, cautions, warnings, admonitions
+:page-last_updated: May 25, 2022
+
+#[[##]]# ${macroName}
+
+`${util.loadStatement($macroName)}`
+
+[.prototype]
+pass:[
+${util.macroSummary($macroName, $macroInfo)}
+]
+
+#if ($macroInfo.finalizer)
+This macro is a <a href="https://bazel.build/extending/macros#finalizers">rule finalizer</a>.
+
+#end
+
+${macroInfo.docString}
+
+#if (!$macroInfo.getAttributeList().isEmpty())
+=== Attributes
+[.rule_attrs]
+[cols="1,1,1,1,1"]
+|===
+| Name  | Description | Type | Mandatory | Default
+
+#foreach ($attribute in $macroInfo.getAttributeList())
+| +++<a id="${macroName}-${attribute.name}"></a>+++$attribute.name
+| #if(!$attribute.docString.isEmpty()) +++${util.markdownCellFormat($attribute.docString)}+++ #else - #end  | +++${util.attributeTypeString($attribute)}+++ | ${util.mandatoryString($attribute)} | #if(!$attribute.defaultValue.isEmpty()) ${util.markdownCodeSpan($attribute.defaultValue)} #end
+#end
+#end
+|===

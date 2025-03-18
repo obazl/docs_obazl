@@ -1,5 +1,6 @@
 {% capture sbar %}sidebar_{{page.pkg}}_{{page.doc}}{% endcapture %}
 {% assign sidebar = site.data.sidebars[page.sidebar].entries %}
+{% assign ruleset = site.data.sidebars[page.sidebar].ruleset %}
 
 <ul id="mysidebar" class="nav"> <!-- A -->
   <li class="sidebarTitle">
@@ -13,31 +14,54 @@
       {% if {{page.doc}} == "ug" %}Guide:{% endif %}
       {% if {{page.doc}} == "dg" %}Dev Guide:{% endif %}
       {% if {{page.doc}} == "refman" %}Reference:{% endif %}
-      {{page.pkg}}
+      {{ruleset]}}
     {% endif %}
     </a>
   </li>
   {% for entry in sidebar %}
   {% for folder in entry.folders %}
+  {% assign edoc = folder.url | append: ".adoc" %}
   {% if folder.output contains "web" %}
   {% if folder.folderitems == null %}
-  <li>
+    {% if folder.output contains "web" %}
     {% if folder.external_url %}
+    <li>
     <a title="{{folder.title}}"
        href="{{folder.external_url}}"
        target="_blank">
       A {{folder.title}}
     </a>
+    </li>
+    {% elsif page.url == folder.url %}
+        <li class="active">
+          <a title="{{folder.title}}"
+             href="{{folder.url}}">
+          B {{folder.title}}
+        </a>
+      </li>
+    {% elsif page.name == edoc %}
+        <li class="active">
+          <a title="{{folder.title}}"
+             class="active"
+             href="{{folder.url}}">
+            {{folder.title}}
+        </a>
+        </li>
     {% else %}
-    <a title="{{folder.title}}" href="#">
-      B {{folder.title}}
+        <li>
+    <a title="{{folder.title}}"
+       href="{{folder.url}}">
+      {{folder.title}}
     </a>
+        </li>
     {% endif %}
-  </li>
+    {% endif %}
   {% else %}
-  <li class="active">
-    <a class="folder active"
-       title="{{folder.title}}" href="#">{{folder.title}}</a>
+  <li class="active {% if folder.open %}folder{% endif %}">
+    <a class="folder"
+       title="{{folder.title}}" href="#">
+      {{folder.title}}
+    </a>
     <ul class="navlist"> <!-- B -->
       {% for folderitem in folder.folderitems %}
       {% assign fdoc = folderitem.url | append: ".adoc" %}
@@ -47,19 +71,19 @@
         <a title="{{folderitem.title}}" href="{{folderitem.external_url}}" target="_blank" rel="noopener">
           1 {{folderitem.title}}
         </a>
-        {% elsif page.url == folderitem.url %}
+      {% elsif page.url == folderitem.url %}
         <li class="active">
           <a title="{{folderitem.title}}" href="{{folderitem.url | remove: "/"}}">
           2 {{folderitem.title}}
         </a>
-        {% elsif page.name == fdoc %}
+      {% elsif page.name == fdoc %}
         <li class="sb-navitem active folder">
           <a title="{{folderitem.title}}"
              class="{% if folderitem.subfolderitems %}folder twisty{% endif %}"
              href="{{folderitem.url | remove: "/"}}">
-          3 {{folderitem.title}}
+          {{folderitem.title}}
         </a>
-        {% elsif folderitem.type == "empty" %}
+      {% elsif folderitem.type == "empty" %}
         <li class="sb-navitem">
           <a title="{{folderitem.title}}"
              href="{{folderitem.url | remove: "/"}}">
@@ -70,7 +94,7 @@
           <a title="{{folderitem.title}}"
              class="{% if folderitem.subfolderitems %}folder twisty{% endif %}"
              href="{{folderitem.url}}">
-          5 {{ folderitem.title }}
+          {{ folderitem.title }}
         </a>
         {% endif %} <!-- if folderitem.external_url -->
 
@@ -103,8 +127,11 @@
                 {{ sfitem.title }}
               </a>
               {% else %}     <!-- if folderitem.subfolderitems -->
-              <li class="sb-navitem">
+              <li class="sb-navitem"
+                id="x{{sfitem.url | remove: "#"}}"
+                >
                 <a title="{{sfitem.title}}"
+                   class="sfitem.url"
                    href="{{sfitem.url | remove: "/"}}">
                 {{ sfitem.title }}
               </a>

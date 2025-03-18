@@ -1,3 +1,4 @@
+ruleset: rules_ppx
 entries:
 - title: rules_ppx
   part: Reference Manual
@@ -25,118 +26,49 @@ entries:
     output: web
     folderitems:
 
-      - title: ocaml_binary
-        url: ocaml_binary
+    - title: ppx_executable
+      url: ppx_executable
+      output: web
+      subfolderitems:
+      - title: Configurable defaults
+        url: "#_configurable-defaults"
         output: web
-        subsubfolderitems:
-        - title: Configurable defaults
-          url: "#_configurable-defaults"
-          output: web
-        - title: Attributes
-          url: "#_attributes"
-          output: web
+      - title: Attributes
+        url: "#_attributes"
+        output: web
 
-      - title: ocaml_import
-        url: ocaml_import
+    - title: ppx_expect_test
+      url: ppx_expect_test
+      output: web
+      subfolderitems:
+      - title: Configurable defaults
+        url: "#_configurable-defaults"
         output: web
-        subsubfolderitems:
-        - title: Configurable defaults
-          url: "#_configurable-defaults"
-          output: web
-        - title: Attributes
-          url: "#_attributes"
-          output: web
+      - title: Attributes
+        url: "#_attributes"
+        output: web
 
-      - title: ocaml_library
-        url: ocaml_library
+    - title: ppx_inline_test
+      url: ppx_inline_test
+      output: web
+      subfolderitems:
+      - title: Configurable defaults
+        url: "#_configurable-defaults"
         output: web
-        subsubfolderitems:
-        - title: Configurable defaults
-          url: "#_configurable-defaults"
-          output: web
-        - title: Attributes
-          url: "#_attributes"
-          output: web
+      - title: Attributes
+        url: "#_attributes"
+        output: web
 
-      - title: ocaml_module
-        url: ocaml_module
+    - title: ppx_transform
+      url: ppx_transform
+      output: web
+      subfolderitems:
+      - title: Configurable defaults
+        url: "#_configurable-defaults"
         output: web
-        subsubfolderitems:
-        - title: Examples
-          url: "#_examples"
-          output: web
-        - title: Configurable defaults
-          url: "#_configurable-defaults"
-          output: web
-        - title: Attributes
-          url: "#_attributes"
-          output: web
-
-      - title: ocaml_ns
-        url: ocaml_ns
+      - title: Attributes
+        url: "#_attributes"
         output: web
-        subsubfolderitems:
-        - title: Configurable defaults
-          url: "#_configurable-defaults"
-          output: web
-        - title: Attributes
-          url: "#_attributes"
-          output: web
-
-      - title: ocaml_ns_config
-        url: ocaml_ns_config
-        output: web
-        subsubfolderitems:
-        - title: Configurable defaults
-          url: "#_configurable-defaults"
-          output: web
-        - title: Attributes
-          url: "#_attributes"
-          output: web
-
-      - title: ocaml_ns_module
-        url: ocaml_ns_module
-        output: web
-        subsubfolderitems:
-        - title: Configurable defaults
-          url: "#_configurable-defaults"
-          output: web
-        - title: Attributes
-          url: "#_attributes"
-          output: web
-
-      - title: ocaml_runtime
-        url: ocaml_runtime
-        output: web
-        subsubfolderitems:
-        - title: Configurable defaults
-          url: "#_configurable-defaults"
-          output: web
-        - title: Attributes
-          url: "#_attributes"
-          output: web
-
-      - title: ocaml_signature
-        url: ocaml_signature
-        output: web
-        subsubfolderitems:
-        - title: Configurable defaults
-          url: "#_configurable-defaults"
-          output: web
-        - title: Attributes
-          url: "#_attributes"
-          output: web
-
-      - title: ocaml_test
-        url: ocaml_test
-        output: web
-        subsubfolderitems:
-        - title: Configurable defaults
-          url: "#_configurable-defaults"
-          output: web
-        - title: Attributes
-          url: "#_attributes"
-          output: web
 
   - title: Providers
     open: true

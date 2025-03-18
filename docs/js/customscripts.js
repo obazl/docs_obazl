@@ -16,13 +16,15 @@ $('#mysidebar').height($(".nav").height());
 window.addEventListener('hashchange', function(e){
     tgt = $(":target").attr('id')
     var oldHash = e.oldURL.split('#')[1] || "";
-    // console.log("oldhash: " + oldHash)
+    console.log("oldhash: " + oldHash)
     if (oldHash) {
-        oldli = "li." + oldHash
-        // console.log("li: " + oldli)
+        oldli = "li#x" + oldHash
+        console.log("old id: " + oldli)
         $(oldli).removeClass("active")
     }
-    $("li." + tgt).addClass("active")
+    t = "li#x" + tgt
+    console.log("tgt: " + t)
+    $(t).addClass("active")
 })
 
 // window.addEventListener("scroll", function () {

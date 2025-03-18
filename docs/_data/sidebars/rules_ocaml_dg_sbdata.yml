@@ -1,3 +1,4 @@
+ruleset: rules_ocaml
 entries:
 - title: rules_ocaml
   part: Dev Guide
@@ -175,7 +176,14 @@ entries:
     url: extending
     output: web
 
-  - title: C tools
+  - title: CC integration
     url: c_tools
     output: web
+    folderitems:
+    - title: C tools
+      url: c_tools
+      output: web
+    - title: rules_cc
+      url: rules-cc/user-guide
+      output: web
 

@@ -58,3 +58,25 @@ tools_ocaml:
 functions:
 	bazel build //stardoc:functions \
 	&& sudo cp -v .bazel/bin/stardoc/functions.adoc docs/rules-ocaml/reference
+
+################
+ppx_executable:
+	bazel build //stardoc:ppx_executable --show_result=20 \
+	 && cp -fv .bazel/bin/stardoc/ppx_executable.adoc \
+	docs/rules-ppx/reference
+
+ppx_expect_test:
+	bazel build //stardoc:ppx_expect_test --show_result=20 \
+	 && cp -fv .bazel/bin/stardoc/ppx_expect_test.adoc \
+	docs/rules-ppx/reference
+
+ppx_inline_test:
+	bazel build //stardoc:ppx_inline_test --show_result=20 \
+	 && cp -fv .bazel/bin/stardoc/ppx_inline_test.adoc \
+	docs/rules-ppx/reference
+
+ppx_transform:
+	bazel build //stardoc:ppx_transform --show_result=20 \
+	 && cp -fv .bazel/bin/stardoc/ppx_transform.adoc \
+	docs/rules-ppx/reference
+

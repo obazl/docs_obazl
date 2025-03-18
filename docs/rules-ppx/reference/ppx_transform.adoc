@@ -1,0 +1,67 @@
+
+= ppx_transform
+:page-permalink: /:path/ppx_transform
+:page-layout: page_rules_ocaml
+:page-pkg: rules_ocaml
+:page-ruleset: rules_ppx
+:page-doc: refman
+:page-sidebar: rules_ppx_refman_sbdata
+:page-parent: ['../reference']
+:page-tags: [tools,ocaml]
+:page-keywords: notes, tips, cautions, warnings, admonitions
+:page-last_updated: May 25, 2022
+
+`load("@rules_ppx//build:rules.bzl", "ppx_transform")`
+
+[.prototype]
+pass:[
+ppx_transform(<a href="#ppx_transform-name">name</a>, <a href="#ppx_transform-src">src</a>, <a href="#ppx_transform-data">data</a>, <a href="#ppx_transform-args">args</a>, <a href="#ppx_transform-env">env</a>, <a href="#ppx_transform-opts">opts</a>, <a href="#ppx_transform-ppx">ppx</a>, <a href="#ppx_transform-print">print</a>)
+]
+
+Runs a ppx executable to transform a source file. Also propagates ppx_codeps from the provider of the ppx dependency.
+
+
+== Attributes
+
+[.rule_attrs]
+[cols="1,1,1,1,1"]
+|===
+| Name  | Description | Type | Mandatory | Default
+
+| +++<a class="rule-attr" id="ppx_transform-name"></a>+++name
+|  A unique name for this target. | +++<a href="https://bazel.build/concepts/labels#target-names">Name</a>+++
+| required
+| 
+| +++<a class="rule-attr" id="ppx_transform-src"></a>+++src
+|  A single source file (struct or sig) label. | +++<a href="https://bazel.build/concepts/labels">Label</a>+++
+| required
+| 
+| +++<a class="rule-attr" id="ppx_transform-data"></a>+++data
+|  Runtime data dependencies: list of labels of data files needed by ppx executable at runtime. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
+| optional
+| []
+| +++<a class="rule-attr" id="ppx_transform-args"></a>+++args
+|  List of args to pass to ppx executable at runtime. | +++List of strings+++
+| optional
+| []
+| +++<a class="rule-attr" id="ppx_transform-env"></a>+++env
+|  Env variables | +++<a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a>+++
+| optional
+| {}
+| +++<a class="rule-attr" id="ppx_transform-opts"></a>+++opts
+|  List of compile options; overrides configurable default options. Supports `+-no-+` prefix for each option; for example, `-no-linkall`. | +++List of strings+++
+| optional
+| []
+| +++<a class="rule-attr" id="ppx_transform-ppx"></a>+++ppx
+|  Label of `ppx_executable` target to be used to transform source before compilation. | +++<a href="https://bazel.build/concepts/labels">Label</a>+++
+| optional
+| None
+| +++<a class="rule-attr" id="ppx_transform-print"></a>+++print
+|  Format of output of PPX transform. Value must be one of `@rules_ppx//print:text`, `@rules_ppx//print:text!`.  See link:../ug/ppx.md#ppx_print[PPX Support] for more information | +++<a href="https://bazel.build/concepts/labels">Label</a>+++
+| optional
+| "@rules_ppx//print:text"
+
+|===
+
+
+

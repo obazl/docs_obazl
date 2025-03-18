@@ -1,3 +1,4 @@
+ruleset: rules_ocaml
 entries:
 - title: rules_ocaml
   part: Reference Manual

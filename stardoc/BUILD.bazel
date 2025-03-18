@@ -46,16 +46,16 @@ bzl_library(
     name = "misc",
     srcs = [
         "@rules_ocaml//build:stardoc",
-        "@rules_ocaml//build/_actions:stardoc",
-        "@rules_ocaml//build/_lib:stardoc",
-        "@rules_ocaml//build/_providers:stardoc",
-        "@rules_ocaml//build/_rules:stardoc",
-        "@rules_ocaml//build/_rules/ocaml_binary:stardoc",
-        "@rules_ocaml//build/_rules/ocaml_library:stardoc",
-        "@rules_ocaml//build/_rules/ocaml_module:stardoc",
-        "@rules_ocaml//build/_rules/ocaml_ns:stardoc",
-        "@rules_ocaml//build/_transitions:stardoc",
-        "@rules_ocaml//lib:stardoc",
+        # "@rules_ocaml//build/_actions:stardoc",
+        # "@rules_ocaml//build/_lib:stardoc",
+        # "@rules_ocaml//build/_providers:stardoc",
+        # "@rules_ocaml//build/_rules:stardoc",
+        # "@rules_ocaml//build/_rules/ocaml_binary:stardoc",
+        # "@rules_ocaml//build/_rules/ocaml_library:stardoc",
+        # "@rules_ocaml//build/_rules/ocaml_module:stardoc",
+        # "@rules_ocaml//build/_rules/ocaml_ns:stardoc",
+        # "@rules_ocaml//build/_transitions:stardoc",
+        # "@rules_ocaml//lib:stardoc",
 
         "@bazel_tools//tools/cpp:toolchain_utils.bzl",
         "@rules_cc//cc:action_names.bzl",
@@ -335,7 +335,7 @@ stardoc(
         "@rules_ocaml//providers:stardoc",
         "@rules_ocaml//ocaml/_transitions:stardoc",
         "@rules_ocaml//build/_rules/utils:stardoc",
-        "@rules_ocaml//ppx:stardoc",
+        # "@rules_ocaml//ppx:stardoc",
     ],
     symbol_names = RULE_SYMS
 )
@@ -346,7 +346,7 @@ TOOLS_OCAML_DEPS  = [
     "@bazel_skylib//lib:shell",
     "@bazel_skylib//rules:common_settings",
     "@rules_ocaml//ocaml:stardoc",
-    "@rules_ocaml//ppx:stardoc",
+    # "@rules_ocaml//ppx:stardoc",
     "@rules_ocaml//ocaml/_providers:stardoc",
 ]
 TOOLS_OCAML_HDR_TPL = "//stardoc/templates/asciidoc:header_tools_ocaml.vm"
@@ -396,7 +396,7 @@ stardoc(
         "@bazel_skylib//lib:dicts",
         "@rules_ocaml//ocaml/_debug:stardoc",
         "@rules_ocaml//ocaml:stardoc",
-        "@rules_ocaml//ppx:stardoc",
+        # "@rules_ocaml//ppx:stardoc",
         "@rules_ocaml//build/_rules:stardoc"
     ],
     # symbol_names = [
@@ -437,7 +437,7 @@ stardoc(
     provider_template = "//stardoc/templates/asciidoc:provider.vm",
     deps  = [
         "@rules_ocaml//ocaml:stardoc",
-        "@rules_ocaml//ppx:stardoc",
+        # "@rules_ocaml//ppx:stardoc",
         "@rules_ocaml//ocaml/_providers:stardoc",
         "@rules_ocaml//providers:stardoc",
     ],
@@ -461,6 +461,7 @@ stardoc(
     ]
 )
 
+################################################################
 stardoc(
     name = "rules_ppx",
     input = ":rules_ppx.bzl",
@@ -483,6 +484,74 @@ stardoc(
         # "ppx_expect_test",
     ]
 )
+
+bzl_library(
+    name = "ppx",
+    srcs = [
+        "@rules_ppx//build:stardoc",
+        "@rules_ppx//build/_rules:stardoc",
+        "@rules_ocaml//build:stardoc",
+
+        "@bazel_tools//tools/cpp:toolchain_utils.bzl",
+        "@rules_cc//cc:action_names.bzl",
+        "@rules_cc//cc:find_cc_toolchain.bzl",
+        "@bazel_skylib//lib:dicts",
+        "@bazel_skylib//lib:paths",
+        "@bazel_skylib//lib:structs",
+        "@bazel_skylib//rules:common_settings",
+        "@rules_cc//cc/common"
+    ],
+    visibility = ["//visibility:public"],
+)
+
+stardoc(
+    name = "ppx_executable",
+    input = "@rules_ppx//build:rules.bzl",
+    symbol_names = ["ppx_executable"],
+    out = "ppx_executable.adoc",
+    header_template = "//stardoc/templates/asciidoc:header_empty.vm",
+   rule_template = "//stardoc/templates/asciidoc:rule_ppx_refman.vm",
+    deps  = [
+        ":ppx",
+    ],
+)
+
+stardoc(
+    name = "ppx_expect_test",
+    input = "@rules_ppx//build:rules.bzl",
+    symbol_names = ["ppx_expect_test"],
+    out = "ppx_expect_test.adoc",
+    header_template = "//stardoc/templates/asciidoc:header_empty.vm",
+   rule_template = "//stardoc/templates/asciidoc:rule_ppx_refman.vm",
+    deps  = [
+        ":ppx",
+    ],
+)
+
+stardoc(
+    name = "ppx_inline_test",
+    input = "@rules_ppx//build:rules.bzl",
+    symbol_names = ["ppx_inline_test"],
+    out = "ppx_inline_test.adoc",
+    header_template = "//stardoc/templates/asciidoc:header_empty.vm",
+    macro_template = "//stardoc/templates/asciidoc:macro_ppx_refman.vm",
+    deps  = [
+        ":ppx",
+    ],
+)
+
+stardoc(
+    name = "ppx_transform",
+    input = "@rules_ppx//build:rules.bzl",
+    symbol_names = ["ppx_transform"],
+    out = "ppx_transform.adoc",
+    header_template = "//stardoc/templates/asciidoc:header_empty.vm",
+   rule_template = "//stardoc/templates/asciidoc:rule_ppx_refman.vm",
+    deps  = [
+        ":ppx",
+    ],
+)
+
 
 # (
 #     name = "providers_opam",

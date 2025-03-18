@@ -1,0 +1,46 @@
+= ${ruleName}
+:page-permalink: /:path/${ruleName}
+:page-layout: page_rules_ocaml
+:page-pkg: rules_ocaml
+:page-ruleset: rules_ppx
+:page-doc: refman
+:page-sidebar: rules_ppx_refman_sbdata
+:page-parent: ['../reference']
+:page-tags: [tools,ocaml]
+:page-keywords: notes, tips, cautions, warnings, admonitions
+:page-last_updated: May 25, 2022
+
+`${util.loadStatement($ruleName)}`
+
+[.prototype]
+pass:[
+${util.ruleSummary($ruleName, $ruleInfo)}
+]
+
+${ruleInfo.docString}
+
+#if (!$ruleInfo.getAttributeList().isEmpty())
+
+== Attributes
+
+[.rule_attrs]
+[cols="1,1,1,1,1"]
+|===
+| Name  | Description | Type | Mandatory | Default
+
+#foreach ($attribute in $ruleInfo.getAttributeList())
+| +++<a class="rule-attr" id="${ruleName}-${attribute.name}"></a>+++$attribute.name
+| #if(!$attribute.docString.isEmpty()) $attribute.docString #else - #end
+## ProviderNameGroup seems to be broken, we always get "Unknown Provider"
+## <br/>#if(!${attribute.getProviderNameGroupList().isEmpty()}) Provider Groups: #foreach ($pg in ${attribute.getProviderNameGroupList()})
+## <br/>Providers: #foreach ($pl in ${pg.getProviderNameList()}) <br/> [${pl}](providers_ocaml.md#${pl.toLowerCase()})#end
+## #end
+## #end
+| +++${util.attributeTypeString($attribute)}+++
+| ${util.mandatoryString($attribute)}
+| $attribute.defaultValue
+#end
+
+#end
+|===
+

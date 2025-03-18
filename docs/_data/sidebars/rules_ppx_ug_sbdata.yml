@@ -1,3 +1,4 @@
+ruleset: rules_ppx
 entries:
 - title: rules_ppx
   part: User Guide
