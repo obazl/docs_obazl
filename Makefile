@@ -1,4 +1,39 @@
-default: rules_ocaml sidebars tools_ocaml providers
+default: ns lib
+
+xdefault: rules_ocaml sidebars tools_ocaml providers
+
+import:
+	bazel build //stardoc:ocaml_import --show_result=20 \
+	 && cp -fv .bazel/bin/stardoc/ocaml_import.adoc docs/rules-ocaml/reference
+
+lib:
+	bazel build //stardoc:ocaml_library --show_result=20 \
+	 && cp -fv .bazel/bin/stardoc/ocaml_library.adoc docs/rules-ocaml/reference
+
+module:
+	bazel build //stardoc:ocaml_module --show_result=20 \
+	 && cp -fv .bazel/bin/stardoc/ocaml_module.adoc docs/rules-ocaml/reference
+
+ns:
+	bazel build //stardoc:ocaml_ns //stardoc:ocaml_ns_config //stardoc:ocaml_ns_module --show_result=20 \
+	 && cp -fv .bazel/bin/stardoc/ocaml_ns*.adoc docs/rules-ocaml/reference
+
+rt:
+	bazel build //stardoc:ocaml_runtime --show_result=20 \
+	 && cp -fv .bazel/bin/stardoc/ocaml_runtime.adoc docs/rules-ocaml/reference
+
+test:
+	bazel build //stardoc:ocaml_test --show_result=20 \
+	 && cp -fv .bazel/bin/stardoc/ocaml_test.adoc docs/rules-ocaml/reference
+
+providers:
+	bazel build \
+	//stardoc:ocamlccinfo \
+	//stardoc:ocamldepsprovider \
+	--show_result=20 \
+	 && cp -fv .bazel/bin/stardoc/OCamlCcInfo.adoc docs/rules-ocaml/reference \
+	 && cp -fv .bazel/bin/stardoc/OCamlDepsProvider.adoc docs/rules-ocaml/reference
+
 
 rules_ocaml:
 	bazel build //stardoc:rules_ocaml \
@@ -16,9 +51,9 @@ tools_ocaml:
 	sudo cp -v .bazel/bin/stardoc/cppo.adoc docs/tools-ocaml/reference/
 	sudo cp -v .bazel/bin/stardoc/menhir.adoc docs/tools-ocaml/reference/
 
-providers:
-	bazel build //stardoc:providers_ocaml \
-	&& sudo cp -v .bazel/bin/stardoc/ocaml-providers.adoc docs/rules-ocaml/reference
+# providers:
+# 	bazel build //stardoc:providers_ocaml \
+# 	&& sudo cp -v .bazel/bin/stardoc/ocaml-providers.adoc docs/rules-ocaml/reference
 
 functions:
 	bazel build //stardoc:functions \

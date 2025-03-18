@@ -1,20 +1,29 @@
-<a id="#${funcInfo.functionName}"></a>
+= ${macroName}
+:page-permalink: /:path/${macroName}
+:page-layout: page_rules_ocaml
+:page-pkg: rules_ocaml
+:page-doc: refman
+:page-sidebar: rules_ocaml_refman_sbdata
+:page-parent: ['../reference']
+:page-tags: [tools,ocaml]
+:page-keywords: notes, tips, cautions, warnings, admonitions
+:page-last_updated: May 25, 2022
 
-#[[##]]# ${funcInfo.functionName}
+#[[##]]# ${macroName}
 
-<pre>
-${util.funcSummary($funcInfo)}
-</pre>
+`${util.loadStatement($macroName)}`
 
-${funcInfo.docString}
+[.prototype]
+pass:[
+${util.macroSummary($macroName, $macroInfo)}
+]
 
-#if (!$funcInfo.getParameterList().isEmpty())
-**PARAMETERS**
+#if ($macroInfo.finalizer)
+This macro is a <a href="https://bazel.build/extending/macros#finalizers">rule finalizer</a>.
 
-
-| Name  | Description | Default Value |
-| ------------- | ------------- | ------------- |
-#foreach ($param in $funcInfo.getParameterList())
-| <a id="${funcInfo.functionName}-${param.name}"></a>$param.name | #if(!$param.docString.isEmpty()) ${util.markdownCellFormat($param.docString)} #else <p align="center"> - </p> #end  | #if(!$param.getDefaultValue().isEmpty()) <code>$param.getDefaultValue()</code> #else none #end|
 #end
-#end
+
+${macroInfo.docString}
+
+=== Attributes
+

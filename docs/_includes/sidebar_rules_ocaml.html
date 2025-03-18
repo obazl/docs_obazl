@@ -1,126 +1,180 @@
 {% capture sbar %}sidebar_{{page.pkg}}_{{page.doc}}{% endcapture %}
 {% assign sidebar = site.data.sidebars[page.sidebar].entries %}
 
-<ul id="mysidebar" class="nav">
+<ul id="mysidebar" class="nav"> <!-- A -->
   <li class="sidebarTitle">
     {% if page.parent %}
     <a href="{{page.parent[0]}}">
     {% else %}
     <a href=".">
-      {% endif %}
+    {% endif %}
+    {% if {{page.doc}} == "home" %}Table of Contents
+    {% else %}
       {% if {{page.doc}} == "ug" %}Guide:{% endif %}
       {% if {{page.doc}} == "dg" %}Dev Guide:{% endif %}
       {% if {{page.doc}} == "refman" %}Reference:{% endif %}
       {{page.pkg}}
+    {% endif %}
     </a>
   </li>
   {% for entry in sidebar %}
   {% for folder in entry.folders %}
   {% if folder.output contains "web" %}
+  {% if folder.folderitems == null %}
+  <li>
+    {% if folder.external_url %}
+    <a title="{{folder.title}}"
+       href="{{folder.external_url}}"
+       target="_blank">
+      A {{folder.title}}
+    </a>
+    {% else %}
+    <a title="{{folder.title}}" href="#">
+      B {{folder.title}}
+    </a>
+    {% endif %}
+  </li>
+  {% else %}
   <li class="active">
-    <a class="folder"
+    <a class="folder active"
        title="{{folder.title}}" href="#">{{folder.title}}</a>
-      <ul class="navlist">
-          {% for folderitem in folder.folderitems %}
-          {% if folderitem.output contains "web" %}
-          {% if folderitem.external_url %}
-          <li class="x"><a title="{{folderitem.title}}" href="{{folderitem.external_url}}" target="_blank" rel="noopener">{{folderitem.title}}</a></li>
-          {% elsif page.url == folderitem.url %}
-          <li class="active"><a title="{{folderitem.title}}" href="{{folderitem.url | remove: "/"}}">{{folderitem.title}}</a></li>
-          {% elsif folderitem.type == "empty" %}
-          <li class="y"><a title="{{folderitem.title}}" href="{{folderitem.url | remove: "/"}}">{{folderitem.title}}</a></li>
+    <ul class="navlist"> <!-- B -->
+      {% for folderitem in folder.folderitems %}
+      {% assign fdoc = folderitem.url | append: ".adoc" %}
+      {% if folderitem.output contains "web" %}
+      {% if folderitem.external_url %}
+      <li class="x">
+        <a title="{{folderitem.title}}" href="{{folderitem.external_url}}" target="_blank" rel="noopener">
+          1 {{folderitem.title}}
+        </a>
+        {% elsif page.url == folderitem.url %}
+        <li class="active">
+          <a title="{{folderitem.title}}" href="{{folderitem.url | remove: "/"}}">
+          2 {{folderitem.title}}
+        </a>
+        {% elsif page.name == fdoc %}
+        <li class="sb-navitem active folder">
+          <a title="{{folderitem.title}}"
+             class="{% if folderitem.subfolderitems %}folder twisty{% endif %}"
+             href="{{folderitem.url | remove: "/"}}">
+          3 {{folderitem.title}}
+        </a>
+        {% elsif folderitem.type == "empty" %}
+        <li class="sb-navitem">
+          <a title="{{folderitem.title}}"
+             href="{{folderitem.url | remove: "/"}}">
+          4 {{folderitem.title}}
+        </a>
+        {% else %}
+        <li class="sb-navitem folder">
+          <a title="{{folderitem.title}}"
+             class="{% if folderitem.subfolderitems %}folder twisty{% endif %}"
+             href="{{folderitem.url}}">
+          5 {{ folderitem.title }}
+        </a>
+        {% endif %} <!-- if folderitem.external_url -->
 
-          {% elsif page.name contains folderitem.url  %}
-          <li class="sb-navitem active"><a title="{{folderitem.title}}" href="{{folderitem.url | remove: "/"}}">{{folderitem.title}}</a></li>
-          {% else %}
-          <li class="sb-navitem"><a title="{{folderitem.title}}" href="{{folderitem.url | remove: "/"}}">{{folderitem.title}}</a></li>
-          {% endif %}
-          {% for subfolders in folderitem.subfolders %}
-          {% if subfolders.output contains "web" %}
-          <li class="subfolders">
-            <a class="subfolder"
-               title="{{subfolders.title}}" href="#">{{ subfolders.title }}</a>
-              <ul class="navlist">
-                  {% for subfolderitem in subfolders.subfolderitems %}
-                  {% if subfolderitem.output contains "web" %}
-                  {% if subfolderitem.external_url %}
-                  <li><a title="{{subfolderitem.title}}" href="{{subfolderitem.external_url}}" target="_blank" rel="noopener">D{{subfolderitem.title}}</a></li>
-                  {% elsif page.url == subfolderitem.url %}
-                  <li class="active"><a title="{{subfolderitem.title}}" href="{{subfolderitem.url | remove: "/"}}">C{{subfolderitem.url}}</a></li>
+        {% if folderitem.subfolderitems %}
+        <ul class="navlist folder"> <!-- C -->
+          {% for sfitem in folderitem.subfolderitems %}
+          {% assign adoc = sfitem.url | append: ".adoc" %}
+          {% if sfitem.output contains "web" %}
+          {% if sfitem.external_url %}
+          <li>
+            <a title="{{sfitem.title}}" href="{{sfitem.external_url}}" target="_blank" rel="noopener">
+              1 {{sfitem.title}}
+            </a>
+            {% elsif page.url == sfitem.url %}
+            <li class="active">
+              <a title="{{sfitem.title}}" href="{{sfitem.url | remove: "/"}}">
+              2 {{sfitem.url}}
+            </a>
+            {% elsif page.name == adoc %}
+            <li class="subsubfolders active sb-navitem">
+              <a class="subsubfolder {% if sfitem.subsubfolderitems %} twisty {% endif %}"
+                 title="{{sfitem.title}}" href="{{sfitem.url | remove: "/"}}">
+              {{sfitem.title}}
+            </a>
+            {% elsif sfitem.subsubfolderitems  %}
+            <li class="subfolders">
+              <a class="subfolder  {% if sfitem.subsubfolderitems %} twisty {% endif %}"
+                 title="{{sfitem.title}}"
+                 href="{{sfitem.url}}">
+                {{ sfitem.title }}
+              </a>
+              {% else %}     <!-- if folderitem.subfolderitems -->
+              <li class="sb-navitem">
+                <a title="{{sfitem.title}}"
+                   href="{{sfitem.url | remove: "/"}}">
+                {{ sfitem.title }}
+              </a>
+              {% endif %} <!-- if sfitem.external_url else ... endif-->
 
-                  {% elsif page.name contains subfolderitem.url ".adoc"  %}
-                  <!-- <li class="sb-navitem active"><a title="{{subfolderitem.title}}" href="{{subfolderitem.url | remove: "/"}}">B{{ subfolderitem.title }}</a></li> -->
-                  <li class="subsubfolders active sb-navitem">
-                    <a class="subsubfolder {% if subfolderitem.subsubfolderitems %} twisty {% endif %}"
-                       title="{{subfolderitem.title}}" href="{{subfolderitem.url | remove: "/"}}">{{ subfolderitem.title }}</a>
+              {% if sfitem.subsubfolderitems  %}
+              <ul> <!-- D -->
+                {% for subsubfolderitem in sfitem.subsubfolderitems %}
+                {% assign subadoc = subsubfolderitem.url | append: ".adoc" %}
+                {% if subsubfolderitem.output contains "web" %}
+                {% if subsubfolderitem.external_url %}
+                <li>
+                  <a title="{{subsubfolderitem.title}}"
+                     href="{{subsubfolderitem.external_url}}"
+                     target="_blank" rel="noopener">{{subsubfolderitem.title}}
+                  </a>
+                </li>
+                {% elsif page.url == subsubfolderitem.url %}
+                <li class="active">
+                  <a title="{{subsubfolderitem.title}}" href="{{subsubfolderitem.url | remove: "/"}}">
+                  SD{{subsubfolderitem.url}}
+                  </a>
+                </li>
+                {% elsif page.name == subadoc%}
+                <li class="sb-navitem active">
+                  <a title="{{subsubfolderitem.title}}" href="{{subsubfolderitem.url | remove: "/"}}">
+                  {{ subsubfolderitem.title }}X
+                  </a>
+                </li>
+                {% elsif subsubfolderitem.url == ":target" %}
+                <li class="sb-navitem">
+                  <a title="{{subsubfolderitem.title}}"
+                     href="{{subsubfolderitem.url | remove: "/"}}">
+                  SB{{ subsubfolderitem.title }}
+                  </a>
+                </li>
+                {% else %}
+                <li class="sb-navitem {{subsubfolderitem.url | remove: "#"}}">
+                  <a title="{{subsubfolderitem.title}}" href="{{subsubfolderitem.url | remove: "/"}}">
+                  {{ subsubfolderitem.title }}
+                  </a>
+                </li>
+                {% endif %}
+                {% endif %}
+                {% endfor %}
+              </ul> <!-- D -->
+            {% endif %} <!-- if sfitem.subsubfolderitems -->
+          </li>
+            {% endif %} <!-- if sfitem.output contains "web" -->
+            {% endfor %} <!-- for sfitem in folderitem.subfolderitems -->
+          </ul> <!-- C -->
+         {% endif %} <!-- if folderitem.subfolderitems -->
+         {% endif %}
+         {% endfor %}
 
-                    <ul>
-                      <!-- <li class="active sb-navitem">Z<a title="{{subfolderitem.title}}" href="{{subfolderitem.url | remove: "/"}}">{{ subfolderitem.title }}</a></li> -->
-                  {% for subsubfolderitem in subfolderitem.subsubfolderitems %}
-                  {% if subsubfolderitem.output contains "web" %}
-                  {% if subsubfolderitem.external_url %}
-                  <li><a title="{{subsubfolderitem.title}}" href="{{subsubfolderitem.external_url}}" target="_blank" rel="noopener">{{subsubfolderitem.title}}</a></li>
-                  {% elsif page.url == subsubfolderitem.url %}
-                  <li class="active"><a title="{{subsubfolderitem.title}}" href="{{subsubfolderitem.url | remove: "/"}}">SD{{subsubfolderitem.url}}</a></li>
-                  {% elsif page.name contains subsubfolderitem.url ".adoc"  %}
-                  <li class="sb-navitem active"><a title="{{subsubfolderitem.title}}" href="{{subsubfolderitem.url | remove: "/"}}">SC{{ subsubfolderitem.title }}</a></li>
-                  {% elsif subsubfoleritem.url == ":target" %}
-                  <li class="sb-navitem"><a title="{{subsubfolderitem.title}}" href="{{subsubfolderitem.url | remove: "/"}}">SB{{ subsubfolderitem.title }}</a></li>
-                  {% else %}
-                  <li class="sb-navitem {{subsubfolderitem.url | remove: "#"}}"><a title="{{subsubfolderitem.title}}" href="{{subsubfolderitem.url | remove: "/"}}">{{ subsubfolderitem.title }}</a></li>
-                  {% endif %}
-                  {% endif %}
-                  {% endfor %}
+         <!-- // if folder.folderitems == null -->
+         <!-- // if folder.output contains "web" -->
+       </ul> <!-- B -->
+     </li>
+         {% endif %}
+         {% endif %}
+         {% endfor %}
+         {% endfor %}
 
-                    </ul>
-
-
-                  {% elsif subfolderitem.subsubfolderitems  %}
-                  <li class="subsubfolders">
-                    <a class="subsubfolder  {% if subfolderitem.subsubfolderitems %} twisty {% endif %}"
-                       title="{{subfolderitem.title}}" href="{{subfolderitem.url}}">{{ subfolderitem.title }}</a>
-                    <ul>
-                      <!-- <li class="active sb-navitem">Z<a title="{{subfolderitem.title}}" href="{{subfolderitem.url | remove: "/"}}">{{ subfolderitem.title }}</a></li> -->
-                  {% for subsubfolderitem in subfolderitem.subsubfolderitems %}
-                  {% if subsubfolderitem.output contains "web" %}
-                  {% if subsubfolderitem.external_url %}
-                  <li><a title="{{subsubfolderitem.title}}" href="{{subsubfolderitem.external_url}}" target="_blank" rel="noopener">{{subsubfolderitem.title}}</a></li>
-                  {% elsif page.url == subsubfolderitem.url %}
-                  <li class="active"><a title="{{subsubfolderitem.title}}" href="{{subsubfolderitem.url | remove: "/"}}">SA{{subsubfolderitem.url}}</a></li>
-                  {% elsif page.name contains subsubfolderitem.url ".adoc"  %}
-                  <li class="sb-navitem active"><a title="{{subsubfolderitem.title}}" href="{{subsubfolderitem.url | remove: "/"}}">{{ subsubfolderitem.title }}</a></li>
-                  {% elsif subsubfolderitem.subsubfolders  %}
-                  <li class="sb-navitem"><a title="{{subsubfolderitem.title}}" href="{{subsubfolderitem.url | remove: "/"}}">SY{{ subsubfolderitem.title }}</a></li>
-                  {% else %}
-                  <li class="sb-navitem"><a title="{{subsubfolderitem.title}}" href="{{subsubfolderitem.url | remove: "/"}}">{{ subsubfolderitem.title }}</a></li>
-                  {% endif %}
-                  {% endif %}
-                  {% endfor %}
-
-                    </ul>
-                  </li>
-                  {% else %}
-                  <li class="sb-navitem"><a title="{{subfolderitem.title}}" href="{{subfolderitem.url | remove: "/"}}">{{ subfolderitem.title }}</a></li>
-                  {% endif %}
-                  {% endif %}
-                  {% endfor %}
-                </ul> <!-- subfolder nav-list-->
-            </li> <!-- class="subfolders" -->
-          {% endif %}
-          {% endfor %}
-          {% endif %}
-          {% endfor %}
-      </ul>
-   </li>
-     {% endif %}
-      {% endfor %}
-      {% endfor %}
       <!-- if you aren't using the accordion, uncomment this block: -->
          <!-- <p class="external"> -->
          <!--     <a href="#" id="collapseAll">Collapse All</a> | <a href="#" id="expandAll">Expand All</a> -->
          <!-- </p> -->
          <!-- -->
-</ul>
+       </ul> <!-- A -->
 <!-- <pre>
 {{ page | inspect }}
 </pre>

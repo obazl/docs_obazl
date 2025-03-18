@@ -4,7 +4,7 @@ entries:
   product: rules_ocaml
   url:  /docs_obazl/rules-ocaml/user-guide
   version: 2.0
-  levels: two
+  levels: four
   folders:
 
   - title: Topics
@@ -12,9 +12,9 @@ entries:
     output: web
     folderitems:
 
-    - title: Accessibility
-      url: visibility
-      output: web
+    # - title: Accessibility
+    #   url: visibility
+    #   output: web
 
     - title: Aggregates
       url: aggregates
@@ -39,27 +39,22 @@ entries:
     - title: Conditional Builds
       url: conditional
       output: web
-
-    # - title: Configurationx
-    #   open: true
-    #   output: web
-      subfolders:
+      levels: two
 
     - title: Configuration
+      open: true
       url: configuration
       output: web
-      # subfolderitems:
-
-    - title: Configurable Defaults
-      url: configurable-defaults
-      output: web
-
-    - title: Configuration Profiles
-      url: profiles
-      output: web
+      subfolderitems:
+      - title: Configurable Defaults
+        url: configurable_defaults
+        output: web
+      - title: Profiles
+        url: profiles
+        output: web
 
     - title: Conventions
-      url: obazl-conventions
+      url: obazl_conventions
       output: web
 
     - title: Dependencies
@@ -79,7 +74,7 @@ entries:
       output: web
 
     - title: File Generation
-      url: file-generation
+      url: filegen
       output: web
 
     - title: Interop
@@ -159,7 +154,7 @@ entries:
       output: web
 
     - title: Split Dependencies
-      url: split-dependencies
+      url: split_dependencies
       output: web
 
     - title: Signatures
@@ -198,8 +193,8 @@ entries:
       url: troubleshooting
       output: web
 
-    - title: user.bazelrc
-      url: user-bazelrc
+    - title: bazelrc files
+      url: bazelrc
       output: web
 
     - title: Visibility

@@ -1,11 +1,15 @@
 = ${ruleName}
 :page-permalink: /:path/${ruleName}
-:page-layout: page_tools_ocaml
-:page-pkg: tools_ocaml
+:page-layout: page_rules_ocaml
+:page-pkg: rules_ocaml
 :page-doc: refman
+:page-sidebar: rules_ocaml_refman_sbdata
+:page-parent: ['../reference']
 :page-tags: [tools,ocaml]
 :page-keywords: notes, tips, cautions, warnings, admonitions
 :page-last_updated: May 25, 2022
+
+`${util.loadStatement($ruleName)}`
 
 [.prototype]
 pass:[
@@ -15,7 +19,8 @@ ${util.ruleSummary($ruleName, $ruleInfo)}
 ${ruleInfo.docString}
 
 #if (!$ruleInfo.getAttributeList().isEmpty())
-**ATTRIBUTES** for rule **$ruleName**:
+
+== Attributes
 
 [.rule_attrs]
 [cols="1,1,1,1,1"]

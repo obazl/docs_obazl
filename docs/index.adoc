@@ -1,16 +1,19 @@
 = The OBazl Book
 :page-permalink: /
+:page-layout: page_rules_ocaml
+:page-pkg: rules_ocaml
+:page-doc: home
+:page-sidebar: rules_ocaml_home_sbdata
 :page-tags: [bazel]
 :page-keywords: notes, tips, cautions, warnings, admonitions
 :page-last_updated: Feb 10, 2025
-:page-sidebar: false
 :page-toc: true
 :toc: true
 
-This site documents the OBazl toolsuite, version 5.0.0.
+This site documents the OBazl toolsuite, version 3.0.0.
 
-WARNING: Version 5.0.0 is *_alpha_* software as of Feb 10, 2025.
-Meaning it works, but there are changes in progress. Do not use in production, but please do test.
+WARNING: Version 3.0.0 is *_beta_* software as of Mar 18, 2025.
+Do not use in production, but please do test.
 
 // The OBazl rules
 // are deliberately low-level, in keeping with the goal of giving the

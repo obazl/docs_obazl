@@ -1,5 +1,5 @@
 = C/C++ (cc) dependencies
-:page-permalink: /:path/cc_deps
+:page-permalink: /:path/obazl_ccdeps
 :page-layout: page_rules_ocaml
 :page-pkg: rules_ocaml
 :page-doc: dg
@@ -9,6 +9,24 @@
 :page-keywords: notes, tips, cautions, warnings, admonitions
 :page-last_updated: June 30, 2022
 :toc: true
+
+== Compilation mode
+
+Default compilation mode is `fastbuild`. That means external CC libs
+ will be built without optimization. But fastbuild is for development,
+ so this means that Bazel treats such external libs as being under
+ development, which generally is not the case.
+
+This can be a problem, since unoptimized libs may be much slower than
+optimized versions. Case in point: `libzstd`. A simple test takes
+10-12 seconds to run (not counting build time); with an optimized lib,
+the same test takes a little over 2 seconds.
+
+To address this problem OBazl provides a specialized attribute,
+`cc_deps`, that always sets the compilation mode to `opt`. External CC
+libs listed in the `deps` attribute will be built with whatever the
+effective compilation mode is - `fastbuild` by default. Libs listed in
+`cc_deps` will always be built with compilation mode `opt`.
 
 == CcInfo Provider
 

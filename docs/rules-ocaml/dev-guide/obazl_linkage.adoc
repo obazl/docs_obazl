@@ -11,8 +11,26 @@
 :toc: true
 
 
+== linkopts
+
+You can experiment by adding link parameters to the `opts` attriibute of `ocaml_binary` and `ocaml_test`, e.g.
+
+[source="starlark"]
+----
+ocaml_test(
+    name     = "test",
+    main     = "Test",
+    opts = [
+        "-verbose",
+        "-ccopt", "-flto",
+        "-ccopt", "-ffunction-sections",
+        "-ccopt", "-fdata-sections",
+        "-ccopt", "-fmerge-all-constants",
+    ],
+    timeout  = "short",
+)
+----
 == Native
 
 == Bytecode
-
 

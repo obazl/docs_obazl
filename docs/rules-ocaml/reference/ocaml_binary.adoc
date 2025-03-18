@@ -1,0 +1,117 @@
+
+= ocaml_binary
+:page-permalink: /:path/ocaml_binary
+:page-layout: page_rules_ocaml
+:page-pkg: rules_ocaml
+:page-doc: refman
+:page-sidebar: rules_ocaml_refman_sbdata
+:page-parent: ['../reference']
+:page-tags: [tools,ocaml]
+:page-keywords: notes, tips, cautions, warnings, admonitions
+:page-last_updated: May 25, 2022
+
+`load("@rules_ocaml//build:rules.bzl", "ocaml_binary")`
+
+[.prototype]
+pass:[
+ocaml_binary(<a href="#ocaml_binary-name">name</a>, <a href="#ocaml_binary-data">data</a>, <a href="#ocaml_binary-archive_deps">archive_deps</a>, <a href="#ocaml_binary-cc_deps">cc_deps</a>, <a href="#ocaml_binary-cc_linkall">cc_linkall</a>, <a href="#ocaml_binary-cc_linkopts">cc_linkopts</a>, <a href="#ocaml_binary-data_prefix_map">data_prefix_map</a>, <a href="#ocaml_binary-env">env</a>,
+             <a href="#ocaml_binary-epilogue">epilogue</a>, <a href="#ocaml_binary-exe">exe</a>, <a href="#ocaml_binary-main">main</a>, <a href="#ocaml_binary-opts">opts</a>, <a href="#ocaml_binary-prologue">prologue</a>, <a href="#ocaml_binary-runtime">runtime</a>, <a href="#ocaml_binary-vm_linkage">vm_linkage</a>)
+]
+
+Generates an OCaml executable binary.
+
+**CONFIGURABLE DEFAULTS** for rule `ocaml_binary`
+
+In addition to the <<Configurable defaults>> that
+apply to all `ocaml_*` rules, the following apply to this rule. (Note
+the difference between '/' and ':' in such labels):
+
+[.rule_attrs]
+[cols="1,1,1"]
+|===
+| Label | Default | `opts` attrib
+
+| @rules_ocaml//cfg/executable/linkall | True | `-linkall`, `-no-linkall`
+
+| @rules_ocaml//cfg/executable:warnings | `@1..3@5..28@30..39@43@46..47@49..57@61..62-40`| `-w` plus option value
+
+|===
+
+// | @rules_ocaml//cfg/executable/threads | True | `-thread`, `-no-thread`
+
+
+**NOTE** These do not support `:enable`, `:disable` syntax.
+
+
+=== Attributes
+
+[.rule_attrs]
+[cols="1,1,1,1,1"]
+|===
+| Name  | Description | Type | Mandatory | Default
+
+| +++<a class="rule-attr" id="ocaml_binary-name"></a>+++name
+|  A unique name for this target. | +++<a href="https://bazel.build/concepts/labels#target-names">Name</a>+++
+| required
+| 
+| +++<a class="rule-attr" id="ocaml_binary-data"></a>+++data
+|  Runtime dependencies: list of labels of data files needed by this executable at runtime. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
+| optional
+| []
+| +++<a class="rule-attr" id="ocaml_binary-archive_deps"></a>+++archive_deps
+|  - | +++Boolean+++
+| optional
+| False
+| +++<a class="rule-attr" id="ocaml_binary-cc_deps"></a>+++cc_deps
+|  Dictionary specifying C/C++ library dependencies. Key: a target label; value: a linkmode string, which determines which file to link. Valid linkmodes: 'default', 'static', 'dynamic', 'shared' (synonym for 'dynamic'). For more information see [CC Dependencies: Linkmode](../ug/cc_deps.md#linkmode). | +++<a href="https://bazel.build/rules/lib/dict">Dictionary: Label -> String</a>+++
+| optional
+| {}
+| +++<a class="rule-attr" id="ocaml_binary-cc_linkall"></a>+++cc_linkall
+|  True: use `-whole-archive` (GCC toolchain) or `-force_load` (Clang toolchain). Deps in this attribute must also be listed in cc_deps. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
+| optional
+| []
+| +++<a class="rule-attr" id="ocaml_binary-cc_linkopts"></a>+++cc_linkopts
+|  List of C/C++ link options. E.g. ["-lstd++"]. | +++List of strings+++
+| optional
+| []
+| +++<a class="rule-attr" id="ocaml_binary-data_prefix_map"></a>+++data_prefix_map
+|  Map for replacing path prefixes of data files | +++<a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a>+++
+| optional
+| {}
+| +++<a class="rule-attr" id="ocaml_binary-env"></a>+++env
+|  Env variables | +++<a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a>+++
+| optional
+| {}
+| +++<a class="rule-attr" id="ocaml_binary-epilogue"></a>+++epilogue
+|  List of OCaml dependencies. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
+| optional
+| []
+| +++<a class="rule-attr" id="ocaml_binary-exe"></a>+++exe
+|  By default, executable name is derived from 'name' attribute; use this to override. | +++String+++
+| optional
+| ""
+| +++<a class="rule-attr" id="ocaml_binary-main"></a>+++main
+|  Label of module containing entry point of executable. In the list of dependencies, this will be placed after 'prologue' deps and before 'epilogue' deps. | +++<a href="https://bazel.build/concepts/labels">Label</a>+++
+| required
+| 
+| +++<a class="rule-attr" id="ocaml_binary-opts"></a>+++opts
+|  List of compile options; overrides configurable default options. Supports `+-no-+` prefix for each option; for example, `-no-linkall`. | +++List of strings+++
+| optional
+| []
+| +++<a class="rule-attr" id="ocaml_binary-prologue"></a>+++prologue
+|  List of OCaml dependencies. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
+| optional
+| []
+| +++<a class="rule-attr" id="ocaml_binary-runtime"></a>+++runtime
+|  runtime to use | +++<a href="https://bazel.build/concepts/labels">Label</a>+++
+| optional
+| "@rules_ocaml//rt:std"
+| +++<a class="rule-attr" id="ocaml_binary-vm_linkage"></a>+++vm_linkage
+|  custom, dynamic or static. Custom means link with -custom flag; static with -output-complete-exe | +++String+++
+| optional
+| "custom"
+
+|===
+
+
+

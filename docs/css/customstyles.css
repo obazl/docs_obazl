@@ -395,6 +395,10 @@ blockquote {
 
 .nav li > a.folder:before {
     content: '\25B8';
+    margin-right: 0px;
+}
+li.subfolders.active > a.subfolder:before {
+    content: '\25BE';
     margin-right: 4px;
 }
 .nav li > a.subfolder:before {
@@ -403,6 +407,10 @@ blockquote {
 }
 .nav li > a.subsubfolder.twisty:before {
     content: '\25B8';
+    margin-right: 4px;
+}
+li.subsubfolders.active > a.subsubfolder.twisty:before {
+    content: '\25BE';
     margin-right: 4px;
 }
 /* .nav li > a > span:after { */
@@ -436,7 +444,8 @@ background-color: #347DBE;
 .nav li a {
     font-size: 12px;
     line-height: 18px;
-    padding: 2px 10px;
+    /* padding: 2px 10px; */
+    padding-left: 20px;
     background-color: #f1f1f1;
 }
 
@@ -460,6 +469,9 @@ div#tg-sb-sidebar  {
     position: -webkit-sticky !important;
     position: sticky !important;
     top:70px !important;
+    padding-bottom: 30px !important;;
+    max-height: calc(100vh - 9rem);
+    overflow-y: auto;
 }
 
 div#tg-sb-content.col-md-9 {
@@ -484,11 +496,14 @@ li.selected{
 /*     /\* left: 20px; *\/ */
 /* } */
 
+.nav ul li ul li a.twisty {
+    padding-left:20px;
+}
 .nav ul li ul li a {
-    padding-left:40px;
+    padding-left:35px;
 }
 .nav ul li ul li ul li a {
-    padding-left:60px;
+    padding-left:40px;
 }
 
 .nav li.thirdlevel > a {
@@ -516,9 +531,12 @@ li.selected{
     color: black;
 }
 
+.nav ul li a.twisty {
+    padding-left:10px;
+}
 .nav ul li a {
     border-top:1px solid whitesmoke;
-    padding-left:10px;
+    padding-left:20px;
 }
 /* end sidebar */
 

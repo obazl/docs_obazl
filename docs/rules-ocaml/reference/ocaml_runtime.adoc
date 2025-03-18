@@ -1,0 +1,54 @@
+
+= ocaml_runtime
+:page-permalink: /:path/ocaml_runtime
+:page-layout: page_rules_ocaml
+:page-pkg: rules_ocaml
+:page-doc: refman
+:page-sidebar: rules_ocaml_refman_sbdata
+:page-parent: ['../reference']
+:page-tags: [tools,ocaml]
+:page-keywords: notes, tips, cautions, warnings, admonitions
+:page-last_updated: May 25, 2022
+
+`load("@rules_ocaml//build/_rules:ocaml_runtime.bzl", "ocaml_runtime")`
+
+[.prototype]
+pass:[
+ocaml_runtime(<a href="#ocaml_runtime-name">name</a>, <a href="#ocaml_runtime-deps">deps</a>, <a href="#ocaml_runtime-env">env</a>, <a href="#ocaml_runtime-opts">opts</a>, <a href="#ocaml_runtime-sys_runtime">sys_runtime</a>)
+]
+
+OCaml runtime, either system (std, debug, instrumented)or user-defined using ocamlc -make-runtime
+
+
+=== Attributes
+
+[.rule_attrs]
+[cols="1,1,1,1,1"]
+|===
+| Name  | Description | Type | Mandatory | Default
+
+| +++<a class="rule-attr" id="ocaml_runtime-name"></a>+++name
+|  A unique name for this target. | +++<a href="https://bazel.build/concepts/labels#target-names">Name</a>+++
+| required
+| 
+| +++<a class="rule-attr" id="ocaml_runtime-deps"></a>+++deps
+|  Libraries whose cc deps should be included in the runtime | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
+| optional
+| []
+| +++<a class="rule-attr" id="ocaml_runtime-env"></a>+++env
+|  Env variables | +++<a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a>+++
+| optional
+| {}
+| +++<a class="rule-attr" id="ocaml_runtime-opts"></a>+++opts
+|  List of compile options; overrides configurable default options. Supports `+-no-+` prefix for each option; for example, `-no-linkall`. | +++List of strings+++
+| optional
+| []
+| +++<a class="rule-attr" id="ocaml_runtime-sys_runtime"></a>+++sys_runtime
+|  System runtime to use: std, dbg, or instrumented. | +++<a href="https://bazel.build/concepts/labels">Label</a>+++
+| optional
+| None
+
+|===
+
+
+

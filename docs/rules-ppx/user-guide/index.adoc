@@ -1,0 +1,18 @@
+= User Guide: rules_ppx
+:page-permalink: /:path/index.html
+:page-layout: page_rules_ocaml
+:page-pkg: rules_ocaml
+:page-doc: dg
+:page-sidebar: rules_ppx_ug_sbdata
+:page-tags: [formatting]
+:page-keywords: notes, tips, cautions, warnings, admonitions
+:page-last_updated: Feb 11, 2025
+:toc: true
+
+
+Audiences:
+
+* Developers who would like to extend `+rules_ppx+` by defining custom rules or macros;
+* Contributors who would like to help develop, maintain, or document `+rules_ppx+`;
+* Anybody curious about how it works.
+

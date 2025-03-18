@@ -1,0 +1,58 @@
+
+= OCamlDepsProvider
+:page-permalink: /:path/OCamlDepsProvider
+:page-layout: page_rules_ocaml
+:page-pkg: rules_ocaml
+:page-doc: refman
+:page-sidebar: rules_ocaml_refman_sbdata
+:page-parent: ['../reference']
+:page-tags: [tools,ocaml]
+:page-keywords: notes, tips, cautions, warnings, admonitions
+:page-last_updated: Mar 13, 2025
+
+
+## OCamlDepsProvider
+
+`load("@rules_ocaml//build:providers.bzl", "OCamlDepsProvider")`
+
+[.prototype]
+pass:[
+OCamlDepsProvider(*, <a href="#OCamlDepsProvider-modname">modname</a>, <a href="#OCamlDepsProvider-cmi">cmi</a>, <a href="#OCamlDepsProvider-sig">sig</a>, <a href="#OCamlDepsProvider-struct">struct</a>, <a href="#OCamlDepsProvider-cli_link_deps">cli_link_deps</a>, <a href="#OCamlDepsProvider-link_archives_deps">link_archives_deps</a>, <a href="#OCamlDepsProvider-submodule">submodule</a>, <a href="#OCamlDepsProvider-sigs">sigs</a>,
+                  <a href="#OCamlDepsProvider-structs">structs</a>, <a href="#OCamlDepsProvider-ofiles">ofiles</a>, <a href="#OCamlDepsProvider-archives">archives</a>, <a href="#OCamlDepsProvider-afiles">afiles</a>, <a href="#OCamlDepsProvider-astructs">astructs</a>, <a href="#OCamlDepsProvider-cmxs">cmxs</a>, <a href="#OCamlDepsProvider-cmts">cmts</a>, <a href="#OCamlDepsProvider-cmtis">cmtis</a>, <a href="#OCamlDepsProvider-srcs">srcs</a>, <a href="#OCamlDepsProvider-cc_dsos">cc_dsos</a>,
+                  <a href="#OCamlDepsProvider-jsoo_runtimes">jsoo_runtimes</a>, <a href="#OCamlDepsProvider-resolvers">resolvers</a>, <a href="#OCamlDepsProvider-xmo">xmo</a>, <a href="#OCamlDepsProvider-paths">paths</a>, <a href="#OCamlDepsProvider-ppx_codeps">ppx_codeps</a>, <a href="#OCamlDepsProvider-ppx_codep_paths">ppx_codep_paths</a>)
+]
+]
+
+
+OCaml build provider; content depends on target rule type.
+
+**FIELDS**
+
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="OCamlDepsProvider-modname"></a>modname | Module name | `None` |
+| <a id="OCamlDepsProvider-cmi"></a>cmi | Cmi file provided | `None` |
+| <a id="OCamlDepsProvider-sig"></a>sig | Cmi file provided | `None` |
+| <a id="OCamlDepsProvider-struct"></a>struct | Structure file (.cmo or .cmx) provided | `None` |
+| <a id="OCamlDepsProvider-cli_link_deps"></a>cli_link_deps | depset of modules w/o archives to be added to link cmd line | `None` |
+| <a id="OCamlDepsProvider-link_archives_deps"></a>link_archives_deps | depset of archives and modules to be added to link cmd line | `None` |
+| <a id="OCamlDepsProvider-submodule"></a>submodule | name of module without ns prefix | `None` |
+| <a id="OCamlDepsProvider-sigs"></a>sigs | depset of .cmi files | `None` |
+| <a id="OCamlDepsProvider-structs"></a>structs | depset of .cmo or .cmx files depending on mode | `None` |
+| <a id="OCamlDepsProvider-ofiles"></a>ofiles | depset of the .o files that go with .cmx files | `None` |
+| <a id="OCamlDepsProvider-archives"></a>archives | depset of .cmxa or .cma files | `None` |
+| <a id="OCamlDepsProvider-afiles"></a>afiles | depset of the .a files that go with .cmxa files | `None` |
+| <a id="OCamlDepsProvider-astructs"></a>astructs | depset of archived structs, added to link depgraph but not command line. | `None` |
+| <a id="OCamlDepsProvider-cmxs"></a>cmxs | cmxs shared libs | `None` |
+| <a id="OCamlDepsProvider-cmts"></a>cmts | depset of cmt files | `None` |
+| <a id="OCamlDepsProvider-cmtis"></a>cmtis | depset of cmti files | `None` |
+| <a id="OCamlDepsProvider-srcs"></a>srcs | depset of src files after renaming/symlinking, so tools can inspect | `None` |
+| <a id="OCamlDepsProvider-cc_dsos"></a>cc_dsos | list of depsets of .so files | `None` |
+| <a id="OCamlDepsProvider-jsoo_runtimes"></a>jsoo_runtimes | depset of runtime.js files | `None` |
+| <a id="OCamlDepsProvider-resolvers"></a>resolvers | depset of .cmo or .cmx files depending on mode; CLI protocol | `None` |
+| <a id="OCamlDepsProvider-xmo"></a>xmo | boolean; cross-module optimization. False means -opaque was used. | `None` |
+| <a id="OCamlDepsProvider-paths"></a>paths | string depset | `None` |
+| <a id="OCamlDepsProvider-ppx_codeps"></a>ppx_codeps | file depset | `None` |
+| <a id="OCamlDepsProvider-ppx_codep_paths"></a>ppx_codep_paths | string depset | `None` |
+
+

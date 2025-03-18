@@ -1,13 +1,13 @@
 = Aggregates: libraries and archives.
 :page-permalink: /:path/aggregates
-:page-parent: ['../user-guide']
 :page-layout: page_rules_ocaml
 :page-pkg: rules_ocaml
 :page-doc: ug
-:page-sidebar: sidebar_rules_ocaml_ug
+:page-sidebar: rules_ocaml_ug_sbdata
+:page-parent: ['../user-guide']
 :page-tags: [aggregation]
 :page-keywords: notes, tips, cautions, warnings, admonitions
-:page-last_updated: May 2, 2022
+:page-last_updated: Mar 17, 2025
 :page-toc: false
 
 OBazl makes a clear and firm distinction between the concepts

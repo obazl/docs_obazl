@@ -1,0 +1,34 @@
+
+= OCamlCcInfo
+:page-permalink: /:path/OCamlCcInfo
+:page-layout: page_rules_ocaml
+:page-pkg: rules_ocaml
+:page-doc: refman
+:page-sidebar: rules_ocaml_refman_sbdata
+:page-parent: ['../reference']
+:page-tags: [tools,ocaml]
+:page-keywords: notes, tips, cautions, warnings, admonitions
+:page-last_updated: Mar 13, 2025
+
+
+## OCamlCcInfo
+
+`load("@rules_ocaml//build:providers.bzl", "OCamlCcInfo")`
+
+[.prototype]
+pass:[
+OCamlCcInfo(*, <a href="#OCamlCcInfo-direct">direct</a>, <a href="#OCamlCcInfo-archived">archived</a>)
+]
+]
+
+
+OCaml runtime provider
+
+**FIELDS**
+
+| Name  | Description | Default Value |
+| :------------- | :------------- | :------------- |
+| <a id="OCamlCcInfo-direct"></a>direct | CcInfo | `None` |
+| <a id="OCamlCcInfo-archived"></a>archived | CcInfo | `None` |
+
+

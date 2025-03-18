@@ -6,23 +6,31 @@ module(
 )
 
 ## bcr deps:
-bazel_dep(name = "platforms",    version = "0.0.8")
-bazel_dep(name = "bazel_skylib", version = "1.4.2")
-bazel_dep(name = "stardoc",      version = "0.6.2")
+bazel_dep(name = "platforms",    version = "0.0.11")
+bazel_dep(name = "bazel_skylib", version = "1.7.1")
+bazel_dep(name = "rules_cc",     version = "0.1.1")
+bazel_dep(name = "stardoc",      version = "0.8.0")
 
 ## obazl deps:
-bazel_dep(name = "rules_ocaml",  version = "2.0.0")
-bazel_dep(name = "tools_ocaml",  version = "2.0.0")
+bazel_dep(name = "rules_ocaml",  version = "3.0.0.dev")
+# bazel_dep(name = "tools_ocaml",  version = "2.0.0")
 
-bazel_dep(name = "pandoc",       version = "1.0.0")
-pandoc = use_extension("@pandoc//extensions:pandoc.bzl",
-                       "pandoc")
-pandoc.config()
-use_repo(pandoc, "pandoc__")
+# bazel_dep(name = "bazel_pandoc",       version = "1.0.0",
+#           repo_name = "pandoc")
+# git_override(
+#     module_name = "bazel_pandoc",
+#     remote = "https://github.com/ProdriveTechnologies/bazel-pandoc.git",
+#     tag = "v0.3"
+#     strip_prefix = "bazel-pandoc-0.3",
+# )
+# pandoc = use_extension("@pandoc//extensions:pandoc.bzl",
+#                        "pandoc")
+# pandoc.config()
+# use_repo(pandoc, "pandoc__")
 
-bazel_dep(name = "dita",       version = "1.0.0")
-dita = use_extension("@dita//extensions:dita.bzl",
-                       "dita")
-dita.config()
-use_repo(dita, "dita__")
+# bazel_dep(name = "dita",       version = "1.0.0")
+# dita = use_extension("@dita//extensions:dita.bzl",
+#                        "dita")
+# dita.config()
+# use_repo(dita, "dita__")
 

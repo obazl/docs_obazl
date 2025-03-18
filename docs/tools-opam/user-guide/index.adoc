@@ -1,8 +1,8 @@
 = User Guide: tools_opam
 :page-permalink: /:path/index.html
+:page-layout: page_tools_opam
 :page-pkg: tools_opam
 :page-doc: ug
-:page-layout: page_tools_opam
 :page-sidebar: tools_opam_ug_sbdata
 :page-tags: [opam,tools]
 :page-otags: [opam,tools]
@@ -12,7 +12,7 @@
 
 // * link:opam-overview[OPAM Overview]
 
-Github: link:https://github.com/obazl/tools_opam/tree/1.0.0.alpha[tools_opam,window=_blank]
+Github: link:https://github.com/obazl/tools_opam[tools_opam,window=_blank]
 
 // * link:coswitches[OPAM Switches & OBazl Coswitches]: seamless OPAM integration
 

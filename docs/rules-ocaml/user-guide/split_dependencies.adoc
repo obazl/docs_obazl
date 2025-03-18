@@ -1,8 +1,10 @@
 = Split Dependencies
-:page-permalink: /:path/split-dependencies
+:page-permalink: /:path/split_dependencies
 :page-layout: page_rules_ocaml
 :page-pkg: rules_ocaml
 :page-doc: ug
+:page-sidebar: rules_ocaml_ug_sbdata
+:page-parent: ['../user-guide']
 :page-tags: [split dependencies]
 :page-last_updated: June 2, 2022
 // :toc_title:

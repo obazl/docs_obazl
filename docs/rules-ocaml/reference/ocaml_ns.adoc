@@ -1,0 +1,29 @@
+
+= ocaml_ns
+:page-permalink: /:path/ocaml_ns
+:page-layout: page_rules_ocaml
+:page-pkg: rules_ocaml
+:page-doc: refman
+:page-sidebar: rules_ocaml_refman_sbdata
+:page-parent: ['../reference']
+:page-tags: [tools,ocaml]
+:page-keywords: notes, tips, cautions, warnings, admonitions
+:page-last_updated: May 25, 2022
+
+## ocaml_ns
+
+`load("@rules_ocaml//build:rules.bzl", "ocaml_ns")`
+
+[.prototype]
+pass:[
+ocaml_ns(*, <a href="#ocaml_ns-name">name</a>, <a href="#ocaml_ns-import_as">import_as</a>, <a href="#ocaml_ns-ns_import_as">ns_import_as</a>, <a href="#ocaml_ns-ns_merge">ns_merge</a>, <a href="#ocaml_ns-ns_name">ns_name</a>, <a href="#ocaml_ns-private">private</a>, <a href="#ocaml_ns-submodules">submodules</a>, <a href="#ocaml_ns-visibility">visibility</a>)
+]
+
+
+Macro. Expands to an link:ocaml_ns_config[ocaml_ns_config] and an
+link:ocaml_module[ocaml_module] target that together define an OCaml pseudo-namespace.
+
+=== Attributes
+
+
+

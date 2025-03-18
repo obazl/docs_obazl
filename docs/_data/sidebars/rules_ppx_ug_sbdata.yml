@@ -1,0 +1,209 @@
+entries:
+- title: rules_ppx
+  part: User Guide
+  product: rules_ppx
+  url:  /docs_obazl/rules-ppx/user-guide
+  version: 2.0
+  levels: four
+  folders:
+
+  - title: PPX Topics
+    open: true
+    output: web
+    folderitems:
+
+    # - title: Accessibility
+    #   url: visibility
+    #   output: web
+
+    - title: Aggregates
+      url: aggregates
+      output: web
+
+    - title: Aspects
+      url: aspects
+      output: web
+
+    - title: Bootstrapping
+      url: bootstrapping
+      output: web
+
+    - title: Caching
+      url: caching
+      output: web
+
+    - title: Compilers
+      url: compilers
+      output: web
+
+    - title: Conditional Builds
+      url: conditional
+      output: web
+      levels: two
+
+    - title: Configuration
+      open: true
+      url: configuration
+      output: web
+      subfolderitems:
+      - title: Configurable Defaults
+        url: configurable_defaults
+        output: web
+      - title: Profiles
+        url: profiles
+        output: web
+
+    - title: Conventions
+      url: obazl_conventions
+      output: web
+
+    - title: Dependencies
+      url: dependencies
+      output: web
+
+    - title: Deployment
+      url: deployment
+      output: web
+
+    - title: Diagnostics
+      url: diagnostics
+      output: web
+
+    - title: Executables
+      url: executables
+      output: web
+
+    - title: File Generation
+      url: filegen
+      output: web
+
+    - title: Interop
+      url: interop
+      output: web
+
+    - title: Labels
+      external_url: https://bazel.build/concepts/labels
+      output: web
+
+    - title: Linking
+      url: linking
+      output: web
+
+    - title: Maintenance
+      url: maintenance
+      output: web
+
+    - title: Modules (Bazel)
+      url: \/docs_obazl\/bazel\/bazel-modules
+      output: web
+
+    - title: Modules (OCaml)
+      url: modules
+      output: web
+
+    - title: Namespacing
+      url: namespacing
+      output: web
+
+    - title: Offline development
+      url: offline
+      output: web
+
+    - title: OPAM
+      url: opam
+      output: web
+
+    - title: Optimization
+      url: optimization
+      output: web
+
+    - title: Packages
+      external_url: https://bazel.build/concepts/build-ref#packages
+      output: web
+
+    - title: Preprocessing
+      url: preprocessing
+      output: web
+
+    - title: Profiles
+      url: profiles
+      output: web
+
+    - title: Providers
+      url: providers
+      output: web
+
+    - title: PPX Support
+      url: ppx
+      output: web
+
+    - title: Querying
+      url: querying
+      output: web
+
+    - title: Repositories
+      url: repositories
+      output: web
+
+    - title: Refactoring
+      url: refactoring
+      output: web
+
+    - title: Separate Compilation
+      url: separate-compilation
+      output: web
+
+    - title: Split Dependencies
+      url: split_dependencies
+      output: web
+
+    - title: Signatures
+      url: signatures
+      output: web
+
+    - title: Stamping
+      url: stamping
+      output: web
+
+    - title: Structures
+      url: structures
+      output: web
+
+    - title: Targets
+      external_url: https://bazel.build/concepts/build-ref#targets
+      output: web
+
+    - title: Testing
+      url: testing
+      output: web
+
+    - title: Threading
+      url: threading
+      output: web
+
+    - title: Toolchains
+      url: toolchains
+      output: web
+
+    - title: Tools
+      url: tools
+      output: web
+
+    - title: Troubleshooting
+      url: troubleshooting
+      output: web
+
+    - title: bazelrc files
+      url: bazelrc
+      output: web
+
+    - title: Visibility
+      url: visibility
+      output: web
+
+    - title: Workspaces
+      url: workspaces
+      output: web
+
+
+

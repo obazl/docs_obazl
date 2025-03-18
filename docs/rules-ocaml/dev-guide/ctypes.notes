@@ -1,0 +1,61 @@
+
+ocaml-zstd
+
+# generically:
+# 1. compile type description, which defines Types functor
+# 2. write typgen ml code using Cstubs_structs.write_c on the Types functor just compiled
+##   - this generates an implementation of mtype Ctypes.TYPE, derived from the c lib we’re wrapping
+##     i.e. it generates definitions for all the types declared in our typdesc.Types functor decl
+##     generated defs depend on the c hdr of the lib we’re wrapping
+# 3. compile and run that code to generate c_generated_types.c
+# 4. compile and link c_generated_types.c
+# 5. run c_generated_types.exe to generate c_generated_types.ml
+## at this point we have ml type code derived from our typedesc by way of c code that makes sure it’s ok
+## i.e. we went from ml typdesc, to C code, back to ml code
+
+# * write fungen ml code - like the typgen code but emits both c and ml code, from the fndesc module
+# to compile fndesc we need generated types from above, and applied Types functor
+## i.e. the fndesc needs a concrete implementation of types, which we get by applying Types functor to the generated types
+## NB the circularity - from the Types functor we derive a (default?) static implementation, to which we then apply the functor
+## why does this work? because the OCaml values used to define the Types functor represent C types.
+
+################
+# https://github.com/mbacarella/mpg123/blob/077a72d922931eb46d4b4e5842b0426fa3c161b5/c/dune
+
+# https://github.com/aantron/luv/blob/master/src/c/dune
+
+# https://github.com/avsm/ocaml-yaml/tree/master/types/stubgen
+
+## Steps:
+# * Compile Types_description.cmx
+
+# * libzstd__type_gen.ml - generates c from Type_description.Types
+#   compile libzstd__type_gen.ml to libzstd__type_gen.exe
+#   run libzstd__type_gen.exe to produce libzstd__c_cout_generated_types.c
+#   compile libzstd__c_cout_generated_types.c to libzstd__c_cout_generated_types.exe
+#   run libzstd__c_cout_generated_types.exe to gen libzstd__c_generated_types.ml
+#   compile libzstd__c_generated_types.ml to zstd_stubs__Libzstd__c_generated_types.[cmo|cmx]
+
+# zzz => libzstd__function_gen__Function_description__Functions.ml
+
+#   link zstd_stubs.cmx
+#        zstd_stubs__Libzstd__c_generated_types.[cmo|cmx]
+#        zstd_stubs__Type_description.cmx
+#        zstd_stubs__Types_generated.cmx
+#        zstd_stubs__Function_description.cmx
+#        zstd_stubs__Libzstd__function_gen__Function_description__Functions.cmx
+#        to libzstd__function_gen__Function_description__Functions.exe
+
+# libzstd__function_gen__Function_description__Functions.exe generates both:
+#     libzstd__c_cout_generated_functions__Function_description__Functions.c
+#     libzstd__c_generated_functions__Function_description__Functions.ml
+# $ (cd _build/default/stubs && ./libzstd__function_gen__Function_description__Functions.exe c libzstd_stubs) > _build/default/stubs/libzstd__c_cout_generated_functions__Function_description__Functions.c
+# $ (cd _build/default/stubs && ./libzstd__function_gen__Function_description__Functions.exe ml libzstd_stubs) > _build/default/stubs/libzstd__c_generated_functions__Function_description__Functions.ml
+
+# * construct zstd_stubs.ml-gen (ns resolver)
+#   - contains Zstd_stubs__Libzstd__c_generated_functions__Function_description__Functions, etc.
+# * -o zstd_stubs.cmo -c -impl stubs/zstd_stubs.ml-gen
+# * -o zstd_stubs.cmx -c -impl stubs/zstd_stubs.ml-gen
+# 2. compile stubs/libzstd__type_gen.exe
+#    deps: zstd_stubs.cmx, zstd_stubs__Libzstd__type_gen.cmx
+

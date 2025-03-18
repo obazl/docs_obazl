@@ -1,8 +1,9 @@
 =  Reference Manual: rules_ocaml
 :page-permalink: /:path/index.html
+:page-layout: page_rules_ocaml
 :page-pkg: rules_ocaml
 :page-doc: refman
-:page-sidebar: false
+:page-sidebar: rules_ocaml_refman_sbdata
 :page-toc: false
 :page-tags: [refman]
 :page-keywords: notes, tips, cautions, warnings, admonitions

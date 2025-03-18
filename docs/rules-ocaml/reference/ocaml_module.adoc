@@ -1,0 +1,176 @@
+
+= ocaml_module
+:page-permalink: /:path/ocaml_module
+:page-layout: page_rules_ocaml
+:page-pkg: rules_ocaml
+:page-doc: refman
+:page-sidebar: rules_ocaml_refman_sbdata
+:page-parent: ['../reference']
+:page-tags: [tools,ocaml]
+:page-keywords: notes, tips, cautions, warnings, admonitions
+:page-last_updated: May 25, 2022
+
+`load("@rules_ocaml//build:rules.bzl", "ocaml_module")`
+
+[.prototype]
+pass:[
+ocaml_module(<a href="#ocaml_module-name">name</a>, <a href="#ocaml_module-deps">deps</a>, <a href="#ocaml_module-data">data</a>, <a href="#ocaml_module-cc_deps">cc_deps</a>, <a href="#ocaml_module-cc_linkage">cc_linkage</a>, <a href="#ocaml_module-deps_runtime">deps_runtime</a>, <a href="#ocaml_module-env">env</a>, <a href="#ocaml_module-module_name">module_name</a>, <a href="#ocaml_module-ns">ns</a>, <a href="#ocaml_module-open">open</a>, <a href="#ocaml_module-opts">opts</a>,
+             <a href="#ocaml_module-pack">pack</a>, <a href="#ocaml_module-ppx">ppx</a>, <a href="#ocaml_module-ppx_args">ppx_args</a>, <a href="#ocaml_module-ppx_data">ppx_data</a>, <a href="#ocaml_module-ppx_print">ppx_print</a>, <a href="#ocaml_module-ppx_verbose">ppx_verbose</a>, <a href="#ocaml_module-sig">sig</a>, <a href="#ocaml_module-struct">struct</a>)
+]
+
+Compiles an OCaml module. The **module name** is determined by rule,
+based on the `struct`, `sig`, `name`, and `module` attributes:
+
+* If the `sig` attribute is the label of an `ocaml_signature` target,
+  then the module name is derived from the name of the compiled
+  sigfile, since compiled interface files cannot be renamed. The
+  structfile will be renamed if it does not match the sigfile name.
+
+* If the `sig` attribute is a filename, then:
+
+** if its principal name is equal to the principal name of the file
+   named in the `struct` attribute, then the module name is derived
+   from it.
+
+** if the principal names of the sigfile and structfile do not match,
+   then the module name is derived from from the `name` attribute.
+   Both the sigfile and the structfile will be renamed accordingly.
+
+** The `module` attribute may be used to force the module name. Both
+   the sigfile and the structfile will be renamed accordingly.
+
+* If the `sig` attribute is not specified (i.e. the structfile is
+  "orphaned"), then the module name will be derived from the
+  structfile name, unless the `module` attribute is specified, in
+  which case it overrides.
+
+== Examples
+
+== Configurable defaults
+
+In addition to the <<Configurable defaults>> that apply to all
+`ocaml_*` rules, the following apply to this rule:
+
+**Options**
+
+[.rule_attrs]
+[cols="1,1,1"]
+|===
+| Label | Default | Comments
+
+| @rules_ocaml//cfg/module:deps | `@rules_ocaml//cfg:null` | list of OCaml deps to add to all `ocaml_module` instances
+
+| @rules_ocaml//cfg/module:cc_deps^1^ | `@rules_ocaml//cfg:null` | list of cc_deps to add to all `ocaml_module` instances
+
+| @rules_ocaml//cfg/module:cc_linkstatic^1^ | `@rules_ocaml//cfg:null` | list of cc_deps to link statically (DEPRECATED)
+
+| @rules_ocaml//cfg/module:warnings | `@1..3@5..28@30..39@43@46..47@49..57@61..62-40`| sets `-w` option for all `ocaml_module` instances
+
+|===
+
+^1^ See link:../user-guide/dependencies-cc[CC Dependencies] for more information on CC deps.
+
+**Boolean Flags**
+
+NOTE: These do not support `:enable`, `:disable` syntax.
+
+[.rule_attrs]
+[cols="1,1,1"]
+|===
+| Label | Default | `opts` attrib equivalent
+
+| @rules_ocaml//cfg/module/linkall | False | `-linkall`, `-no-linkall`
+
+| @rules_ocaml//cfg/module:verbose | False | `-verbose`, `-no-verbose`
+
+|===
+
+
+== Attributes
+
+[.rule_attrs]
+[cols="1,1,1,1,1"]
+|===
+| Name  | Description | Type | Mandatory | Default
+
+| +++<a class="rule-attr" id="ocaml_module-name"></a>+++name
+|  A unique name for this target. | +++<a href="https://bazel.build/concepts/labels#target-names">Name</a>+++
+| required
+| 
+| +++<a class="rule-attr" id="ocaml_module-deps"></a>+++deps
+|  List of dependencies. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
+| optional
+| []
+| +++<a class="rule-attr" id="ocaml_module-data"></a>+++data
+|  Runtime data dependencies: list of labels of data files needed by this module at runtime. This is a standard Bazel attribute; see link:https://bazel.build/reference/be/common-definitions#typical-attributes[Typical attributes,window="_blank"]. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
+| optional
+| []
+| +++<a class="rule-attr" id="ocaml_module-cc_deps"></a>+++cc_deps
+|  Static (.a) or dynamic (.so, .dylib) libraries. Must by built or imported using Bazel's rules_cc ruleset (thus providing CcInfo output). | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
+| optional
+| []
+| +++<a class="rule-attr" id="ocaml_module-cc_linkage"></a>+++cc_linkage
+|  Dictionary specifying C/C++ library dependencies. Allows finer control over linking than the 'cc_deps' attribute. Key: a target label providing CcInfo; value: a linkmode string, which determines which file to link. Valid linkmodes: 'default', 'static', 'dynamic', 'shared' (synonym for 'dynamic'). For more information see link:../user-guide/dependencies-cc#_cc-linkmode[CC Dependencies: Linkmode]. | +++<a href="https://bazel.build/rules/lib/dict">Dictionary: Label -> String</a>+++
+| optional
+| {}
+| +++<a class="rule-attr" id="ocaml_module-deps_runtime"></a>+++deps_runtime
+|  Runtime module dependencies, e.g. .cmxs plugins. Use the `data` attribute for runtime data dependencies. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
+| optional
+| []
+| +++<a class="rule-attr" id="ocaml_module-env"></a>+++env
+|  Env variables | +++<a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a>+++
+| optional
+| {}
+| +++<a class="rule-attr" id="ocaml_module-module_name"></a>+++module_name
+|  Use this string as module name, instead of deriving it from sig or struct | +++String+++
+| optional
+| ""
+| +++<a class="rule-attr" id="ocaml_module-ns"></a>+++ns
+|  Label of an link:ocaml_ns[ocaml_ns] target, which must list this module in its `manifest` attribute. For bottom-up namespacing. Modules may use this attribute to elect membership in a bottom-up namespace. | +++<a href="https://bazel.build/concepts/labels">Label</a>+++
+| optional
+| None
+| +++<a class="rule-attr" id="ocaml_module-open"></a>+++open
+|  List of OCaml dependencies to be passed with `-open`. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
+| optional
+| []
+| +++<a class="rule-attr" id="ocaml_module-opts"></a>+++opts
+|  List of compile options; overrides configurable default options. Supports `+-no-+` prefix for each option; for example, `-no-linkall`. | +++List of strings+++
+| optional
+| []
+| +++<a class="rule-attr" id="ocaml_module-pack"></a>+++pack
+|  Experimental.  List of pack submodules. They will be compiled with -for-pack, and this module will be compile with -pack. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
+| optional
+| []
+| +++<a class="rule-attr" id="ocaml_module-ppx"></a>+++ppx
+|  Label of `ppx_executable` target to be used to transform source before compilation. | +++<a href="https://bazel.build/concepts/labels">Label</a>+++
+| optional
+| None
+| +++<a class="rule-attr" id="ocaml_module-ppx_args"></a>+++ppx_args
+|  Options to pass to PPX executable passed by the `ppx` attribute. | +++List of strings+++
+| optional
+| []
+| +++<a class="rule-attr" id="ocaml_module-ppx_data"></a>+++ppx_data
+|  PPX runtime data dependencies. List of labels of files needed by the PPX executable passed via the `ppx` attribute when it is executed to transform the source file. For example, a source file using link:https://github.com/janestreet/ppx_optcomp[ppx_optcomp] may import a file using extension `[%%import ]`; this file should be listed in this attribute. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
+| optional
+| []
+| +++<a class="rule-attr" id="ocaml_module-ppx_print"></a>+++ppx_print
+|  Format of output of PPX transform: binary (default) or text. Value must be one of `@rules_ocaml//ppx/print:binary!` or `@rules_ocaml//ppx/print:text!`. | +++<a href="https://bazel.build/concepts/labels">Label</a>+++
+| optional
+| None
+| +++<a class="rule-attr" id="ocaml_module-ppx_verbose"></a>+++ppx_verbose
+|  - | +++Boolean+++
+| optional
+| False
+| +++<a class="rule-attr" id="ocaml_module-sig"></a>+++sig
+|  Single label of a target producing `OCamlSignatureProvider` (i.e. rule `ocaml_signature`) OR a sig source file. Optional. | +++<a href="https://bazel.build/concepts/labels">Label</a>+++
+| optional
+| None
+| +++<a class="rule-attr" id="ocaml_module-struct"></a>+++struct
+|  A single module (struct) source file label. | +++<a href="https://bazel.build/concepts/labels">Label</a>+++
+| required
+| 
+
+|===
+
+
+

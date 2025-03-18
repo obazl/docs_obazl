@@ -1,8 +1,10 @@
 = OBazl Conventions
-:page-permalink: /:path/obazl-conventions
+:page-permalink: /:path/obazl_conventions
 :page-layout: page_rules_ocaml
 :page-pkg: rules_ocaml
 :page-doc: ug
+:page-sidebar: rules_ocaml_ug_sbdata
+:page-parent: ['../user-guide']
 :page-tags: [conventions]
 :page-keywords: notes, tips, cautions, warnings, admonitions
 :page-last_updated: May 2, 2022

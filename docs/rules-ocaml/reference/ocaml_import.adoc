@@ -1,0 +1,115 @@
+
+= ocaml_import
+:page-permalink: /:path/ocaml_import
+:page-layout: page_rules_ocaml
+:page-pkg: rules_ocaml
+:page-doc: refman
+:page-sidebar: rules_ocaml_refman_sbdata
+:page-parent: ['../reference']
+:page-tags: [tools,ocaml]
+:page-keywords: notes, tips, cautions, warnings, admonitions
+:page-last_updated: May 25, 2022
+
+`load("@rules_ocaml//build:rules.bzl", "ocaml_import")`
+
+[.prototype]
+pass:[
+ocaml_import(<a href="#ocaml_import-name">name</a>, <a href="#ocaml_import-deps">deps</a>, <a href="#ocaml_import-srcs">srcs</a>, <a href="#ocaml_import-afiles">afiles</a>, <a href="#ocaml_import-all">all</a>, <a href="#ocaml_import-archive">archive</a>, <a href="#ocaml_import-astructs">astructs</a>, <a href="#ocaml_import-cc_deps">cc_deps</a>, <a href="#ocaml_import-cmtis">cmtis</a>, <a href="#ocaml_import-cmts">cmts</a>, <a href="#ocaml_import-cmxs">cmxs</a>, <a href="#ocaml_import-dllibs">dllibs</a>,
+             <a href="#ocaml_import-doc">doc</a>, <a href="#ocaml_import-jsoo_runtime">jsoo_runtime</a>, <a href="#ocaml_import-ocaml_version">ocaml_version</a>, <a href="#ocaml_import-ofiles">ofiles</a>, <a href="#ocaml_import-plugin">plugin</a>, <a href="#ocaml_import-ppx_codeps">ppx_codeps</a>, <a href="#ocaml_import-sigs">sigs</a>, <a href="#ocaml_import-version">version</a>)
+]
+
+Imports pre-compiled OCaml files. [User Guide](../ug/ocaml_import.md).
+
+
+=== Attributes
+
+[.rule_attrs]
+[cols="1,1,1,1,1"]
+|===
+| Name  | Description | Type | Mandatory | Default
+
+| +++<a class="rule-attr" id="ocaml_import-name"></a>+++name
+|  A unique name for this target. | +++<a href="https://bazel.build/concepts/labels#target-names">Name</a>+++
+| required
+| 
+| +++<a class="rule-attr" id="ocaml_import-deps"></a>+++deps
+|  - | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
+| optional
+| []
+| +++<a class="rule-attr" id="ocaml_import-srcs"></a>+++srcs
+|  - | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
+| optional
+| []
+| +++<a class="rule-attr" id="ocaml_import-afiles"></a>+++afiles
+|  list of .a files that go with .cmxa files | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
+| optional
+| []
+| +++<a class="rule-attr" id="ocaml_import-all"></a>+++all
+|  Glob all cm* files except for 'archive' or 'plugin' so theey can be added to action ldeps (rather than cmd line). I.e. the (transitive) deps of an archive, which must be accessible to the compiler (via search path, not command line), and so must be added to the action ldeps. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
+| optional
+| []
+| +++<a class="rule-attr" id="ocaml_import-archive"></a>+++archive
+|  - | +++<a href="https://bazel.build/concepts/labels">Label</a>+++
+| optional
+| None
+| +++<a class="rule-attr" id="ocaml_import-astructs"></a>+++astructs
+|  - | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
+| optional
+| []
+| +++<a class="rule-attr" id="ocaml_import-cc_deps"></a>+++cc_deps
+|  C archive files (.a) for integrating OCaml and C libs | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
+| optional
+| []
+| +++<a class="rule-attr" id="ocaml_import-cmtis"></a>+++cmtis
+|  - | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
+| optional
+| []
+| +++<a class="rule-attr" id="ocaml_import-cmts"></a>+++cmts
+|  - | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
+| optional
+| []
+| +++<a class="rule-attr" id="ocaml_import-cmxs"></a>+++cmxs
+|  - | +++<a href="https://bazel.build/concepts/labels">Label</a>+++
+| optional
+| None
+| +++<a class="rule-attr" id="ocaml_import-dllibs"></a>+++dllibs
+|  Dynamically-loadable, for ocamlrun. Standard naming is 'dll<name>_stubs.so' or 'dll<name>.so'. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
+| optional
+| []
+| +++<a class="rule-attr" id="ocaml_import-doc"></a>+++doc
+|  - | +++String+++
+| optional
+| ""
+| +++<a class="rule-attr" id="ocaml_import-jsoo_runtime"></a>+++jsoo_runtime
+|  - | +++<a href="https://bazel.build/concepts/labels">Label</a>+++
+| optional
+| None
+| +++<a class="rule-attr" id="ocaml_import-ocaml_version"></a>+++ocaml_version
+|  - | +++String+++
+| optional
+| ""
+| +++<a class="rule-attr" id="ocaml_import-ofiles"></a>+++ofiles
+|  list of .o files that go with .cmx files | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
+| optional
+| []
+| +++<a class="rule-attr" id="ocaml_import-plugin"></a>+++plugin
+|  - | +++<a href="https://bazel.build/concepts/labels">Label</a>+++
+| optional
+| None
+| +++<a class="rule-attr" id="ocaml_import-ppx_codeps"></a>+++ppx_codeps
+|  - | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
+| optional
+| []
+| +++<a class="rule-attr" id="ocaml_import-sigs"></a>+++sigs
+|  - | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
+| optional
+| []
+| +++<a class="rule-attr" id="ocaml_import-version"></a>+++version
+|  - | +++String+++
+| optional
+| ""
+
+|===
+
+
+

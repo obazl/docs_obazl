@@ -1,0 +1,181 @@
+entries:
+- title: rules_ppx
+  part: Dev Guide
+  product: rules_ppx
+  url:  /docs_obazl/rules-ppx/dev-guide
+  version: 2.0
+  levels: four
+  folders:
+
+  # - title: Topics
+  #   open: true
+  #   output: web
+  #   folderitems:
+
+  - title: PPX Dev environment & workflow
+    open: true
+    type: empty
+    url: workflow
+    output: web
+    levels: two
+
+  - title: "OCaml: tools & protocols"
+    open: true
+    # url: ocaml_overview
+    output: web
+    folderitems:
+    - title: Build protocols
+      url: ocaml_build_protocols
+      output: web
+    - title: Compilation
+      url: ocaml_compilation
+      output: web
+    - title: Archiving
+      url: ocaml_archiving
+      output: web
+    - title: Linking executables
+      url: ocaml_linkage
+      output: web
+      subfolderitems:
+      - title: ToC
+        url: "#toc"
+        output: web
+      - title: Common options
+        url: "#_common-options"
+        output: web
+      - title: Native binaries
+        url: "#_native-binaries"
+        output: web
+      - title: Bytecode binaries
+        url: "#_bytecode-binaries"
+        output: web
+      - title: Foreign library linkage
+        url: "#_foreign-library-linkage"
+        output: web
+      - title: Diagnostics
+        url: "#_diagnostics"
+        output: web
+
+    - title: Runtimes
+      url: ocaml_runtimes
+      output: web
+
+    - title: Profiling
+      url: ocaml_profiling
+      output: web
+
+    - title: CC dependencies
+      url: ocaml_ccdeps
+      output: web
+
+    - title: Namespacing
+      url: ocaml_namespacing
+      output: web
+
+  - title: Understanding Bazel
+    open: true
+    url: bazel_overview
+    output: web
+    folderitems:
+
+    - title: Rules
+      url: bazel_rules
+      output: web
+
+    - title: Aspects
+      url: aspects
+      output: web
+
+    - title: Configurations
+      url: configurations
+      output: web
+
+    - title: Constraints
+      url: constraints
+      output: web
+    - title: Depsets
+      url: depsets
+      output: web
+    - title: Macros
+      url: macros
+      output: web
+    - title: Platforms
+      url: platforms
+      output: web
+    - title: Providers
+      url: providers
+      output: web
+    - title: Toolchains
+      url: toolchains
+      output: web
+    - title: Transitions
+      url: transitions
+      output: web
+
+  - title: rules_ocaml
+    url: rules_ocaml
+    open: true
+    output: web
+    levels: three
+    folderitems:
+
+    - title: Compilation
+      open: true
+      output: web
+      subfolderitems:
+      - title: Signatures
+        url: obazl_signatures
+        output: web
+      - title: Structures
+        url: obazl_structures
+        output: web
+    - title: Linking executables
+      url: obazl_linkage
+      output: web
+    - title: Namespacing support
+      url: obazl_namespacing
+      output: web
+      subfolderitems:
+      - title: ToC
+        url: "#toc"
+        output: web
+      - title: Terminology
+        url: "#_terminology"
+        output: web
+      - title: Defining ns libraries
+        url: "#_defining-ns-libraries-ocaml_ns"
+        output: web
+      - title: Composing ns libraries
+        url: "#_composing-ns-libraries"
+        output: web
+      - title: Quasi-private ns libraries
+        url: "#_quasi-private-ns-libraries"
+        output: web
+      - title: Implementation
+        url: "#_implementation"
+        output: web
+
+    - title: Ppx support
+      url: ppx
+      output: web
+    - title: C/C++ dependencies
+      url: obazl_ccdeps
+      output: web
+    - title: Toolchains
+      url: obazl_toolchains
+      output: web
+    - title: Testing
+      url: obazl_testing
+      output: web
+    - title: Diagnostics & Debugging
+      url: obazl_debugging
+      output: web
+
+  - title: Extending rules_ocaml
+    url: extending
+    output: web
+
+  - title: C tools
+    url: c_tools
+    output: web
+

@@ -29,9 +29,10 @@ fork a repository and offer contributions or just eavesdrop.
 To use unreleased versions of a module (whether `rules_ocaml` or one
 of the other OBazl modules) you must use one of the following methods:
 
-* Use the `git_override` method in your
+a. Create a local registry with `source.json` files of type `git_repository`
+b. Use the `git_override` method in your
   `MODULE.bazel` file, specifying the branch you want; or
-* Fork/clone the repo to your local drive, and then use either
+c. Fork/clone the repo to your local drive, and then use either
   ** `local_path_override` in your `MODULE.bazel` file, or
   ** `--override_module` option on the command line or in a bazelrc file.
 
@@ -40,28 +41,108 @@ always use the `--registry` directives as shown above. This is because
 the module may itself depend on resources only accessible
 in those registries.
 
+I develop primarily on a Mac (arm) and test on Linux (Ubuntu, x86).
+
 The next section describes the configuration I use for development using these techniques.
+
+== Local registry
+
+This is the easiest and most flexible method.
+
+Summary: create a local https://bazel.build/external/registry[registry
+], whose records will point either to local copies of repos or to
+commits in a git service. Then use `--registry=...` to use this local
+registry, and you will pick any changes to local repos automatically.
+
+With this method you avoid cluttering your `MODULE.bazel` files with
+override code that will have to be deleted eventually anyway, and you
+don’t need to keep track of which modules have overrides and which
+don’t.
+
+Another advantage of this approach is that it facilitates sharing a
+configuration across hosts, so that modules under development can be
+tested without publishing to a registry. Each developer on each host
+maintains a copy of the local registry, and can update the
+`source.json` files as needed.
+
+Registries are very simple. A local registry looks like this:
+
+[title="$HOME/obazl/registry"]
+----
+.
+├── bazel_registry.json           <1>
+├── modules
+│ ├── module_a
+│ ├── module_b
+.
+.
+.
+----
+<1> Contents:  `{ "module_base_path": "../../" }`
+
+An individual module record looks like this:
+
+[title="$HOME/obazl/registry/modules"]
+----
+module_a
+└── 1.0.0.dev
+    ├── MODULE.bazel -> /path/to/local/module_a/MODULE.bazel
+    └── source.json
+----
+
+Pretty simple.  The `source.json` file will have one of the following two forms:
+
+[title="local source"]
+----
+{ "type": "local_path",
+  "path": "relpath/to/module_a" }       <1>
+----
+<1> `path` will be interpreted relative to the `module_base_path` set
+in the `bazel_registry.json` file as noted above.
+
+[title="remote source"]
+----
+{
+    "type":   "git_repository",
+    "remote": "git@github.com:<user>/module_a.git",
+    "commit": "bb43b97e95b7e02b120c43373e52e3e86d065230",
+}
+----
+
+Use a local source record until your code is stable enough for testing
+or sharing on other platforms. Then create and push a commit, and
+switch the registry record to use the remote source format. Repeat,
+updating the `commit` field of the registry record, until ready to
+publish.
+
+With this method you do not need to cut a release or prerelease
+archive, or publish to a shared bzlmod registry, in order to share
+code under development. Instead you “distribute” a local registry
+(which can itself be put under version control).
+
+NOTE: *POLICY* always use "dev ids" for code under development. OBazl
+convention is to use `<version>.dev` for both the module Id and the
+branch name. Such Ids are never used for published versions, so it is
+easy to keep track of what has been published (e.g. when viewing the
+output of ‘bazel mod graph`).
+
+
 
 == Using dev versions of the repos
 
-I develop primarily on a Mac (arm) and test on Linux (Ubuntu, x86).
 
-I use the following branches, ordered by decreasing instability:
+I use the following branches:
 
-* `<version>.dev` is where active development takes place.  I sometimes push "checkpoint" commits on this branch just to save my code, so code on this branch may build incorrectly or may fail to build.
-* `<version>.alpha`. I promote dev code to this branch when it works for me and I think it should work for others.  Code on this branch may not have been tested on both platforms.  It is also subject to change; for example an attribute may be renamed. I do not cut github prelease archives from this branch.
-* `<version>.beta` is the branch I use to cut prerelease (release candidate) archives
-  tagged as `<version>.rc.n`.
-* `main` is used to cut release archives.
+* `<version>.dev` is where active development takes place. Unstable.
 
-For example, to depend directly on the `5.0.0.alpha` branch of the
+For example, to depend directly on the `5.0.0.dev` branch of the
 `rules_ocaml` repo:
 
 [source="starlark", title="MODULE.bazel"]
 ----
 bazel_dep(name = "rules_ocaml", version = "5.0.0")
 git_override(module_name = "rules_ocaml",
-             branch = "5.0.0.alpha",                                     <1>
+             branch = "5.0.0.dev",                                     <1>
              remote = "https://github.com/obazl/rules_ocaml.git")
 ----
 <1> You can depend on whichever branch you prefer.

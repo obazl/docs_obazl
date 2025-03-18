@@ -1,4 +1,4 @@
-= Diagnostics & Debugging
+= Troubleshooting
 :page-permalink: /:path/obazl_debugging
 :page-layout: page_rules_ocaml
 :page-pkg: rules_ocaml
@@ -74,3 +74,11 @@ Linker verbosity (`man ld`):
 * `-order_file_statistics` Logs information about the processing of a -order_file.
 * `-map map_file_path` Writes a map file to the specified path which details all symbols and their addresses in the output image.
 
+
+==== link version mismatch
+
+E.g.
+
+    .../libzstd.a[23](zstdmt_compress.o)) was built for newer 'macOS' version (14.5) than being linked (14.0)
+
+Fix: set `-mmacosx-version-min`

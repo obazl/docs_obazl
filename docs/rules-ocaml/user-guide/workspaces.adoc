@@ -3,10 +3,14 @@
 :page-layout: page_rules_ocaml
 :page-pkg: rules_ocaml
 :page-doc: ug
+:page-sidebar: rules_ocaml_ug_sbdata
+:page-parent: ['../user-guide']
 :page-tags: [repositories,workspaces]
 :page-last_updated: May 5, 2022
 // :toc-title:
 // :toc: true
+
+WARNING: “Workspace” is deprecated and will disappear with Bazel version 9.
 
 Official documentation:
 

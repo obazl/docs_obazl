@@ -1,15 +1,18 @@
-repository: obazl/docs_obazl
+repository: obazl/docs_obazl/
 
 output: web
 
 topnav_title: The OBazl Book
-site_title:   The OBazl Book B
+site_title:   The OBazl Book & Blog
 company_name:
 github_editme_path:
 google_analytics:
 
 # host: 127.0.0.1
 # port: 4000
+
+include:
+  - rules_ocaml
 
 exclude:
   - .idea/
@@ -101,11 +104,11 @@ defaults:
 
 description: "blah ..."
 
-title: 'The OBazl Book'
+title: 'The OBazl Book & Blog'
 email: your-email@example.com
 description: >- # this means to ignore newlines until "baseurl:"
  Rules and tools for building OCaml software with Bazel.
-baseurl: "/docs_obazl" # the subpath of your site, e.g. /blog
+baseurl: "/docs_obazl/" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: obazldev
 github_username:  mobileink

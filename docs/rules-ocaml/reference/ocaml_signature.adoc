@@ -1,0 +1,114 @@
+
+= ocaml_signature
+:page-permalink: /:path/ocaml_signature
+:page-layout: page_rules_ocaml
+:page-pkg: rules_ocaml
+:page-doc: refman
+:page-sidebar: rules_ocaml_refman_sbdata
+:page-parent: ['../reference']
+:page-tags: [tools,ocaml]
+:page-keywords: notes, tips, cautions, warnings, admonitions
+:page-last_updated: May 25, 2022
+
+`load("@rules_ocaml//build:rules.bzl", "ocaml_signature")`
+
+[.prototype]
+pass:[
+ocaml_signature(<a href="#ocaml_signature-name">name</a>, <a href="#ocaml_signature-deps">deps</a>, <a href="#ocaml_signature-src">src</a>, <a href="#ocaml_signature-env">env</a>, <a href="#ocaml_signature-module_name">module_name</a>, <a href="#ocaml_signature-ns">ns</a>, <a href="#ocaml_signature-open">open</a>, <a href="#ocaml_signature-opts">opts</a>, <a href="#ocaml_signature-pack">pack</a>, <a href="#ocaml_signature-ppx">ppx</a>, <a href="#ocaml_signature-ppx_args">ppx_args</a>, <a href="#ocaml_signature-ppx_data">ppx_data</a>,
+                <a href="#ocaml_signature-ppx_print">ppx_print</a>, <a href="#ocaml_signature-ppx_verbose">ppx_verbose</a>, <a href="#ocaml_signature-xmo">xmo</a>)
+]
+
+Generates OCaml .cmi (inteface) file. (link:../user-guide/signatures[signatures]). Provides `OCamlSignatureProvider`.
+
+**CONFIGURABLE DEFAULTS** for rule `ocaml_signature`
+
+In addition to the <<Configurable defaults>> that
+apply to all `ocaml_*` rules, the following apply to this rule. (Note
+the difference between '/' and ':' in such labels):
+
+[.rule_attrs]
+[cols="1,1,1"]
+|===
+| Label | Default | `opts` attrib
+
+| @rules_ocaml//cfg/signature/linkall | True | `-linkall`, `-no-linkall`
+
+| @rules_ocaml//cfg/signature:warnings | `@1..3@5..28@30..39@43@46..47@49..57@61..62-40`| `-w` plus option value
+
+|===
+
+// | @rules_ocaml//cfg/signature/threads | False | true: `-I +threads`
+
+
+=== Attributes
+
+[.rule_attrs]
+[cols="1,1,1,1,1"]
+|===
+| Name  | Description | Type | Mandatory | Default
+
+| +++<a class="rule-attr" id="ocaml_signature-name"></a>+++name
+|  A unique name for this target. | +++<a href="https://bazel.build/concepts/labels#target-names">Name</a>+++
+| required
+| 
+| +++<a class="rule-attr" id="ocaml_signature-deps"></a>+++deps
+|  List of OCaml dependencies. Use this for compiling a .mli source file with deps. See [Dependencies](#deps) for details. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
+| optional
+| []
+| +++<a class="rule-attr" id="ocaml_signature-src"></a>+++src
+|  A single .mli source file label | +++<a href="https://bazel.build/concepts/labels">Label</a>+++
+| optional
+| None
+| +++<a class="rule-attr" id="ocaml_signature-env"></a>+++env
+|  Env variables | +++<a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a>+++
+| optional
+| {}
+| +++<a class="rule-attr" id="ocaml_signature-module_name"></a>+++module_name
+|  Set module (sig) name to this string | +++String+++
+| optional
+| ""
+| +++<a class="rule-attr" id="ocaml_signature-ns"></a>+++ns
+|  Bottom-up namespacing | +++<a href="https://bazel.build/concepts/labels">Label</a>+++
+| optional
+| None
+| +++<a class="rule-attr" id="ocaml_signature-open"></a>+++open
+|  List of OCaml dependencies to be passed with -open. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
+| optional
+| []
+| +++<a class="rule-attr" id="ocaml_signature-opts"></a>+++opts
+|  List of compile options; overrides configurable default options. Supports `+-no-+` prefix for each option; for example, `-no-linkall`. | +++List of strings+++
+| optional
+| []
+| +++<a class="rule-attr" id="ocaml_signature-pack"></a>+++pack
+|  Experimental | +++String+++
+| optional
+| ""
+| +++<a class="rule-attr" id="ocaml_signature-ppx"></a>+++ppx
+|  Label of `ppx_executable` target to be used to transform source before compilation. | +++<a href="https://bazel.build/concepts/labels">Label</a>+++
+| optional
+| None
+| +++<a class="rule-attr" id="ocaml_signature-ppx_args"></a>+++ppx_args
+|  Options to pass to PPX executable passed by the `ppx` attribute. | +++List of strings+++
+| optional
+| []
+| +++<a class="rule-attr" id="ocaml_signature-ppx_data"></a>+++ppx_data
+|  PPX runtime data dependencies. List of labels of files needed by the PPX executable passed via the `ppx` attribute when it is executed to transform the source file. For example, a source file using link:https://github.com/janestreet/ppx_optcomp[ppx_optcomp] may import a file using extension `[%%import ]`; this file should be listed in this attribute. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
+| optional
+| []
+| +++<a class="rule-attr" id="ocaml_signature-ppx_print"></a>+++ppx_print
+|  Format of output of PPX transform: binary (default) or text. Value must be one of `@rules_ocaml//ppx/print:binary!` or `@rules_ocaml//ppx/print:text!`. | +++<a href="https://bazel.build/concepts/labels">Label</a>+++
+| optional
+| None
+| +++<a class="rule-attr" id="ocaml_signature-ppx_verbose"></a>+++ppx_verbose
+|  - | +++Boolean+++
+| optional
+| False
+| +++<a class="rule-attr" id="ocaml_signature-xmo"></a>+++xmo
+|  Cross-module optimization. If false, compile with -opaque | +++Boolean+++
+| optional
+| True
+
+|===
+
+
+

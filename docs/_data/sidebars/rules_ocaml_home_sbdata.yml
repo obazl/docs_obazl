@@ -1,0 +1,131 @@
+entries:
+- title: home
+  part: Home page
+  product: rules_ocaml
+  url:  /docs_obazl/index
+  version: 2.0
+  levels: four
+  folders:
+
+  - title: The OCaml SDK
+    open: true
+    output: web
+    folderitems:
+    - title: Language
+      levels: two
+      url: ocaml/language
+      output: web
+    - title: Toolchains
+      levels: two
+      url: ocaml/toolchains
+      output: web
+    - title: Build protocols
+      levels: two
+      url: ocaml/build-protocols
+      output: web
+
+  - title: rules_ocaml
+    open: true
+    output: web
+    folderitems:
+    - title: User Guide
+      levels: two
+      url: rules-ocaml/user-guide
+      output: web
+
+    - title: Reference Manual
+      url: rules-ocaml/reference
+      output: web
+
+    - title: Developer Guide
+      url: rules-ocaml/dev-guide
+      output: web
+
+  - title: tools_opam
+    open: true
+    output: web
+    folderitems:
+    - title: User Guide
+      levels: two
+      url: tools-opam/user-guide
+      output: web
+
+    - title: Reference Manual
+      url: tools-opam/reference
+      output: web
+
+    - title: Developer Guide
+      url: tools-opam/dev-guide
+      output: web
+
+  - title: rules_ppx
+    open: true
+    output: web
+    folderitems:
+    - title: User Guide
+      url: rules-ppx/user-guide
+      output: web
+    - title: Reference Manual
+      url: rules-ppx/reference
+      output: web
+    - title: Developer Guide
+      url: rules-ppx/dev-guide
+      output: web
+
+  - title: tools_obazl
+    open: true
+    output: web
+
+  - title: Extensions
+    open: true
+    output: web
+    folderitems:
+    - title: rules_cppo
+      url: OCamlCcInfo
+      output: web
+    - title: rules_ctypes
+      url: OCamlCcInfo
+      output: web
+    - title: rules_jsoo
+      open: true
+      output: web
+      subfolderitems:
+      - title: User Guide
+        url: rules-jsoo/user-guide
+        output: web
+      - title: Reference Manual
+        url: rules-jsoo/reference
+        output: web
+      - title: Developer Guide
+        url: rules-jsoo/dev-guide
+        output: web
+    - title: rules_menhir
+      url: OCamlCcInfo
+      output: web
+
+  - title: Interop
+    open: true
+    output: web
+    folderitems:
+    - title: C/C++
+      url: OCamlCcInfo
+      output: web
+    - title: Javascript
+      url: OCamlCcInfo
+      output: web
+    - title: Ruse
+      url: OCamlCcInfo
+      output: web
+
+  - title: Providers
+    open: true
+    output: web
+    folderitems:
+
+    - title: OCamlCcInfo
+      url: OCamlCcInfo
+      output: web
+    - title: OCamlDepsProvider
+      url: OCamlDepsProvider
+      output: web
+
