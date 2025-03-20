@@ -1,0 +1,96 @@
+
+= tools_opam%opam
+:page-permalink: /:path/opam
+:page-layout: page_rules_ocaml
+:page-pkg: rules_ocaml
+:page-doc: refman
+:page-sidebar: tools_opam_dg_sbdata
+:page-parent: ['../reference']
+:page-tags: [tools,ocaml]
+:page-keywords: notes, tips, cautions, warnings, admonitions
+:page-last_updated: Mar 18, 2025
+
+[.prototype]
+pass:[
+opam = use_extension("@tools_opam//extensions:opam.bzl", "opam")
+opam.deps(<a href="#opam.deps-debug">debug</a>, <a href="#opam.deps-ocaml_version">ocaml_version</a>, <a href="#opam.deps-opam_verbosity">opam_verbosity</a>, <a href="#opam.deps-opam_version">opam_version</a>, <a href="#opam.deps-pkgs">pkgs</a>, <a href="#opam.deps-toolchain">toolchain</a>, <a href="#opam.deps-verbosity">verbosity</a>)
+]
+
+
+This module extension enables seamless integration of opam dependencies into the Bazel environment.
+
+
+== Methods
+
+[#opam.deps]
+=== deps
+
+The `deps` method (tag class) runs code that
+
+1. ensures the selected opam switch is properly configured, and
+2. generates a Bazel repository for each opam package listed in the `pkgs` attribute
+
+The Bazel repository for package `pkg` will be named `opam.pkg`, so in
+your `BUILD.bazel` files you refer to it as `@opam.pkg//lib`.
+
+The Bazel repositories are lazily evaluated. The method will
+__configure__ a repository for every package in the complete
+dependency graph - that is, generate Bazel files for it and register
+it with Bazel. But repositories are not ``materialized'' (evaluated)
+until needed. So your project might have many opam dependencies, but
+if you build a target that only depends on one, then only that one
+repository will actually be constructed and used.
+
+.Usage example
+[%collapsible]
+====
+[source="starlark",title="MODULE.bazel"]
+----
+bazel_dep(name = "tools_opam", version = "1.0.0")
+opam = use_extension("@tools_opam//extensions:opam.bzl", "opam")
+opam.deps(pkgs = {"ounit2": "2.2.7"})
+use_repo(opam, "opam.ounit2")
+use_repo(opam, "opam", "opam.ocamlsdk")                               <1>
+register_toolchains("@opam.ocamlsdk//toolchain/selectors/local:all")  <2>
+register_toolchains("@opam.ocamlsdk//toolchain/profiles:all")         <2>
+----
+<1> Modules `opam` and `opam.ocamlsdk` are always implicitly configured.
+<2> The toolchains defined by module `opam.ocamlsdk` must always be registered.
+
+[source="starlark",title="BUILD.bazel"]
+----
+ocaml_module(name="A", struct="a.ml", deps=["@opam.ounit2//lib"],...)
+----
+====
+
+==== Attributes
+
+[.rule_attrs]
+[cols="1,3,1,1,1"]
+|===
+| Name  | Description | Type | Mandatory | Default
+| +++<a id="opam.deps-debug"></a>+++debug
+|  Debug level | +++Integer+++
+| optional
+|  `0` | +++<a id="opam.deps-ocaml_version"></a>+++ocaml_version
+|  Version of OCaml | +++String+++
+| optional
+|  `"5.3.0"` | +++<a id="opam.deps-opam_verbosity"></a>+++opam_verbosity
+|  Verbosity level for opam commands | +++Integer+++
+| optional
+|  `0` | +++<a id="opam.deps-opam_version"></a>+++opam_version
+|  Version of opam to use for xdg toolchain | +++String+++
+| optional
+|  `"2.3.0"` | +++<a id="opam.deps-pkgs"></a>+++pkgs
+|  List of opam pkg Ids | +++<a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a>+++
+| optional
+|  `{}` | +++<a id="opam.deps-toolchain"></a>+++toolchain
+|  opam toolchain: xdg, local, or global | +++String+++
+| optional
+|  `"xdg"` | +++<a id="opam.deps-verbosity"></a>+++verbosity
+|  Verbosity level | +++Integer+++
+| optional
+|  `0` 
+|===
+
+

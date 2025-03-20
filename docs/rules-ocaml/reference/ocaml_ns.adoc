@@ -8,7 +8,7 @@
 :page-parent: ['../reference']
 :page-tags: [tools,ocaml]
 :page-keywords: notes, tips, cautions, warnings, admonitions
-:page-last_updated: May 25, 2022
+:page-last_updated: Mar 18, 2025
 
 ## ocaml_ns
 
@@ -24,6 +24,19 @@ Macro. Expands to an link:ocaml_ns_config[ocaml_ns_config] and an
 link:ocaml_module[ocaml_module] target that together define an OCaml pseudo-namespace.
 
 === Attributes
+[.rule_attrs]
+[cols="1,3,1,1,1"]
+|===
+| Name  | Description | Type | Mandatory | Default
 
+| +++<a id="ocaml_ns-name"></a>+++name
+|  +++A unique name for this macro instance. Normally, this is also the name for the macro's main or only target. The names of any other targets that this macro might create will be this name with a string suffix.+++   | +++<a href="https://bazel.build/concepts/labels#target-names">Name</a>+++ | required | | +++<a id="ocaml_ns-import_as"></a>+++import_as
+|  -   | +++<a href="https://bazel.build/rules/lib/dict">Dictionary: Label -> String</a>+++ | optional |  `{}` | +++<a id="ocaml_ns-ns_import_as"></a>+++ns_import_as
+|  -   | +++<a href="https://bazel.build/rules/lib/dict">Dictionary: Label -> String</a>+++ | optional |  `{}` | +++<a id="ocaml_ns-ns_merge"></a>+++ns_merge
+|  -   | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++ | optional |  `[]` | +++<a id="ocaml_ns-ns_name"></a>+++ns_name
+|  +++Namespace name+++   | +++String; <a href="https://bazel.build/reference/be/common-definitions#configurable-attributes">nonconfigurable</a>+++ | optional |  `""` | +++<a id="ocaml_ns-private"></a>+++private
+|  -   | +++Boolean; <a href="https://bazel.build/reference/be/common-definitions#configurable-attributes">nonconfigurable</a>+++ | optional |  `False` | +++<a id="ocaml_ns-submodules"></a>+++submodules
+|  -   | +++List of strings+++ | optional |  `[]` | +++<a id="ocaml_ns-visibility"></a>+++visibility
+|  +++The visibility to be passed to this macro's exported targets. It always implicitly includes the location where this macro is instantiated, so this attribute only needs to be explicitly set if you want the macro's targets to be additionally visible somewhere else.+++   | +++<a href="https://bazel.build/concepts/labels">List of labels</a>; <a href="https://bazel.build/reference/be/common-definitions#configurable-attributes">nonconfigurable</a>+++ | optional | |===
 
 

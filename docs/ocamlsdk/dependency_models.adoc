@@ -1,11 +1,13 @@
-= Depencency Models
+= Dependency Models
 :page-permalink: /:path/dependency-models
-:page-layout: page_ocaml
-:page-pkg: ocaml
-:page-doc: ocaml
+:page-layout: page_rules_ocaml
+:page-pkg: rules_ocaml
+:page-doc: sdk
+:page-sidebar: rules_ocaml_sdk_sbdata
+:page-parent: ['../ocamlsdk']
 :page-tags: [ocaml,build]
 :page-keywords: notes, tips, cautions, warnings, admonitions
-:page-last_updated: July 16, 2022
+:page-last_updated: Mar 19, 2025
 :toc-title:
 :toc: true
 

@@ -25,5 +25,16 @@ This macro is a <a href="https://bazel.build/extending/macros#finalizers">rule f
 
 ${macroInfo.docString}
 
+#if (!$macroInfo.getAttributeList().isEmpty())
 === Attributes
+[.rule_attrs]
+[cols="1,3,1,1,1"]
+|===
+| Name  | Description | Type | Mandatory | Default
 
+#foreach ($attribute in $macroInfo.getAttributeList())
+| +++<a id="${macroName}-${attribute.name}"></a>+++$attribute.name
+| #if(!$attribute.docString.isEmpty()) +++${util.markdownCellFormat($attribute.docString)}+++ #else - #end  | +++${util.attributeTypeString($attribute)}+++ | ${util.mandatoryString($attribute)} | #if(!$attribute.defaultValue.isEmpty()) ${util.markdownCodeSpan($attribute.defaultValue)} #end
+#end
+#end
+|===

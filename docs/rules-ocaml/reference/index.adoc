@@ -7,17 +7,17 @@
 :page-toc: false
 :page-tags: [refman]
 :page-keywords: notes, tips, cautions, warnings, admonitions
-:page-last_updated: May 2, 2022
+:page-last_updated: Mar 18, 2025
 
-== Rules
-* link:ocaml-rules[ocaml rules]
-* link:rules-ocaml/reference/ppx[ppx rules]
+// == Rules
+// * link:ocaml-rules[ocaml rules]
+// * link:rules-ocaml/reference/ppx[ppx rules]
 
-== Providers
-* link:ocaml-providers[ocaml providers]
-* link:providers_ppx.md[ppx providers]
-* link:providers_opam.md[opam providers]
+// == Providers
+// * link:ocaml-providers[ocaml providers]
+// * link:providers_ppx.md[ppx providers]
+// * link:providers_opam.md[opam providers]
 
-== Functions
-* ocaml link:functions[Functions]
+// == Functions
+// * ocaml link:functions[Functions]
 

@@ -29,7 +29,7 @@ entries:
       - title: ocaml_binary
         url: ocaml_binary
         output: web
-        subsubfolderitems:
+        subfolderitems:
         - title: Configurable defaults
           url: "#_configurable-defaults"
           output: web
@@ -40,7 +40,7 @@ entries:
       - title: ocaml_import
         url: ocaml_import
         output: web
-        subsubfolderitems:
+        subfolderitems:
         - title: Configurable defaults
           url: "#_configurable-defaults"
           output: web
@@ -51,7 +51,7 @@ entries:
       - title: ocaml_library
         url: ocaml_library
         output: web
-        subsubfolderitems:
+        subfolderitems:
         - title: Configurable defaults
           url: "#_configurable-defaults"
           output: web
@@ -62,7 +62,7 @@ entries:
       - title: ocaml_module
         url: ocaml_module
         output: web
-        subsubfolderitems:
+        subfolderitems:
         - title: Examples
           url: "#_examples"
           output: web
@@ -76,7 +76,7 @@ entries:
       - title: ocaml_ns
         url: ocaml_ns
         output: web
-        subsubfolderitems:
+        subfolderitems:
         - title: Configurable defaults
           url: "#_configurable-defaults"
           output: web
@@ -87,7 +87,7 @@ entries:
       - title: ocaml_ns_config
         url: ocaml_ns_config
         output: web
-        subsubfolderitems:
+        subfolderitems:
         - title: Configurable defaults
           url: "#_configurable-defaults"
           output: web
@@ -98,7 +98,7 @@ entries:
       - title: ocaml_ns_module
         url: ocaml_ns_module
         output: web
-        subsubfolderitems:
+        subfolderitems:
         - title: Configurable defaults
           url: "#_configurable-defaults"
           output: web
@@ -109,7 +109,7 @@ entries:
       - title: ocaml_runtime
         url: ocaml_runtime
         output: web
-        subsubfolderitems:
+        subfolderitems:
         - title: Configurable defaults
           url: "#_configurable-defaults"
           output: web
@@ -120,7 +120,7 @@ entries:
       - title: ocaml_signature
         url: ocaml_signature
         output: web
-        subsubfolderitems:
+        subfolderitems:
         - title: Configurable defaults
           url: "#_configurable-defaults"
           output: web
@@ -131,7 +131,7 @@ entries:
       - title: ocaml_test
         url: ocaml_test
         output: web
-        subsubfolderitems:
+        subfolderitems:
         - title: Configurable defaults
           url: "#_configurable-defaults"
           output: web

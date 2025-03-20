@@ -14,24 +14,37 @@ entries:
     folderitems:
     - title: Language
       levels: two
-      url: ocaml/language
+      url: ocamlsdk/language
       output: web
-    - title: Toolchains
+    - title: Tools
       levels: two
-      url: ocaml/toolchains
+      url: ocamlsdk/tools
+      output: web
+    - title: Dependencies
+      levels: two
+      url: ocamlsdk/dependency-models
       output: web
     - title: Build protocols
       levels: two
-      url: ocaml/build-protocols
+      url: ocamlsdk/build-protocols
+      output: web
+    - title: Package management
+      levels: two
+      url: ocamlsdk/pkg-mgmt
       output: web
 
   - title: Bazel for OCaml devs
     open: true
+    url: bazel
     output: web
     folderitems:
-    - title: Overview
+    - title: Table of Contents
+      url: bazel#toc
       levels: two
-      url: bazel/user-guide
+      output: web
+    - title: Transparency
+      levels: two
+      url: bazel#transparency
       output: web
     - title: Bzlmod
       levels: two
@@ -99,26 +112,18 @@ entries:
     output: web
     folderitems:
     - title: rules_cppo
-      url: OCamlCcInfo
+      external_url: https://github.com/obazl/rules_cppo
       output: web
     - title: rules_ctypes
-      url: rules-ctypes
+      external_url: https://github.com/obazl/rules_ctypes
       output: web
     - title: rules_jsoo
       open: true
       output: web
-      subfolderitems:
-      - title: User Guide
-        url: rules-jsoo/user-guide
-        output: web
-      - title: Reference Manual
-        url: rules-jsoo/reference
-        output: web
-      - title: Developer Guide
-        url: rules-jsoo/dev-guide
-        output: web
+      external_url: https://github.com/obazl/rules_jsoo
     - title: rules_menhir
-      url: OCamlCcInfo
+      open: true
+      external_url: https://github.com/obazl/rules_menhir
       output: web
 
   - title: Interop

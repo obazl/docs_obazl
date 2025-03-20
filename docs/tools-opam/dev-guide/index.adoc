@@ -1,8 +1,10 @@
 = Developer Guide: tools_opam
 :page-permalink: /:path/index.html
-:page-layout: page_tools_opam
-:page-pkg: tools_opam
+:page-layout: page_rules_ocaml
+:page-pkg: rules_ocaml
 :page-doc: dg
+:page-sidebar: tools_opam_dg_sbdata
+:page-parent: ['../dev-guide']
 :page-otags: [opam,tools]
 :page-keywords: notes, tips, cautions, warnings, admonitions
 :page-last_updated: May 2, 2022

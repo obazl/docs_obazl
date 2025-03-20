@@ -1,0 +1,36 @@
+ruleset: tools_opam
+entries:
+- title: home
+  part: Home page
+  product: tools_opam
+  url:  /docs_obazl/tools_opam
+  version: 2.0
+  levels: four
+  folders:
+
+  - title: tools_opam
+    open: true
+    output: web
+    folderitems:
+    - title: Dependencies
+      levels: two
+      url: opam_dependencies.html
+      output: web
+    - title: User Guide
+      levels: two
+      url: /docs_obazl/tools-opam/user-guide
+      output: web
+    - title: Reference
+      levels: two
+      # url: /docs_obazl/tools-opam/reference
+      output: web
+      subfolderitems:
+      - title: ctypes_module
+        levels: two
+        url: reference/ctypes_module
+        output: web
+
+    - title: Developer Guide
+      levels: two
+      url: /docs_obazl/tools-opam/dev-guide
+      output: web

@@ -8,7 +8,7 @@
 :page-parent: ['../reference']
 :page-tags: [tools,ocaml]
 :page-keywords: notes, tips, cautions, warnings, admonitions
-:page-last_updated: May 25, 2022
+:page-last_updated: Mar 18, 2025
 
 `load("@rules_ocaml//build/_rules:ocaml_test.bzl", "ocaml_test")`
 
@@ -36,7 +36,7 @@ In addition to the [OCaml configurable defaults](#configdefs) that apply to all
  See [Configurable Defaults](../ug/configdefs_doc.md) for more information.
 
 
-=== Attributes
+== Attributes
 
 [.rule_attrs]
 [cols="1,1,1,1,1"]
@@ -52,7 +52,7 @@ In addition to the [OCaml configurable defaults](#configdefs) that apply to all
 | optional
 | []
 | +++<a class="rule-attr" id="ocaml_test-archive_deps"></a>+++archive_deps
-|  - | +++Boolean+++
+|  Force archiving of library dependencies | +++Boolean+++
 | optional
 | False
 | +++<a class="rule-attr" id="ocaml_test-cc_deps"></a>+++cc_deps

@@ -12,36 +12,99 @@
 
 This site documents the OBazl toolsuite, version 3.0.0.
 
-WARNING: Version 3.0.0 is *_beta_* software as of Mar 18, 2025.
+[WARNING]
+====
+Version 3.0.0 is *_beta_* software as of Mar 18, 2025.
 Do not use in production, but please do test.
 
-// The OBazl rules
-// are deliberately low-level, in keeping with the goal of giving the
-// developer complete control (i.e. no magic). Obazl build rules
-// correspond more-or-less directly to the build commands they construct.
-// The down side of sugar-free rules is a degree of inconvenience. For
-// example, OBazl does not analyze implicit dependencies, so it is the
-// responsibility of the developer to discover and list them. It does not
-// support file globbing, so each source file must have a build rule.
-// Most such inconveniences can and will be addressed over time by
-// tooling built on the foundation of the primitive rules.
+This documentation is a Work-In-Progress. Things will be a little
+messy and incomplete.
+====
 
-link:changelog[CHANGES] from previous versions.
+* link:changelog[CHANGES] from previous versions.
+* link:status[Status]
 
-WARNING: This documentation is a Work-In-Progress.  Things will be
-a little messy and incomplete.
+== Getting started
 
-== link:status[Status]
+=== Demo projects
+
+NOTE: The demo projects use the `xdg` opam toolchain strategy
+(explained in link:tools-opam/user-guide[tools-opam]); this means the initial build will create an opam root
+and switch in `$XDG_DATA_HOME`. This only happens once, and `xdg`
+toolchains are shared by all OBazl projects. So the initial build may
+take a while; thereafter builds should be reasonably fast.
+
+The easiest way to get started is to fork/clone one of the demo projects. For example,
+
+.demo_hello
+[%collapsible%open]
+====
+----
+$ git clone https://github.com/obazl/demo_hello.git
+$ cd demo_hello
+$ bazel run bin:hello
+$ bazel test test
+$ bazel build //...                         <1>
+$ bazel test //...                          <2>
+$ bazel test //... --build_tests_only       <3>
+----
+<1>  Builds all targets
+<2>  Builds all targets and runs all tests
+<3>  Runs all tests but only builds targets required by the tests
+====
+
+Other demos:
+
+* https://github.com/obazl/demos_obazl[demos_obazl,window=_blank] contains over 150 small demos in the https://github.com/obazl/demos_obazl/tree/main/rules_ocaml[rules_ocaml,window=_blank] subdirectory. 
+* https://github.com/obazl/demos_ctypes[demos_ctypes] contains two examples demonstrating the use of https://github.com/obazl/rules_ctypes[rules_ctypes], an OBazl extension supporting https://github.com/yallop/ocaml-ctypes[ocaml-ctypes].  Also demonstrates integration of OCaml and C using https://github.com/bazelbuild/rules_cc[rules_cc].
+
+=== `@obazl//new`: generating a new project
 
 
-== Demos
 
-* https://github.com/obazl/demos_obazl[https://github.com/obazl/demos_obazl,window=_blank]
+.Generate a new project
+[%collapsible%open]
+====
+----
+$ mkdir obazl && cd obazl
+$ cat > .bazelrc <<EOF
+common --registry=https://raw.githubusercontent.com/obazl/registry/main/
+common --registry=https://bcr.bazel.build
+EOF
+$ cat > MODULE.bazel <<EOF
+module(name="myproj")
+bazel_dep(name = "tools_obazl", version = "3.0.0", repo_name = "obazl")
+EOF
+$ bazel run @obazl//new -- --help
+$ bazel run @obazl//new -- --list
+Templates available from library @templates_ocaml
+	ffi/ctypes
+		Minimal project using ctypes library
+        ...
+	proj/hello
+		Minimal working example
+...
+$ bazel run @obazl//new -- -t proj/hello -n howdy
+$ cd howdy
+$ bazel build //... --show_result=10            <1>
+$ bazel test //... --show_result=10
+----
+<1> Builds all targets.  `--show_result` is optional; it tells OBazl to tell print information about build outputs, which is not printed by default.
+====
 
-// * link:deployments/mina
 
+== Summary of features
 
-// * https://github.com/obazl/tools_obazl[tools_obazl]
+The OBazl rules
+are deliberately low-level, in keeping with the goal of giving the
+developer complete control (i.e. no magic). OBazl build rules
+correspond more-or-less directly to the build commands they construct.
+The down side of sugar-free rules is a degree of inconvenience. For
+example, OBazl does not analyze implicit dependencies, so it is the
+responsibility of the developer to discover and list them. It does not
+support file globbing, so each source file must have a build rule.
+Most such inconveniences can and will be addressed over time by
+tooling built on the foundation of the primitive rules.
 
 
 == Support

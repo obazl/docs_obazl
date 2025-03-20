@@ -12,7 +12,7 @@
 
 TODO: how OBazl manages transitive deps.
 
-=== Dependency classes
+== Dependency classes
 
 * direct and indirect
 * module v. interface

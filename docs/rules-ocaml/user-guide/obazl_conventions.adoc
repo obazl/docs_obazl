@@ -37,16 +37,6 @@ See link:https://bazel.build/docs/bazelrc[Write bazelrc configuration files,wind
   processing. For example, if you are adding Bazel support to a
   project that uses Dune, put `_build` in `.bazelignore`.
 
-* `WORKSPACE.bazel`, not `WORKSPACE`
-
-* Explicitly name your workspace - make `workspace(name="foo")` the
-    first line of `WORKSPACE.bazel` (replacing `foo` with your
-    workspace name). This will make log messages more decipherable,
-    among other things.
-
-* Use `WORKSPACE.bzl` for extension code needed by `WORKSPACE.bazel`,
-  such as `fetch()` functions that link:bootstrapping.html#fetching-rules-repositories[fetch language rules and external repositories].
-
 * `BUILD.bazel`, not `BUILD`
 
 * Use `BUILD.bzl` for package-local extension code.
@@ -83,12 +73,6 @@ See link:https://bazel.build/docs/bazelrc[Write bazelrc configuration files,wind
 
 == Naming Conventions
 
-* Repository fetching functions:
-
-** `<lang>_fetch_rules` - for fetching rules packages
-** `<lang>_fetch_repo`, `<lang>_fetch_repos` - for fetching library repositories
-** alternative: `<lang>_fetch_lib`, `<lang>_fetch_libs`
-
 * primary target names should match package name. E.g. `//foo/bar:bar`
 
 * `ocaml_module` and `ppx_module` targets should capitalize the
@@ -99,5 +83,5 @@ See link:https://bazel.build/docs/bazelrc[Write bazelrc configuration files,wind
   modules, suffixed by `_cmi`. For example:
   `ocaml_interface(name="Foo_cmi", src="foo.mli"...)`
 
-* `ocaml_ns_resolver` target names should be suffixed by `_ns`.
+* `ocaml_ns` target names should be prefixed by `ns`.
 

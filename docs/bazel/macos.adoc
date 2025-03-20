@@ -73,16 +73,24 @@ When using the cc_toolchain (e.g. to build C, C++, objc, ...):
 
 == warnings
 
-You may see warnings like the following if your code links to external binaries not built by Bazel:
+You may see warnings like the following if your code links to CC libraries:
 
 `ld: warning: object file (bazel-out/darwin-fastbuild/bin/interop/ffi/case110/cclibs/liblibalpha.a(alpha.o)) was built for newer macOS version (12.3) than being linked (12.0)`
 
-In this example, we built a `cc_library` from source, which evidently was built differently than ...?
+This happens because we built `liblibalpha.a` with a Bazel rule (e.g.
+`cc_library`), which automatically adds `--mmacos_version_min=x.y.z`
+to its command line. We then pass it to the OCaml linker (on the
+command line, or using `-cclib`), which proceeds to call the system
+linker. But OCaml does not pass `--macos_version_min` to the linker, so if it has different ideas about the minimum version, you get this warning message.
 
-Adding `build --macos_minimum_os=12.0` to `.bazelrc` eliminates the
-warning. Setting the version to 12.3 does not. So evidently there is
-some binary involved that was built with 12.0, but I have no idea
-what.
+One way to address this is to add `build --macos_version_min=x.y.z` to
+`.bazelrc`. Another would be to pass `--cclib
+--macos_version_min=x.y.z` to OCaml.
+
+IMPORTANT: The latest version of `rules_ocaml` should eliminate this
+problem. The rules interrogate the Bazel cc toolchain to obtain the
+--macos_version_min option it uses, and then pass it to the OCaml
+linker.
 
 == todo
 

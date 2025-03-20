@@ -1,0 +1,61 @@
+= Package management
+:page-permalink: /:path/pkg-mgmt
+:page-layout: page_rules_ocaml
+:page-pkg: rules_ocaml
+:page-doc: sdk
+:page-sidebar: rules_ocaml_sdk_sbdata
+:page-parent: ['../ocamlsdk']
+:page-tags: [ocaml,build]
+:page-keywords: notes, tips, cautions, warnings, admonitions
+:page-last_updated: Mar 18, 2025
+:toc-title:
+:toc: true
+
+The standard package manager for OCaml is https://opam.ocaml.org/[opam,window=_blank].
+
+Instruction for configuring an opam switch is beyond the scope of this
+guide, but here are some common useful commands:
+
+* `$ opam switch show` - prints the name of the _current_ switch
+* `$ opam switch` - shows all installed switches
+* `$ opam list` - shows all packages installed in the current switch
+* `$ opam pin list` - shows all "pinned" packages
+* `$ opam config list` - lists all general configuration settings
+* `$ opam config list ounit2` - lists all configuration settings for package `ounit2`
+* `$ opam var` - same as `opam config list`
+* `$ opam var bin` - print the value of the `bin` var of the current switch
+* `$ opam var --package <pkg>` - prints all variables for package `<pkg>` as `<pkg>:<var>`
+* `$ opam var <pkg>:<var>` - prints value of variable for package, e.g.
+** `$ opam var ounit2:version` - prints version string of package `ounit2`
+
+WARNING: "opam var --package ..." may be very, very slow.
+
+OPAM switch names commonly match the version string of the installed
+compiler, but this is not required; you can name your switches however
+you wish. In that case, here are some useful commands, using `--switch
+<s>` to pick out a switch:
+
+* `$ opam list --switch myswitch` - list packages installed for switch `myswitch`
+* `$ opam config list --switch myswitch` - prints variables for switch `myswitch`.
+* `$ opam var --package ocaml --switch myswitch` - prints variables for the `ocaml` package of switch `myswitch`
+** `$ opam var ocaml:version --switch myswitch` - prints  `version` variable of the `ocaml` package of switch `myswitch`
+** `$ opam var ocaml:depends --switch myswitch` - prints `depends` variable (i.e. compiler build options)  of the `ocaml` package of switch `myswitch`
+* `$ opam var --package ocaml-base-compiler --switch myswitch` - prints variables for the `ocaml-base-compiler` package of switch `myswitch`
+
+NOTE: Compiler versions are treated as (pseudo) packages. When you run
+`$ opam switch` you will see that the "compiler" column lists strings of
+form `<pkgname>.<varname>`; for example, `ocaml-base-compiler.4.12.0`.
+If you have installed a compiler with `+options` the string will look
+like `ocaml-variants.4.14.0+options`. Use the `<pkgname>` part to obtain information about the compiler, e.g. `$ opam var --package ocaml-base-compiler:version --switch myswitch`.
+
+WARNING: The `ocaml-base-compiler` variable is unreliable! Don't use it unless it is listed in the output of `$ opam config list --switch myswitch`.
+
+  * If you use `emacs`, you probably want to install `merlin`.
+
+// * link:tools.md[Tools]
+
+* Locally installed (system) libraries. Some OPAM packages depend on locally
+  installed resources. For example, package `bignum` depends on
+  package `zarith`, which depends on a local installation of `libgmp` (usually in `/usr/local`).
+
+

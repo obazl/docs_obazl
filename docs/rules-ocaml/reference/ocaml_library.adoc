@@ -8,16 +8,18 @@
 :page-parent: ['../reference']
 :page-tags: [tools,ocaml]
 :page-keywords: notes, tips, cautions, warnings, admonitions
-:page-last_updated: May 25, 2022
+:page-last_updated: Mar 18, 2025
 
 `load("@rules_ocaml//build/_rules:ocaml_library.bzl", "ocaml_library")`
 
 [.prototype]
 pass:[
-ocaml_library(<a href="#ocaml_library-name">name</a>, <a href="#ocaml_library-archive_name">archive_name</a>, <a href="#ocaml_library-env">env</a>, <a href="#ocaml_library-linkage">linkage</a>, <a href="#ocaml_library-manifest">manifest</a>, <a href="#ocaml_library-ns_name">ns_name</a>, <a href="#ocaml_library-opts">opts</a>, <a href="#ocaml_library-shared">shared</a>, <a href="#ocaml_library-standalone">standalone</a>)
+ocaml_library(<a href="#ocaml_library-name">name</a>, <a href="#ocaml_library-archive_name">archive_name</a>, <a href="#ocaml_library-env">env</a>, <a href="#ocaml_library-linkage">linkage</a>, <a href="#ocaml_library-manifest">manifest</a>, <a href="#ocaml_library-opts">opts</a>)
 ]
 
 Aggregates a collection of OCaml modules. [User Guide](../ug/ocaml_library.md). Provides: [OCamlLibraryProvider](providers_ocaml.md#ocamllibraryprovider).
+
+xXXXX
 
 An `ocaml_library` is a collection of modules packaged into an OBazl
 target; it is not a single binary file. It is a OBazl convenience rule
@@ -33,10 +35,10 @@ more information see [Collections: Libraries, Archives and
 Packages](../ug/collections.md).
 
 
-=== Attributes
+== Attributes
 
 [.rule_attrs]
-[cols="1,1,1,1,1"]
+[cols="1,3,1,1,1"]
 |===
 | Name  | Description | Type | Mandatory | Default
 
@@ -61,22 +63,10 @@ Overrides hidden _linkage | +++String+++
 |  List of component modules, for libraries and archives. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
 | optional
 | []
-| +++<a class="rule-attr" id="ocaml_library-ns_name"></a>+++ns_name
-|  - | +++String+++
-| optional
-| ""
 | +++<a class="rule-attr" id="ocaml_library-opts"></a>+++opts
 |  List of compile options; overrides configurable default options. Supports `+-no-+` prefix for each option; for example, `-no-linkall`. | +++List of strings+++
 | optional
 | []
-| +++<a class="rule-attr" id="ocaml_library-shared"></a>+++shared
-|  True: build a shared lib (.cmxs) | +++Boolean+++
-| optional
-| False
-| +++<a class="rule-attr" id="ocaml_library-standalone"></a>+++standalone
-|  True: link total depgraph. False: link only direct deps. | +++Boolean+++
-| optional
-| False
 
 |===
 

@@ -1,26 +1,20 @@
-= OCaml: Toolchains & Ecosystem
-:page-permalink: /:path/toolchains
+= OCaml: Tools & Ecosystem
+:page-permalink: /:path/tools
 :page-layout: page_rules_ocaml
-:page-pkg: ocaml
-:page-doc: ocaml
+:page-pkg: rules_ocaml
+:page-doc: sdk
+:page-sidebar: rules_ocaml_sdk_sbdata
+:page-parent: ['../ocamlsdk']
 :page-tags: [ocaml,toolchain]
 :page-keywords: notes, tips, cautions, warnings, admonitions
-:page-last_updated: May 16, 2022
+:page-last_updated: Mar 19, 2025
 :toc-title:
 :toc: true
 
-WARNING: Status: very rough as of 5/25/22.
-
-Standard OCaml distributions contain no fewer than four toolchains.  ...
-
-IMPORTANT: The current OBazl toolsuite uses one OPAM-based Bazel
-toolchain that contains all the tools in the selected OPAM switch
-(i.e. OCaml distribution). Build mode (bytecode or native) is
-controlled by a configurable default rule passed on the command line;
-see X for details. The profiling compilers are not supported. The next
-version will contain one Bazel toolchain for each OCaml toolchain.
-
 == Compilers
+
+Standard OCaml distributions contain no fewer than four toolchains.
+
 
 [cols="1,1,1,1"]
 |===
@@ -55,9 +49,11 @@ The `\*.opt` versions are native code binaries; the `*.byte` versions
 are bytecode binaries, which must be executed with
 link:https://v2.ocaml.org/manual/runtime.html[ocamlrun,window="_blank"].
 
+WARNING: Runtime tracing has changed in version 5.
+
 The profiling complers instrument the source code, adding code to
 record how many times functions are called, branches of conditionals
-are taken, etc.  See also link:https://v2.ocaml.org/manual/instrumented-runtime.html[Runtime tracing with the instrumented runtime,window="_blank"].
+are taken, etc.
 
 By default, names without an extension are symlinked to the optimized (native) binaries:
 
@@ -99,10 +95,14 @@ The OCaml toolchain includes a variety of tools, most of which come in
 * link:https://v2.ocaml.org/manual/lexyacc.html#s%3Aocamlyacc-overview[ocamlyacc,window="_blank"] - parser generator
 
 
-== OPAM
+== Package managment
 
+See link:pkg-mgmt[Package management] for more information.
 
-== Third-party Tools
+=== OPAM
+
+link:https://opam.ocaml.org/[opam,window=_blank] is the standard OCaml package manager.
+
 
 === ocamlfind and the findlib library
 
@@ -113,18 +113,27 @@ but the metadata language it defines is used by OPAM.
 
 link:https://github.com/ocaml/ocamlfind[ocamlfind,window="_blank"] is a commonly used command-line interface to the `findlib` library.
 
-=== OPAM
 
-link:https://opam.ocaml.org/[OPAM] is the standard OCaml package manager.
+== Build tools
 
-=== Dune
+* https://buck2.build/[Buck2] supports OCaml.
 
-link:https://github.com/ocaml/dune[Dune] is the most commonly used
+* link:https://github.com/ocaml/dune[Dune] is the most commonly used
 build system for OCaml. Many if not most OPAM packages use Dune.
 
-OBazl is an alternative to Dune.
+* https://github.com/ocaml/ocamlbuild[ocamlbuild] is the legacy build tool. It has largely been supplanted by Dune, but it is still in use.
 
-=== Other
+* https://github.com/ocaml-omake/omake[omake]
+
+* https://erratique.ch/software/b0[B0] is an interesting system that is used to build some popular OCaml packages.
+
+* https://github.com/ocaml/oasis[oasis] is another legacy tool. The last update to the repo was five years ago.
+
+* Makefiles are still used by many OCaml developers. The OCaml
+  distribution uses Makefiles.
+
+
+== Other tools
 
 * link:https://github.com/Octachron/codept[codept,window="_blank"] - alternative dependency solver
 * link:https://github.com/ocaml-community/cppo[cppo,window="_blank"] - preprocessor, modeled on the C preprocessor

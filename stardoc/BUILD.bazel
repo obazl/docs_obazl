@@ -16,10 +16,10 @@ RULE_SYMS = [
     "ocamllex",
     "ocaml_library",
     "ocaml_module",
-    "ocaml_ns_archive",
-    "ocaml_ns_library",
+    # "ocaml_ns_archive",
+    # "ocaml_ns_library",
     # "ocaml_ns_module",
-    "ocaml_ns_resolver",
+    # "ocaml_ns_resolver",
     # "ocaml_parsing", => ocamllex, ocamlyacc
     "ocaml_signature",
     "ocaml_test",
@@ -140,7 +140,7 @@ stardoc(
     symbol_names = ["ocaml_ns"],
     out = "ocaml_ns.adoc",
     header_template = "//stardoc/templates/asciidoc:header_empty.vm",
-    macro_template = "//stardoc/templates/asciidoc:macros.vm",
+    macro_template = "//stardoc/templates/asciidoc:macro_rule_refman.vm",
     deps  = [":misc"],
 )
 
@@ -628,6 +628,20 @@ stardoc(
         "@bazel_skylib//lib:structs",
         "@bazel_skylib//rules:common_settings",
     ],
+)
+
+################################################################
+stardoc(
+    name = "tools_opam",
+    input = "@tools_opam//extensions:opam.bzl",
+    # symbol_names = ["opam"],
+    out = "tools_opam_opam.adoc",
+    header_template = "//stardoc/templates/asciidoc:header_empty.vm",
+    module_extension_template = "//stardoc/templates/asciidoc:module_extension.vm",
+    deps  = [
+        ":misc",
+        "@tools_opam//extensions:stardoc"
+    ]
 )
 
 

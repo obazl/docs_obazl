@@ -1,0 +1,84 @@
+ruleset: rules_ctypes
+entries:
+- title: rules_ctypes
+  part: Reference Manual
+  product: rules_ctypes
+  url:  /docs_obazl/rules-ctypes/reference
+  version: 2.0
+  levels: four
+  folders:
+
+  - title: Ctypes
+    open: true
+    # url: workflow
+    output: web
+    levels: two
+    folderitems:
+    - title: Global build settings
+      open: true
+      output: web
+    - title: Profiles
+      open: true
+      output: web
+
+  - title: Rules
+    open: true
+    output: web
+    folderitems:
+
+    - title: ppx_executable
+      url: ppx_executable
+      output: web
+      subfolderitems:
+      - title: Configurable defaults
+        url: "#_configurable-defaults"
+        output: web
+      - title: Attributes
+        url: "#_attributes"
+        output: web
+
+    - title: ppx_expect_test
+      url: ppx_expect_test
+      output: web
+      subfolderitems:
+      - title: Configurable defaults
+        url: "#_configurable-defaults"
+        output: web
+      - title: Attributes
+        url: "#_attributes"
+        output: web
+
+    - title: ppx_inline_test
+      url: ppx_inline_test
+      output: web
+      subfolderitems:
+      - title: Configurable defaults
+        url: "#_configurable-defaults"
+        output: web
+      - title: Attributes
+        url: "#_attributes"
+        output: web
+
+    - title: ppx_transform
+      url: ppx_transform
+      output: web
+      subfolderitems:
+      - title: Configurable defaults
+        url: "#_configurable-defaults"
+        output: web
+      - title: Attributes
+        url: "#_attributes"
+        output: web
+
+  - title: Providers
+    open: true
+    output: web
+    folderitems:
+
+    - title: OCamlCcInfo
+      url: OCamlCcInfo
+      output: web
+    - title: OCamlDepsProvider
+      url: OCamlDepsProvider
+      output: web
+

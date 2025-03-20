@@ -1,0 +1,117 @@
+ruleset: Bazel
+entries:
+- title: home
+  part: Home page
+  product: Bazel User Guide
+  url:  /docs_obazl/bazel
+  version: 2.0
+  levels: four
+  folders:
+
+  - title: Bazel for OCaml devs
+    open: true
+    url: "./"
+    output: web
+    folderitems:
+    - title: Top
+      open: true
+      url: "./#"
+      output: web
+    - title: Overview
+      open: true
+      url: "#_overview"
+      output: web
+    - title: OCaml tasks
+      open: true
+      url: "#_ocaml-specific-tasks"
+      output: web
+    - title: Bazel
+      open: true
+      url: "#_bazel"
+      output: web
+    - title: Bzlmod
+      open: true
+      url: "#_bzlmod"
+      output: web
+    - title: Setup
+      open: true
+      url: "#_setup"
+      output: web
+    - title: Transparency
+      open: true
+      url: "#transparency"
+      output: web
+    - title: Tips
+      open: true
+      url: "#_useful-tips"
+      output: web
+    - title: MacOS
+      open: true
+      url: macos
+      output: web
+
+  - title: Official Docs
+    open: true
+    output: web
+    folderitems:
+
+
+    - title: Build phases
+      external_url: https://bazel.build/run/build#build-phases
+      output: web
+
+    - title: Containerization
+      external_url: https://github.com/bazel-contrib/rules_oci
+      output: web
+
+    - title: Evaluation model
+      external_url: https://docs.bazel.build/versions/master/skylark/concepts.html#evaluation-model
+      output: web
+
+    - title: Modules
+      external_url: https://bazel.build/external/module
+      output: web
+
+    - title: Offline builds
+      external_url: https://bazel.build/external/advanced#offline_builds
+      output: web
+
+    - title: Persistent workers
+      external_url: https://docs.bazel.build/versions/master/persistent-workers.html
+      output: web
+
+    - title: Platforms
+      external_url: https://docs.bazel.build/versions/master/platforms.html
+      output: web
+
+    - title: Query guide
+      external_url: https://bazel.build/query/guide
+      output: web
+
+    - title: Query language
+      external_url: https://bazel.build/query/language
+      output: web
+
+    - title: Remote caching
+      external_url: https://docs.bazel.build/versions/master/remote-caching.html
+      output: web
+
+    - title: Remote execution
+      external_url: https://docs.bazel.build/versions/master/remote-execution.html
+      output: web
+
+    - title: Repo names - apparent
+      external_url: https://bazel.build/external/overview#apparent-repo-name
+      output: web
+
+    - title: Repo names - canonical
+      external_url: https://bazel.build/external/overview#canonical-repo-name
+      output: web
+
+    - title: Rules
+      external_url: https://bazel.build/extending/rules
+      output: web
+
+    - title: Toolchains
+      external_url: https://bazel.build/extending/toolchains
+      output: web

@@ -1,0 +1,25 @@
+ruleset: rules_ocaml
+entries:
+- title: OCaml SDK
+  part: OCaml SDK
+  product: rules_ocaml
+  url:  /docs_obazl/ocamlsdk
+  version: 2.0
+  levels: four
+  folders:
+
+  - title: Language
+    url: language
+    output: web
+  - title: Tools
+    url: tools
+    output: web
+  - title: Dependencies
+    url: dependency-models
+    output: web
+  - title: Build Protocols
+    url: build-protocols
+    output: web
+  - title: Package management
+    url: pkg-mgmt
+    output: web

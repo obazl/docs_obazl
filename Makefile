@@ -1,6 +1,12 @@
+.PHONY: import lib module ns rt test
+
 default: ns lib
 
 xdefault: rules_ocaml sidebars tools_ocaml providers
+
+binary:
+	bazel build //stardoc:ocaml_binary --show_result=20 \
+	 && cp -fv .bazel/bin/stardoc/ocaml_binary.adoc docs/rules-ocaml/reference
 
 import:
 	bazel build //stardoc:ocaml_import --show_result=20 \
@@ -22,9 +28,17 @@ rt:
 	bazel build //stardoc:ocaml_runtime --show_result=20 \
 	 && cp -fv .bazel/bin/stardoc/ocaml_runtime.adoc docs/rules-ocaml/reference
 
+sig:
+	bazel build //stardoc:ocaml_signature --show_result=20 \
+	 && cp -fv .bazel/bin/stardoc/ocaml_signature.adoc docs/rules-ocaml/reference
+
 test:
 	bazel build //stardoc:ocaml_test --show_result=20 \
 	 && cp -fv .bazel/bin/stardoc/ocaml_test.adoc docs/rules-ocaml/reference
+
+tools_opam:
+	bazel build //stardoc:tools_opam --show_result=20 \
+	 && cp -fv .bazel/bin/stardoc/tools_opam_opam.adoc docs/tools-opam/reference
 
 providers:
 	bazel build \
@@ -35,9 +49,9 @@ providers:
 	 && cp -fv .bazel/bin/stardoc/OCamlDepsProvider.adoc docs/rules-ocaml/reference
 
 
-rules_ocaml:
-	bazel build //stardoc:rules_ocaml \
-	&& sudo cp -v .bazel/bin/stardoc/rules_ocaml.adoc docs/rules-ocaml/reference/ocaml-rules.adoc
+
+
+rules_ocaml: binary import lib module ns rt sig test
 
 sidebars:
 	bazel build //stardoc:rules_ocaml_sidebar \

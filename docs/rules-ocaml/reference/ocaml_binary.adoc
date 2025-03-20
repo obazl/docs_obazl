@@ -8,14 +8,14 @@
 :page-parent: ['../reference']
 :page-tags: [tools,ocaml]
 :page-keywords: notes, tips, cautions, warnings, admonitions
-:page-last_updated: May 25, 2022
+:page-last_updated: Mar 18, 2025
 
 `load("@rules_ocaml//build:rules.bzl", "ocaml_binary")`
 
 [.prototype]
 pass:[
-ocaml_binary(<a href="#ocaml_binary-name">name</a>, <a href="#ocaml_binary-data">data</a>, <a href="#ocaml_binary-archive_deps">archive_deps</a>, <a href="#ocaml_binary-cc_deps">cc_deps</a>, <a href="#ocaml_binary-cc_linkall">cc_linkall</a>, <a href="#ocaml_binary-cc_linkopts">cc_linkopts</a>, <a href="#ocaml_binary-data_prefix_map">data_prefix_map</a>, <a href="#ocaml_binary-env">env</a>,
-             <a href="#ocaml_binary-epilogue">epilogue</a>, <a href="#ocaml_binary-exe">exe</a>, <a href="#ocaml_binary-main">main</a>, <a href="#ocaml_binary-opts">opts</a>, <a href="#ocaml_binary-prologue">prologue</a>, <a href="#ocaml_binary-runtime">runtime</a>, <a href="#ocaml_binary-vm_linkage">vm_linkage</a>)
+ocaml_binary(<a href="#ocaml_binary-name">name</a>, <a href="#ocaml_binary-data">data</a>, <a href="#ocaml_binary-cc_deps">cc_deps</a>, <a href="#ocaml_binary-cc_linkall">cc_linkall</a>, <a href="#ocaml_binary-cc_linkopts">cc_linkopts</a>, <a href="#ocaml_binary-data_prefix_map">data_prefix_map</a>, <a href="#ocaml_binary-env">env</a>, <a href="#ocaml_binary-epilogue">epilogue</a>, <a href="#ocaml_binary-exe_name">exe_name</a>,
+             <a href="#ocaml_binary-force_archived_libdeps">force_archived_libdeps</a>, <a href="#ocaml_binary-main">main</a>, <a href="#ocaml_binary-opts">opts</a>, <a href="#ocaml_binary-prologue">prologue</a>, <a href="#ocaml_binary-runtime">runtime</a>, <a href="#ocaml_binary-vm_linkage">vm_linkage</a>)
 ]
 
 Generates an OCaml executable binary.
@@ -43,10 +43,10 @@ the difference between '/' and ':' in such labels):
 **NOTE** These do not support `:enable`, `:disable` syntax.
 
 
-=== Attributes
+== Attributes
 
 [.rule_attrs]
-[cols="1,1,1,1,1"]
+[cols="1,3,1,1,1"]
 |===
 | Name  | Description | Type | Mandatory | Default
 
@@ -58,10 +58,6 @@ the difference between '/' and ':' in such labels):
 |  Runtime dependencies: list of labels of data files needed by this executable at runtime. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
 | optional
 | []
-| +++<a class="rule-attr" id="ocaml_binary-archive_deps"></a>+++archive_deps
-|  - | +++Boolean+++
-| optional
-| False
 | +++<a class="rule-attr" id="ocaml_binary-cc_deps"></a>+++cc_deps
 |  Dictionary specifying C/C++ library dependencies. Key: a target label; value: a linkmode string, which determines which file to link. Valid linkmodes: 'default', 'static', 'dynamic', 'shared' (synonym for 'dynamic'). For more information see [CC Dependencies: Linkmode](../ug/cc_deps.md#linkmode). | +++<a href="https://bazel.build/rules/lib/dict">Dictionary: Label -> String</a>+++
 | optional
@@ -86,10 +82,14 @@ the difference between '/' and ':' in such labels):
 |  List of OCaml dependencies. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
 | optional
 | []
-| +++<a class="rule-attr" id="ocaml_binary-exe"></a>+++exe
+| +++<a class="rule-attr" id="ocaml_binary-exe_name"></a>+++exe_name
 |  By default, executable name is derived from 'name' attribute; use this to override. | +++String+++
 | optional
 | ""
+| +++<a class="rule-attr" id="ocaml_binary-force_archived_libdeps"></a>+++force_archived_libdeps
+|  Force archiving of library dependencies | +++Boolean+++
+| optional
+| False
 | +++<a class="rule-attr" id="ocaml_binary-main"></a>+++main
 |  Label of module containing entry point of executable. In the list of dependencies, this will be placed after 'prologue' deps and before 'epilogue' deps. | +++<a href="https://bazel.build/concepts/labels">Label</a>+++
 | required

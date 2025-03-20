@@ -9,7 +9,10 @@
     {% else %}
     <a href=".">
     {% endif %}
-    {% if {{page.doc}} == "home" %}Table of Contents
+    {% if {{page.doc}} == "home" %}
+    Table of Contents
+    {% elsif {{page.doc}} == "sdk" %}
+    OCaml SDK
     {% else %}
       {% if {{page.doc}} == "ug" %}Guide:{% endif %}
       {% if {{page.doc}} == "dg" %}Dev Guide:{% endif %}

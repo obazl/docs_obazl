@@ -8,7 +8,7 @@
 :page-parent: ['../reference']
 :page-tags: [tools,ocaml]
 :page-keywords: notes, tips, cautions, warnings, admonitions
-:page-last_updated: May 25, 2022
+:page-last_updated: Mar 18, 2025
 
 `load("@rules_ocaml//build/_rules:ocaml_runtime.bzl", "ocaml_runtime")`
 
@@ -20,7 +20,7 @@ ocaml_runtime(<a href="#ocaml_runtime-name">name</a>, <a href="#ocaml_runtime-de
 OCaml runtime, either system (std, debug, instrumented)or user-defined using ocamlc -make-runtime
 
 
-=== Attributes
+== Attributes
 
 [.rule_attrs]
 [cols="1,1,1,1,1"]

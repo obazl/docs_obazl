@@ -1,8 +1,10 @@
 = Dependencies
-:page-permalink: /:path/dependencies
+:page-permalink: /:path/opam-dependencies
 :page-layout: page_tools_opam
 :page-pkg: tools_opam
 :page-doc: dg
+:page-sidebar: tools_opam_dg_sbdata
+:page-parent: ['../dev-guide']
 :page-tags: [opam,tools,dependencies]
 :page-keywords: notes, tips, cautions, warnings, admonitions
 :page-last_updated: May 15, 2022
@@ -101,7 +103,7 @@ Tasks:
 
 * find the (module) deps for for each source file - tools like `codept` and `ocamldeps` can do this
 
-==== Constructing the deps environment
+=== Constructing the deps environment
 
 
 The OBazl depsenv is layered:

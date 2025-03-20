@@ -15,6 +15,10 @@ bazel_dep(name = "stardoc",      version = "0.8.0")
 bazel_dep(name = "rules_ocaml",  version = "3.0.0.dev")
 bazel_dep(name = "rules_ppx",    version = "3.0.0.dev")
 bazel_dep(name = "rules_ctypes", version = "0.23.0.dev")
+
+bazel_dep(name = "tools_opam",   version = "1.0.0.dev")
+opam = use_extension("@tools_opam//extensions:opam.bzl", "opam")
+
 bazel_dep(name = "protobuf",     version = "29.0")
 
 # bazel_dep(name = "tools_ocaml",  version = "2.0.0")

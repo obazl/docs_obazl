@@ -1,15 +1,15 @@
 = OCaml: Build Protocols
 :page-permalink: /:path/build-protocols
-:page-layout: page_ocaml
-:page-pkg: ocaml
-:page-doc: ocaml
+:page-layout: page_rules_ocaml
+:page-pkg: rules_ocaml
+:page-doc: sdk
+:page-sidebar: rules_ocaml_sdk_sbdata
+:page-parent: ['../ocamlsdk']
 :page-tags: [ocaml,build]
 :page-keywords: notes, tips, cautions, warnings, admonitions
-:page-last_updated: July 16, 2022
+:page-last_updated: Mar 18, 2025
 :toc-title:
 :toc: true
-
-WARNING: Status: very rough as of 5/25/22.
 
 
 == link:https://v2.ocaml.org/manual/compunit.html#s:compilation-units[Compilation Units]
@@ -124,6 +124,8 @@ Q: what about dynamic linking, e.g. a.cmxs?
 
 == Runtimes
 
+=== System runtimes
+
 When linking an executable, the compilers search for a target runtime to link.
 
 Sys target: liibasmrun, libasmrunc, libasmruni - see asmcomp/asmlink.ml
@@ -158,6 +160,28 @@ similar if you use -output-obj etc.
 NB: when you link with -custom the runtime is automatically added
 
 So the challenge for the obazl code is to determine which runtime to add as a runtime dep, and when to explicitly list it on the cmd line.
+
+=== VM runtimes
+
+Bytecode executables run on a virtual machine. The standard VM is
+`ocamlrun`; this is often referred to as a “runtime” or “interpreter”.
+OBazl calls it a “vm runtime”. This is not entirely accurate, since
+technically speaking `ocamlrun` et al. contain more than just the
+runtime system. But it’s close enough.
+
+Two other vm runtimes are available: `ocamlrund` (for debugging) and
+`ocamlruni` (for instrumentation).
+
+In addition, OCaml supports several ways to customize the vm runtime:
+
+* Passing `-custom` to `ocamlc` tells it to embed the runtime in the
+  bytecode executable, which can then be run directly (without `ocamlrun`).
+* Passing `-output-complete-exe` tells `ocamlc` to “[b]uild a
+  self-contained executable by linking a C object file containing the
+  bytecode program, the OCaml runtime system and any other static C
+  code given to ocamlc.” The resulting executable can be run directly.
+* Passing `-make-runtime` tells `ocamlc` to generate a vm runtime containing C object files and libraries passed on the command line; the resulting vm runtime can then be used instead of `ocamlrun` to execute bytecode executables produced using `-use-runtime`.
+* Options `-with-runtime` and `-without-runtime` afford further customization.
 
 
 == Modules and the File System
@@ -206,6 +230,8 @@ The compiler can extract the principal signature from a module if you
 pass it the `-i` option. For this to work, though, all dependencies -
 structs and sigs - must be compiled first, so it is not as simple as
 passing the structfile source to the compiler with the `-i` flag.
+
+WARNING: The rest of this section is outdated and no longer accurate.
 
 The OBazl rule `ocaml_module` does not support the `-i` option; adding
 it would complicate the rule implementation for little benefit, since

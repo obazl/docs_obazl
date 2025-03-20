@@ -8,15 +8,13 @@
 :page-parent: ['../reference']
 :page-tags: [tools,ocaml]
 :page-keywords: notes, tips, cautions, warnings, admonitions
-:page-last_updated: May 25, 2022
+:page-last_updated: Mar 18, 2025
 
 `load("@rules_ocaml//build:rules.bzl", "ocaml_ns_config")`
 
 [.prototype]
 pass:[
-ocaml_ns_config(<a href="#ocaml_ns_config-name">name</a>, <a href="#ocaml_ns_config-deps">deps</a>, <a href="#ocaml_ns_config-data">data</a>, <a href="#ocaml_ns_config-cc_deps">cc_deps</a>, <a href="#ocaml_ns_config-cc_linkage">cc_linkage</a>, <a href="#ocaml_ns_config-deps_runtime">deps_runtime</a>, <a href="#ocaml_ns_config-env">env</a>, <a href="#ocaml_ns_config-import_as">import_as</a>, <a href="#ocaml_ns_config-module_name">module_name</a>,
-                <a href="#ocaml_ns_config-ns_import_as">ns_import_as</a>, <a href="#ocaml_ns_config-ns_merge">ns_merge</a>, <a href="#ocaml_ns_config-ns_name">ns_name</a>, <a href="#ocaml_ns_config-open">open</a>, <a href="#ocaml_ns_config-opts">opts</a>, <a href="#ocaml_ns_config-pack">pack</a>, <a href="#ocaml_ns_config-ppx">ppx</a>, <a href="#ocaml_ns_config-ppx_args">ppx_args</a>, <a href="#ocaml_ns_config-ppx_data">ppx_data</a>, <a href="#ocaml_ns_config-ppx_print">ppx_print</a>,
-                <a href="#ocaml_ns_config-ppx_verbose">ppx_verbose</a>, <a href="#ocaml_ns_config-private">private</a>, <a href="#ocaml_ns_config-sig">sig</a>, <a href="#ocaml_ns_config-struct">struct</a>, <a href="#ocaml_ns_config-submodules">submodules</a>)
+ocaml_ns_config(<a href="#ocaml_ns_config-name">name</a>, <a href="#ocaml_ns_config-env">env</a>, <a href="#ocaml_ns_config-import_as">import_as</a>, <a href="#ocaml_ns_config-ns_import_as">ns_import_as</a>, <a href="#ocaml_ns_config-ns_merge">ns_merge</a>, <a href="#ocaml_ns_config-ns_name">ns_name</a>, <a href="#ocaml_ns_config-opts">opts</a>, <a href="#ocaml_ns_config-private">private</a>, <a href="#ocaml_ns_config-submodules">submodules</a>)
 ]
 
 OBSOLETE DOCSTRING!  under revision...
@@ -72,10 +70,10 @@ By default, the ns prefix string is formed from the package name, with '/' repla
 ns(ns = "foobar", srcs = glob(["*.ml"]))
 
 
-=== Attributes
+== Attributes
 
 [.rule_attrs]
-[cols="1,1,1,1,1"]
+[cols="1,3,1,1,1"]
 |===
 | Name  | Description | Type | Mandatory | Default
 
@@ -83,26 +81,6 @@ ns(ns = "foobar", srcs = glob(["*.ml"]))
 |  A unique name for this target. | +++<a href="https://bazel.build/concepts/labels#target-names">Name</a>+++
 | required
 | 
-| +++<a class="rule-attr" id="ocaml_ns_config-deps"></a>+++deps
-|  List of dependencies. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
-| optional
-| []
-| +++<a class="rule-attr" id="ocaml_ns_config-data"></a>+++data
-|  Runtime data dependencies: list of labels of data files needed by this module at runtime. This is a standard Bazel attribute; see link:https://bazel.build/reference/be/common-definitions#typical-attributes[Typical attributes,window="_blank"]. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
-| optional
-| []
-| +++<a class="rule-attr" id="ocaml_ns_config-cc_deps"></a>+++cc_deps
-|  Static (.a) or dynamic (.so, .dylib) libraries. Must by built or imported using Bazel's rules_cc ruleset (thus providing CcInfo output). | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
-| optional
-| []
-| +++<a class="rule-attr" id="ocaml_ns_config-cc_linkage"></a>+++cc_linkage
-|  Dictionary specifying C/C++ library dependencies. Allows finer control over linking than the 'cc_deps' attribute. Key: a target label providing CcInfo; value: a linkmode string, which determines which file to link. Valid linkmodes: 'default', 'static', 'dynamic', 'shared' (synonym for 'dynamic'). For more information see link:../user-guide/dependencies-cc#_cc-linkmode[CC Dependencies: Linkmode]. | +++<a href="https://bazel.build/rules/lib/dict">Dictionary: Label -> String</a>+++
-| optional
-| {}
-| +++<a class="rule-attr" id="ocaml_ns_config-deps_runtime"></a>+++deps_runtime
-|  Runtime module dependencies, e.g. .cmxs plugins. Use the `data` attribute for runtime data dependencies. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
-| optional
-| []
 | +++<a class="rule-attr" id="ocaml_ns_config-env"></a>+++env
 |  Env variables | +++<a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a>+++
 | optional
@@ -118,10 +96,6 @@ e.g. '//mwe/rgb:R': 'Red' will generate
 module R = Red | +++<a href="https://bazel.build/rules/lib/dict">Dictionary: Label -> String</a>+++
 | optional
 | {}
-| +++<a class="rule-attr" id="ocaml_ns_config-module_name"></a>+++module_name
-|  Use this string as module name, instead of deriving it from sig or struct | +++String+++
-| optional
-| ""
 | +++<a class="rule-attr" id="ocaml_ns_config-ns_import_as"></a>+++ns_import_as
 |  Dictionary: keys are exogenous namespaces (resolver modules),
 values are strings to serve as ns name aliases.
@@ -133,59 +107,23 @@ Example: {"//foo/bar:nsbaz": "FOOBARBAZ"} | +++<a href="https://bazel.build/rule
 | optional
 | []
 | +++<a class="rule-attr" id="ocaml_ns_config-ns_name"></a>+++ns_name
-|  - | +++String+++
+|  Use this as the ns name (prefix string) | +++String+++
 | optional
 | ""
-| +++<a class="rule-attr" id="ocaml_ns_config-open"></a>+++open
-|  List of OCaml dependencies to be passed with `-open`. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
-| optional
-| []
 | +++<a class="rule-attr" id="ocaml_ns_config-opts"></a>+++opts
 |  List of compile options; overrides configurable default options. Supports `+-no-+` prefix for each option; for example, `-no-linkall`. | +++List of strings+++
 | optional
 | []
-| +++<a class="rule-attr" id="ocaml_ns_config-pack"></a>+++pack
-|  Experimental.  List of pack submodules. They will be compiled with -for-pack, and this module will be compile with -pack. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
-| optional
-| []
-| +++<a class="rule-attr" id="ocaml_ns_config-ppx"></a>+++ppx
-|  Label of `ppx_executable` target to be used to transform source before compilation. | +++<a href="https://bazel.build/concepts/labels">Label</a>+++
-| optional
-| None
-| +++<a class="rule-attr" id="ocaml_ns_config-ppx_args"></a>+++ppx_args
-|  Options to pass to PPX executable passed by the `ppx` attribute. | +++List of strings+++
-| optional
-| []
-| +++<a class="rule-attr" id="ocaml_ns_config-ppx_data"></a>+++ppx_data
-|  PPX runtime data dependencies. List of labels of files needed by the PPX executable passed via the `ppx` attribute when it is executed to transform the source file. For example, a source file using link:https://github.com/janestreet/ppx_optcomp[ppx_optcomp] may import a file using extension `[%%import ]`; this file should be listed in this attribute. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
-| optional
-| []
-| +++<a class="rule-attr" id="ocaml_ns_config-ppx_print"></a>+++ppx_print
-|  Format of output of PPX transform: binary (default) or text. Value must be one of `@rules_ocaml//ppx/print:binary!` or `@rules_ocaml//ppx/print:text!`. | +++<a href="https://bazel.build/concepts/labels">Label</a>+++
-| optional
-| None
-| +++<a class="rule-attr" id="ocaml_ns_config-ppx_verbose"></a>+++ppx_verbose
-|  - | +++Boolean+++
-| optional
-| False
 | +++<a class="rule-attr" id="ocaml_ns_config-private"></a>+++private
-|  - | +++Boolean+++
+|  If True, suffix '__0' to the ns name, to make it quasi-private. Not to be confused with the standard Bazel 'visibility' attribute.
+
+Set this to True if you have a module whose name matches the ns name. | +++Boolean+++
 | optional
 | False
-| +++<a class="rule-attr" id="ocaml_ns_config-sig"></a>+++sig
-|  Single label of a target producing `OCamlSignatureProvider` (i.e. rule `ocaml_signature`) OR a sig source file. Optional. | +++<a href="https://bazel.build/concepts/labels">Label</a>+++
-| optional
-| None
-| +++<a class="rule-attr" id="ocaml_ns_config-struct"></a>+++struct
-|  A single module (struct) source file label. | +++<a href="https://bazel.build/concepts/labels">Label</a>+++
-| optional
-| None
 | +++<a class="rule-attr" id="ocaml_ns_config-submodules"></a>+++submodules
 |  List of strings from which submodule names are to be derived for aliasing. Bazel labels may be used; the submodule name will be derived from the target part. For example, '//a/b:c' normalizes to C. But they are just strings, and will not be checked against any files.
 
-The normalized submodule names must match the names of the modules electing membership via the 'ns_config' attribute.
-
- Module source code generated by ocamllex and ocamlyacc can be accomodated by using the module name for the source file and generating a .ml source file of the same name, e.g. lexer.mll -> lexer.ml. | +++List of strings+++
+The normalized submodule names must match the names of the modules electing membership via the 'ns_config' attribute. | +++List of strings+++
 | optional
 | []
 

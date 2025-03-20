@@ -1,0 +1,50 @@
+= tools_opam%${extensionName}
+:page-permalink: /:path/${extensionName}
+:page-layout: page_rules_ocaml
+:page-pkg: rules_ocaml
+:page-doc: refman
+:page-sidebar: tools_opam_dg_sbdata
+:page-parent: ['../reference']
+:page-tags: [tools,ocaml]
+:page-keywords: notes, tips, cautions, warnings, admonitions
+:page-last_updated: Mar 18, 2025
+
+[.prototype]
+pass:[
+${util.moduleExtensionSummary($extensionName, $extensionInfo)}
+]
+
+#if (!$extensionInfo.docString.isEmpty())
+
+${extensionInfo.docString}
+#end
+
+#if (!$extensionInfo.getTagClassList().isEmpty())
+
+== Methods
+#foreach ($tagClass in $extensionInfo.getTagClassList())
+
+[#${extensionName}.${tagClass.tagName}]
+=== ${tagClass.tagName}
+#if (!$tagClass.docString.isEmpty())
+
+${tagClass.docString}
+#end
+
+==== Attributes
+
+[.rule_attrs]
+[cols="1,3,1,1,1"]
+|===
+| Name  | Description | Type | Mandatory | Default
+#foreach ($attribute in $tagClass.getAttributeList())
+| +++<a id="${extensionName}.${tagClass.tagName}-${attribute.name}"></a>+++$attribute.name
+| #if(!$attribute.docString.isEmpty()) ${util.markdownCellFormat($attribute.docString)} #else - #end
+| +++${util.attributeTypeString($attribute)}+++
+| ${util.mandatoryString($attribute)}
+| #if(!$attribute.defaultValue.isEmpty()) ${util.markdownCodeSpan($attribute.defaultValue)} #end
+#end
+#end
+#end
+
+|===
