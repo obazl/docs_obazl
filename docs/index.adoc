@@ -14,8 +14,7 @@ This site documents the OBazl toolsuite, version 3.0.0.
 
 [WARNING]
 ====
-Version 3.0.0 is *_beta_* software as of Mar 18, 2025.
-Do not use in production, but please do test.
+Version 3.0.0.beta.1 scheduled for release on Mar 21, 2025 or thereabouts.
 
 This documentation is a Work-In-Progress. Things will be a little
 messy and incomplete.
@@ -26,6 +25,9 @@ messy and incomplete.
 
 == Getting started
 
+The easiest way to get started is to fork/clone one of the demo projects, but
+you can also use the `@obazl//new` tool to generate a project from a template.
+
 === Demo projects
 
 NOTE: The demo projects use the `xdg` opam toolchain strategy
@@ -33,8 +35,6 @@ NOTE: The demo projects use the `xdg` opam toolchain strategy
 and switch in `$XDG_DATA_HOME`. This only happens once, and `xdg`
 toolchains are shared by all OBazl projects. So the initial build may
 take a while; thereafter builds should be reasonably fast.
-
-The easiest way to get started is to fork/clone one of the demo projects. For example,
 
 .demo_hello
 [%collapsible%open]
