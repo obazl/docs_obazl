@@ -1,16 +1,15 @@
-ruleset: Bazel
+ruleset: The Bazel Platform
 entries:
 - title: home
   part: Home page
-  product: Bazel User Guide
+  product: The Bazel Platform
   url:  /docs_obazl/bazel
   version: 2.0
   levels: four
   folders:
 
-  - title: Bazel for OCaml devs
+  - title: Table of Contents
     open: true
-    url: "./"
     output: web
     folderitems:
     - title: Top
@@ -21,17 +20,17 @@ entries:
       open: true
       url: "#_overview"
       output: web
-    - title: OCaml tasks
-      open: true
-      url: "#_ocaml-specific-tasks"
-      output: web
     - title: Bazel
       open: true
       url: "#_bazel"
       output: web
-    - title: Bzlmod
+    - title: Bazel modules
       open: true
       url: "#_bzlmod"
+      output: web
+    - title: Aspects
+      open: true
+      url: "#_aspects"
       output: web
     - title: Setup
       open: true
@@ -47,7 +46,7 @@ entries:
       output: web
     - title: MacOS
       open: true
-      url: macos
+      url: "#_macos"
       output: web
 
   - title: Official Docs
@@ -55,6 +54,9 @@ entries:
     output: web
     folderitems:
 
+    - title: Aspects
+      external_url: https://bazel.build/extending/aspects
+      output: web
 
     - title: Build phases
       external_url: https://bazel.build/run/build#build-phases
@@ -68,8 +70,16 @@ entries:
       external_url: https://docs.bazel.build/versions/master/skylark/concepts.html#evaluation-model
       output: web
 
+    - title: Macros
+      external_url: https://bazel.build/extending/macros
+      output: web
+
     - title: Modules
       external_url: https://bazel.build/external/module
+      output: web
+
+    - title: Module extensions
+      external_url: https://bazel.build/external/extension
       output: web
 
     - title: Offline builds

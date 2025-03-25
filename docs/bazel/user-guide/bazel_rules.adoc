@@ -2,12 +2,12 @@
 :page-permalink: /:path/bazel_rules
 :page-layout: page_rules_ocaml
 :page-pkg: rules_ocaml
-:page-doc: dg
+:page-doc: bazel
+:page-sidebar: bazel_ug_sbdata
 :page-parent: ['../dev-guide']
-:page-sidebar: rules_ocaml_dg_sbdata
 :page-tags: [formatting]
 :page-keywords: notes, tips, cautions, warnings, admonitions
-:page-last_updated: Feb 11, 2025
+:page-last_updated: Mar 24, 2025
 :toc: true
 
 A Bazel link:https://bazel.build/rules/rules-tutorial[rule,window=_blank] can be

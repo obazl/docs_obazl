@@ -1,0 +1,272 @@
+= Repositories & Workspaces
+:page-permalink: /:path/repositories
+:page-layout: page_rules_ocaml
+:page-pkg: rules_ocaml
+:page-doc: bazel
+:page-sidebar: bazel_ug_sbdata
+:page-parent: ['../user-guide']
+:page-tags: [bazel]
+:page-keywords: notes, tips, cautions, warnings, admonitions
+:page-last_updated: Nov 8 2023
+// :toc-title:
+:toc: true
+
+
+WARNING: Most of this is outdated; with the introduction of modules
+(“bzlmod”), Bazel is moving away from the concept of “workspace”.
+`WORKSPACE` files will be completely removed in the next major version
+of Bazel (9).
+
+Official docs:
+
+* link:https://bazel.build/concepts/build-ref["Repositories, workspaces, packages, and targets",window="_blank"]
+
+OBazl deviates somewhat from the official documentation in order to
+fill in some of the holes and resolve some ambiguities. We think the
+official docs routinely conflate distinct concepts like "workspace"
+and "repository" and are often inconsistent and/or confusing.
+
+* link:https://bazel.build/concepts/build-ref#workspace[Workspace,window="_blank"]:  the docs say "A workspace is a directory tree on your filesystem...". OBazl reserves "repository" for this meaning and restricts the meaning of "workspace" to the namespace determined by a WORKSPACE file as described below.
+
+* link:https://bazel.build/concepts/build-ref#repositories[Repositories,window="_blank"]: "Code is organized in repositories. The directory containing the WORKSPACE file is the root of the main repository, also called @. Other, (external) repositories are defined in the WORKSPACE file using workspace rules."
+
+This language is unclear and inconsistent to us. For example, `@`
+names a workspace, not a repository; and it is critical to maintain
+the distinction between a repository (a filesystem object) and a
+workspace (a namespace that is *_not_* the same thing as the
+repository associated with it).
+
+== Terminology
+
+* WORKSPACE (or just WS) file: file named WORKSPACE.bazel
+** Bazel also accepts WORKSPACE but OBazl conventions recommend WORKSPACE.bazel.
+* Repository: a directory (tree) in a file system rooted at a directory containing a WS file (the "root WS file").
+* Repository scope: the entire subtree?
+* Workspace: a namespace, determined by a WS file; overlaid on repository tree
+* Workspace repository: the repository determined by the WS file. I.e.
+  the repository associated with the WS. The repository of a workspace
+  is its "underlying filesystem tree".
+** Every workspace is associated with the repository rooted at the WS
+   directory; this is called the "workspace repository"
+* Workspace scope - see below
+* worskpace directory: a directory containing a WS file
+* BUILD file: a file named BUILD.bazel
+** Bazel also accepts filename BUILD, but OBazl recommends BUILD.bazel
+* package directory: a directory (within the scope of a workspace) containing a BUILD file
+* Module: see ...
+
+IMPORTANT: It follows that "repository" is not synonymous with
+"workspace". A repository may contain file system objects that are not
+within the scope of its associated workspace: there is a difference
+between a file system object and the "space" determined by a WS file.
+A workspace is a namespace; it contains names, not directories, files,
+etc., and does not necessarily include every filesystem object in its
+repository. So "workspace" means the namespace determined by a WS
+file.
+
+IOW we have two conceptual spaces: one for the file system, and one
+for the "space" of Bazel entities such as packages and targets.
+
+
+Each WS file determines exactly one workspace.
+
+The _potential_ scope of the workspace determined by a WORKSPACE file
+encompasses the directory that contains it and the entire
+tree of subdirectories rooted at that directory - i.e. its repository.
+
+A directory within the scope of a workspace that contains a BUILD file
+is a (Bazel) _package directory_.
+
+The _effective_ scope of a workspace is limited to the subset of
+directories in its repository that
+
+* are NOT within the scope of a workspace repository rooted at a subdirectory in the repository
+** i.e. the effective scope excludes subtrees whose root directory contains a WS file
+* DO contain a BUILD file (i.e. package directories)
+
+WARNING: Subdirectories within a WS repository that contain a WS file
+are *_not_* subworkspaces. Workspaces are not hierarchical; the
+workspace/namespace determined by the WS file does not contain any WS names.
+
+The name of the workspace is determined by the "workspace" function in
+the WORKSPACE file if it is used (e.g. `workspace(name="foo")`;
+otherwise it is the name of the directory containing the WORKSPACE
+file.
+
+== External Repositories and their Workspaces
+
+A WORKSPACE file may contain Starlark code declaring and/or defining
+_external_ workspaces, thereby "importing" their contents and making
+them accessible by targets defined within the scope of declaring
+workspace, i.e. packages and targets in the workspace may use the
+external workspaces.
+
+NOTE: External workspace declarations and definitions need not be
+directly contained in the root WS file; they may also be
+declared/defined by functions in extension files, so long as they are
+loaded and called from the root WS file. A common pattern recommended
+by OBazl conventions is to define a function in file `WORKSPACE.bzl`
+(note the suffix: `.bzl`, not `.bazel`; this makes it an "extension"
+file) that is responsible for "calling" rules to create external
+workspaces, and then to load and call this function from the
+`WORKSPACE.bazel` file.
+
+An external workspace, relative to a "current" or "controlling"
+ workspace, is a workspace whose repository is outside of the scope of
+ the current workspace.
+
+NOTE: This does not mean outside of the _repository_ of the current
+workspace. If a repository contains subdirectories containing WS
+files, the trees rooted at those subdirectories are inside of the
+current repository but outside of the corrent workspace.
+
+TODO: diagram
+
+NOTE: This means that workspaces defined under a repository (within
+the scope of the declaring WS) _may_ be declared as external
+workspaces (using rule `local_repository`), but they can also be
+ignored.
+
+External workspaces may be local or remote.
+
+* Local external workspaces are defined by repositories in the local
+  filesystem, that are managed by the user. Recall that a repository
+  by definition contains a WS file in its root directory.
+
+** Local workspaces are declared using native rules `local_repository`
+   and `new_local_repository`
+
+** The workspace name of local external repositories is determined by
+   the `name` attribute of the declaring rule.
+
+* Remote external workspaces are defined by repositories in the local
+  filesystem that are managed by Bazel.
+
+** They are declared by Starlark repository rules, usually
+  `http_archive` or `git_repository`. Bazel downloads the source and
+  unpacks it in the local filesystem to form the repository.
+
+** Such remote repositories typically contain a WORKSPACE file, but
+   Bazel does not evaluate it, so any external workspaces that _it_
+   declares will not be automatically imported. The new `bzlmod`
+   facility was designed to address this shortcoming but it will not
+   be supported by OBazl until version 3.
+
+** The name attribute of the repo rule determines the workspace name.
+Bazel will download and unpack the remote repo into a directory of
+that name.
+
+* User-defined repository rules may create local repositories from
+  either local or remote resources. That is, they may create local
+  repositories by creating/copying/symlinking artifacts in the local
+  filesystem or by downloading them.
+
+CAUTION: When building with remote caching and/or executation,
+locations may be on other machines. TODO: articulate this.
+
+Once a workspace is declared and defined, the location of its
+underlying repository in the file system is invisible to starlark code
+that references it.
+
+
+So repositories contain (in addition to the root WORKSPACE file)
+BUILD.bazel files, .bzl extension files, source files etc., but not
+(strictly speaking) packages or targets. Workspaces contain Bazel
+packages and targets (i.e. labels), the variables and functions
+defined in extension files (what else?), but not directories or files.
+Note that source file names do double duty: they are contained as
+filenames in the repository, and as target names in the namespace.
+
+== MODULES
+
+Bazel module definition: "A module is essentially a Bazel project that
+can have multiple versions..." This is useless since "Bazel project"
+is undefined.
+
+"The MODULE.bazel file should be located at the root of the workspace
+directory (next to the WORKSPACE file)."
+
+Regarding module dependencies: "In your workspace, each module then
+gets turned into a repo."
+
+The MODULE.bazel file specifies dependencies, but does not use
+repository rules to do so. I.e. it specifies module deps, not
+repository deps. The specified module (name plus version) is resolved
+by a Bazel registry, which contains the metadata Bazel needs to figure
+out hhow to obtain the repository. Note that this mechanism does not
+use repository rules.
+
+That is, each module is associated with repository, and thus a
+namespace (repositories must contain a WORKSPACE file). But the
+namespace is determined by the module(name=...) function (contained in
+the MODULE.bazel file of the repository) rather than a repo rule or
+the WORKSPACE file.
+
+Q: what if the WORKSPACE file contains a workspace(name=...) that does
+not match the module name?
+
+Q: what if the module name in a downloaded MODULE.bazel file does not
+match the name used in bazel_dep(name=...)? (Presumably the registry
+would prevent this from happening?)
+
+Q: can we have both repo rules in WORKSPACE.bazel and bazel_dep rules
+in MODULE.bazel?
+
+So MODULE.bazel gives us the module name, and that serves as the
+namespace name.
+
+ALIASES
+
+The local_repository and new_local_repository rules support the
+repo_mapping attribute that defines aliasing.
+
+The 'bind' repo rule, although "not recommended", can also define aliases.
+
+Q: can aliasing affect module naming? The repository associated with a
+module could have local repos, no? But aliasing is scoped.
+
+'''
+
+"Repository Rules" https://bazel.build/rules/repository_rules
+
+This section covers user-defined repo rules.
+
+"An external repository is a rule ...".  Sigh.
+
+"Each external repository rule creates its own workspace, with its own BUILD files and artifacts..."
+
+The implementation of a repo rule "describe[s] how to create the
+repository, its content and BUILD files."
+
+Bazel-defined repo rules are called "workspace rules".
+
+"Workspace Rules" https://bazel.build/reference/be/workspace
+
+"Native":
+
+* local_repository - "Allows targets from a local directory to be bound..." This seems to mean "local directory configured as a repo" or something like that.
+* new_local_repository - "Allows a local directory to be turned into a Bazel repository..."
+
+"Starlark" repo rules:
+
+Git repository rules https://bazel.build/rules/lib/repo/git:
+
+* git_repository - "Clone an external git repository..."
+* new_git_repository - "Clone an external git repository..."
+
+Http repository rules:
+
+* http_archive - "Downloads a Bazel repository..."
+* http_file
+* http_jar
+
+
+
+
+What is a "repository"?
+
+
+
+https://bazel.build/docs/bzlmod#modules
+
+"In your workspace, each module then gets turned into a repo."

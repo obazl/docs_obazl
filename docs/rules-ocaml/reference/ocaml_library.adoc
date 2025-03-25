@@ -17,9 +17,7 @@ pass:[
 ocaml_library(<a href="#ocaml_library-name">name</a>, <a href="#ocaml_library-archive_name">archive_name</a>, <a href="#ocaml_library-env">env</a>, <a href="#ocaml_library-linkage">linkage</a>, <a href="#ocaml_library-manifest">manifest</a>, <a href="#ocaml_library-opts">opts</a>)
 ]
 
-Aggregates a collection of OCaml modules. [User Guide](../ug/ocaml_library.md). Provides: [OCamlLibraryProvider](providers_ocaml.md#ocamllibraryprovider).
-
-xXXXX
+Aggregates a collection of OCaml modules. (link:../ug/ocaml_library.md[User Guide]). Provides: [OCamlLibraryProvider](providers_ocaml.md#ocamllibraryprovider).
 
 An `ocaml_library` is a collection of modules packaged into an OBazl
 target; it is not a single binary file. It is a OBazl convenience rule

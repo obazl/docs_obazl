@@ -47,22 +47,25 @@
           <a title="{{folder.title}}"
              class="active"
              href="{{folder.url}}">
-            {{folder.title}}
+            C {{folder.title}}
         </a>
         </li>
     {% else %}
         <li class="active">
     <a title="{{folder.title}}"
        href="{{folder.url}}">
-      {{folder.title}}
+      D {{folder.title}}
     </a>
         </li>
     {% endif %}
     {% endif %}
   {% else %}
-  <li class="active {% if folder.open %}folder{% endif %}">
+  <li class="active {% if folder.open %}folder{% endif %}"
+      >
     <a class="folder"
-       title="{{folder.title}}" href="#">
+       id="{{folder.title}}"
+       title="{{folder.title}}"
+       href="#">
       {{folder.title}}
     </a>
     <ul class="navlist"> <!-- B -->
@@ -84,7 +87,7 @@
           <a title="{{folderitem.title}}"
              class="{% if folderitem.subfolderitems %}folder twisty{% endif %}"
              href="{{folderitem.url | remove: "/"}}">
-          3 {{folderitem.title}}
+          {{folderitem.title}}
         </a>
       {% elsif folderitem.type == "empty" %}
         <li class="sb-navitem">
@@ -93,16 +96,20 @@
           4 {{folderitem.title}}
         </a>
         {% else %}
-        <li class="sb-navitem folder">
+        <li class="{% if folderitem.subfolderitems %}sb-navitem folder{% else %}sb-navitem{% endif %}"
+            {% if folderitem.subfolderitems %}
+            id={{folderitem.url | remove: "#" | prepend: "x"}}
+            {% endif %}>
           <a title="{{folderitem.title}}"
              class="{% if folderitem.subfolderitems %}folder twisty{% endif %}"
              href="{{folderitem.url}}">
-          5 {{ folderitem.title }}
+          {{ folderitem.title }}
         </a>
         {% endif %} <!-- if folderitem.external_url -->
 
         {% if folderitem.subfolderitems %}
-        <ul class="navlist folder"> <!-- C -->
+        <ul class="navlist"
+            id="{{folderitem.url | remove: "#" | prepend: "y"}}">
           {% for sfitem in folderitem.subfolderitems %}
           {% assign adoc = sfitem.url | append: ".adoc" %}
           {% if sfitem.output contains "web" %}
@@ -127,7 +134,7 @@
               <a class="subfolder  {% if sfitem.subsubfolderitems %} twisty {% endif %}"
                  title="{{sfitem.title}}"
                  href="{{sfitem.url}}">
-                02{{ sfitem.title }}
+                02 {{ sfitem.title }}
               </a>
               {% else %}     <!-- if folderitem.subfolderitems -->
               <li class="sb-navitem"
@@ -136,7 +143,7 @@
                 <a title="{{sfitem.title}}"
                    class="sfitem.url"
                    href="{{sfitem.url}}">
-                03{{ sfitem.title }}
+                {{ sfitem.title }}
               </a>
               {% endif %} <!-- if sfitem.external_url else ... endif-->
 

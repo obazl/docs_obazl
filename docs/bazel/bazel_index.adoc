@@ -1,0 +1,424 @@
+= The Bazel Platform
+:page-permalink: /:path/index
+:page-layout: page_rules_ocaml
+:page-pkg: rules_ocaml
+:page-doc: bazel
+:page-sidebar: bazel_sbdata
+:page-parent: ['.']
+:page-tags: [bazel]
+:page-keywords: notes, tips, cautions, warnings, admonitions
+:page-last_updated: Mar 24, 2025
+:toc-title:
+// :toc: false
+
+NOTE: Purpose: high-level overview of Bazel’s capabilities and how
+they are used by OBazl to support OCaml.
+
+== Overview
+
+Bazel is not usually thought of as a platform. It is primarily a build
+system, but it is much more than that.  It is also:
+
+* A package manager (bzlmod)
+* A query engine (https://bazel.build/query/language[query], https://bazel.build/query/cquery[cquery], https://bazel.build/query/aquery[aquery])
+* A tool runner (https://bazel.build/docs/user-manual#running-executables[bazel run]
+
+Furthermore, Bazel has powerful extension mechanisms:
+
+* Custom rules
+* https://bazel.build/extending/macros[Macros]
+* https://bazel.build/extending/aspects[Aspects]
+
+These facilities make it possible to seamlessly integrate tools of all
+sorts into development workflows of all kinds, with Bazel acting as
+the master-of-ceremonies.
+
+See also:
+
+* https://blog.aspect.build/run-tools-installed-by-bazel[Running local tools installed by Bazel]
+
+Bazel provides a great deal of information about your build program,
+and it provides fine-grained control over build actions. You can build
+any target in your project, and only it and its dependencies will be
+built. You can parameterize your builds at any level of granularity.
+If you include appropriate test targets, you can modularize your
+development even if your source code is not organized in a modular
+manner.
+
+Furthermore, Bazel includes powerful query facilities that make it
+possible to explore the dependency structures of your code. You can
+easily list the dependency chain between two targets, or list the
+targets that have a certain parameter, etc. You can generate SVG
+graphs showing dependency graphs of your code.
+
+Bazel also makes it easy to develop multiple, mutually-dependent
+projects simultaneously. If your main project depends on an external
+repository, you can easily configure your build to use a local copy of
+the dependency _without altering your build code_. One benefit of this
+is that it makes it easy to eliminate embedded git submodules.
+
+=== No installation
+
+Installation? Installation?  We don’t need no stinkin’ installation!
+
+Bazel’s package management is very different from opam’s.
+Installation, deployment, packaging etc. are not directly handled by
+Bazel. Those capabilities must be supplied by rules, for example
+https://github.com/bazelbuild/rules_pkg[rules_pkg,window=_blank].
+
+=== Tool runners
+
+`bazel run` can be used to build and run tools.
+
+
+== Bazel
+
+TIP: OBazl recommends using link:https://github.com/bazelbuild/bazelisk[Bazelisk,window="_blank"] (link:https://bazel.build/install/bazelisk[Installing Bazel using Bazelisk,window="_blank"]).
+
+Official Bazel link:https://bazel.build/docs[User Guide,window="_blank"]
+
+TIP: A great deal of Bazel documentation is available, but it
+  is not always easy to find what you need. If you do find it, you probably want to
+  bookmark it.
+
+If you use Bazelisk, you can pin the Bazel version by putting file
+`.bazelversion` in the root directory of your project, containing the
+required version string, e.g. `latest` or `5.1.1`.
+
+To work effectively with OBazl you must master the following material at minimum:
+
+* https://bazel.build/concepts/build-ref["Repositories, workspaces, packages, and targets",window=_blank]
+* https://bazel.build/run/build#bazel-build[Building one target,window=_blank]
+* https://bazel.build/run/build#specifying-build-targets[Building multiple targets,window=_blank] - explains various target “patterns” like `//foo/...:all` and `foo:all`
+* https://bazel.build/concepts/labels[Labels,window="_blank"] (See also: `$ bazel help target-syntax`)
+* https://bazel.build/docs/bazelrc[Write bazelrc configuration files,window="_blank"]
+
+If you are just getting started with Bazel, you should work through one of the link:https://bazel.build/start/bazel-intro#getting-started-tutorials[Tutorials,window="_blank"]
+
+See also  https://bazel.build/run/build[Build programs with Bazel,window=_blank]
+
+== Setup
+
+To get the most out of OBazl and Bazel, you need to decide on some
+conventions and do a little configuration. See link:/docs_obazl/rules-ocaml/user-guide/obazl_conventions[OBazl
+Conventions] for a list.
+
+
+== Bzlmod
+
+* https://bazel.build/external/module[Bazel modues,window=_blank]
+* https://docs.bazel.build/versions/master/external.html[Working with External Dependencies,window=_blank]
+
+* https://bazel.build/external/overview#bzlmod[Manage external dependencies with Bzlmod,window=_blank]
+
+
+== Aspects
+
+An aspect may be thought of as an _extension_ of the normal build
+program. The core of an aspect is one or more build actions that are
+executed in addition to or instead of the normal build actions.
+Typical examples are aspects that run formatters or linters.
+
+There are two ways to implement an aspect in this sense: external and inline.
+
+=== External aspects
+
+External aspects use Bazel’s
+https://bazel.build/extending/aspects[aspect] mechanism, which is
+designed to support the use of external tools (tools not included in
+the toolchain) to extend build actions throughout a dependency graph
+defined by the aspect. External aspects specify a set of rule
+attributes that determine a “shadow” dependency graph, and Bazel will
+apply the aspect to all the targets in the dependency graph.
+
+=== Inline aspects
+
+The other method, which is not generally recognized, is to use Bazel’s
+`--output_groups` facility to enable _inline aspects_. An inline
+aspect is a build action that is directly supported by a build rule
+but only executed when the user requests a specific output group.
+Inline aspects are local; they do not propagate to additional build
+targets in the way that
+
+For example, the OCaml SDK includes a tool, `ocamlobjinfo`, that dumps
+textual (human-readable) metadata about compiled artifacts to
+`stdout`. To use `ocamlobjinfo`, the developer must first compile the
+object of interest - say, `//foo/bar:A`, producing `foo/bar/a.cmo` -
+and then run `ocamlobjinfo` against the output.
+
+Without an inline aspect, this would be impractical for Bazel users.
+Building a target puts the outputs in a filesystem area controlled by
+Bazel, on a path constructed by Bazel. So to apply `ocamlobjinfo` to
+the output of `$ bazel build foo/bar:A`, one would have to obtain from
+Bazel the path of the output object. This is possible, but very cumbersome.
+
+But an inline aspect makes this almost trivial. The `ocaml_module`
+rule includes in its implementation function a build action to compile
+its input. It also includes an inline aspect that runs `ocamlobjinfo`
+against output of the compile action. The inline aspect is just a
+build action that takes the output of the normal compile action as its
+input, and uses `ctx.actions.run_shell` to run `ocamlobjinfo`. (Use of
+`run_shell` is required in this case because `ocamlobjinfo` writes to
+`stdout` and does not have a parameter like `-o` to redirect output to
+a file.)
+
+What makes this work as an aspect is that the output of the
+`ocamlobinfo` action is listed only in the `OutputGroupInfo` provider,
+as field `modinfo`. That means that the aspect action will only be
+executed if the user passes [nowrap]`+--output_groups=modinfo+` to the build
+command. So a normal `$ bazel build foo/bar:A` will ignore the inline
+aspect and proceed as usual. But `$ bazel build foo/bar:A
+--output_groups=modinfo` tells bazel that only the output specified as
+the `modinfo` field of the `OutputGroupInfo` provider need be built.
+Since that field contains the output of the `ocamlobjinfo` build
+action, which in turn depends on the output of the compile action, the
+result is that the target will be compile as normal, and then the
+`ocamlobjinfo` action will be run against the compilation output,
+producing the `modinfo` requested by the user.
+
+Inline aspects only make sense for actions that use tools provided by
+the toolchain. An inline action that uses an external tool would make
+the ruleset dependent on that tool, whether the user wants to use it
+or not.
+
+
+// == OBazl
+
+// * The library rule `ocaml_library` does not build a "separately
+//   compiled module". Instead it provides a simple aggregation
+//   mechanism, so that you can depend on a collection of resources under
+//   a single name. In other words, OBazl takes the term "library" to
+//   mean "collection of resources"; the resources will almost always be
+//   OCaml compiled modules, but may include e.g. runtime data
+//   dependencies. The "library" produced by `ocaml_library` is a
+//   Starlark structure, which has no OCaml counterpart.
+
+// === Prerequisites
+
+// * Platform: Linux or MacOS. Both Bazel and OCaml support windows, so
+//   OBazl may work, but it has not been tested and there are no pplans to
+//   do so. However, it should not be terribly difficult to port it to
+//   Windows. If you have the time and energy to work on this please
+//   reach out on the link:https://discord.gg/PHSAW5DUva[OBazl Discord
+//   server,window="_blank"] and I will be happy to help.
+
+// * Build tools. The OCaml toolchain depends on a C/C++ compiler and
+//   tools.
+
+// * link:https://opam.ocaml.org/[OPAM,window="_blank"] installation. The rules have been used
+//   with version 2.0.7. Earlier versions may work; if not, please link:https://github.com/obazl/rules_opam/issues[file
+//   an issue,window="_blank"].
+
+// * An OPAM link:https://opam.ocaml.org/doc/Usage.html#opam-switch[switch,window="_blank"]
+//   containing the OCaml compiler and OPAM packages your project needs.
+
+[#transparency]
+== Transparency
+
+Inspecting the Bazel environment, logs, build actions, etc.
+
+=== bazel info
+
+The `bazel info` command will print a dictionary listing the
+parameters, file locations, etc. that Bazel uses internally. It
+supports a large number of options; run `$ bazel help info` to see them
+all; to see just the keys for the dictionary, run `$ bazel help info-keys`.
+
+Most of entries in the dictionary, most of the time, can be safely
+ignored; but if you run into trouble, two of them can be helpful with
+debugging: `command_log` and `output_base`.
+
+=== command_log
+
+Bazel writes logs to a `command_log` file each time it executes a
+command; it overwrites the file. You can discover the location of the
+file by running `$ bazel info command_log`. Since the output of this
+command will overwrite the log file, you must use an alias or shell
+script to enable easy browsing.  See the link:conventions.md#aliases[aliases]
+recommendation in link:conventions.md[OBazl Conventions] for an example.
+
+=== output_base
+
+The `output_base` directory contains a subdirectory, `external`, that
+contains the external repositories your project has configured. You
+can browse the `BUILD.bazel` files of an external repo, for example,
+to verify that you are using the correct target labels.
+
+=== targets
+
+Bazel can print a source text representation of each target :
+
+`$ bazel query '@ppx_tools//:*' --output build`
+
+This shows what the target looks like to Bazel after it has been
+processed (e.g. variables expanded, etc.).
+
+=== actions
+
+A single build target may generate multiple build _actions_. For
+example, if an `ocaml_module` rule is parameterized with a `ppx`
+argument, it will generate two actions: one to transform the source
+file with the PPX, and one to compile the result. Each action will
+have a command line string.
+
+Normally there is no need to pay these actions any mind, but if
+something goes wrong with your build it may be useful to see exactly
+what a build rule is doing - what the actions are, what commands and
+arguments are used to run the actions, and what the inputs and outputs
+are. Fortunately this is easy to do. You can use the [action query]()
+facility to print all the actions generated by a rule without actually
+running the rule (so it does not trigger any compilation). For
+example, the following will print all the actions (and much additional
+information) generated by the `//foo/bar:baz` target:
+
+```
+$ bazel aquery //foo/bar:baz
+```
+
+See link:transparency.md[Transparency] for more information.
+
+=== packages
+
+To list all the files in the directory containing associated with a package:
+
+`$ bazel query 'kind("source file", @<repo>//<pkg>:*)' --output label_kind`
+
+To include all subpackages (subdirectories containing BUILD.bazel
+file), use `@<repo>//<pkg>/\...:*` instead of  `@<repo>//<pkg>:*`.
+
+E.g.
+
+`$ bazel query 'kind("source file", @ppx_tools//:*)' --output label_kind`
+
+`$ bazel query 'kind("source file", @ppx_tools//metaquot:*)' --output label_kind`
+
+
+
+==== Compile/link commands
+
+todo...
+
+== Useful tips
+
+* The `clean` command "[r]emoves bazel-created output, including all
+  object files, and bazel metadata." It will not refresh repository
+  dependencies. Adding the `--expunge` option will delete everything;
+  it will also stop the server, so that then next build command will
+  start from scratch. You almost never need to do this.
+
+* You should rarely need to run `$ bazel clean`. Bazel caches a
+  complete description of the build, so it always knows what needs to
+  be rebuilt. However, if you change the build structure - especially
+  if you remove build targets - you may need this command to rebuild
+  the cache.
+
+* Do spend some time learning to use the query facilities. On a
+  project of any size you'll be glad you did.
+
+* To experiment with build rules etc. you can avoid cluttering the
+  source tree by creating a `BUILD.bazel` in a work directory like
+  `dev` and putting the rules there. Since dependencies are expressed
+  as target labels, you can reach into the tree anywhere you like,
+  although you may need to adjust the `visibility` attribute of
+  targets.
+
+* Use link:https://github.com/bazelbuild/bazelisk[Bazelisk] to make sure
+  you're always using the latest version of Bazel. You can pin the
+  version you want by using a `.bazelversion` file.
+
+* You can enable link:https://docs.bazel.build/versions/master/completion.html[command-line completion] (also known as tab-completion) in Bash and Zsh. This lets you tab-complete command names, flags names and flag values, and target names.  Caveat: tab-completion may be an issue for Bazelisk; see link:https://github.com/bazelbuild/bazelisk/issues/29[Support bash autocomplete #29].)
+
+* If you need to make some kind of global change, e.g. renaming a
+  target or adding a dependencie to multiple rules, do not
+  search-and-replace. Use
+  link:https://github.com/bazelbuild/buildtools/tree/master/buildozer[buildozer]
+  instead.  (See link:maintenance.md#batch[Batch Editing] for more information.)
+
+
+== MacOS
+
+== versions- os, sdk, xcode
+
+IMPORTANT: Because the OCaml compilers may call a compiler (linker/assember), setting these Bazel switches may not be enough to eliminate those pesky "object was built for newer version.." (see below).  You may also need to pass some options to the linker using `-ccopt` (TODO: details)
+
+link:https://www.smileykeith.com/2021/03/08/locking-xcode-in-bazel/[Locking Xcode versions in Bazel,window="_blank"] blog post, March 2021; slightly outdated
+
+"Bazel discovers your currently installed Xcode versions by running
+xcode_locator, and then generating a BUILD file that contains an entry
+for every version you currently have installed... In order to enforce
+developers use the same version, you can short circuit bazel's Xcode
+discovery and instead reference a local target that you provide."
+
+NB: xcode-locator is a Bazel tool, not a macos tool.
+
+WARNING: the blog article is based on pre-bzlmod versions; it lists this command:
+`cat bazel-$(basename $PWD)/external/local_config_xcode/BUILD`
+To use it with bzlmod replace `external/local_config_xcode` with `external/bazel_tools\~xcode_configure_extension\~local_config_xcode`
+
+
+To retrieve the build number from your current Xcode version:
+
+`xcodebuild -version`
+
+NOTE: better to use `--macos_sdk_version`? see below
+
+* `--xcode_version=<a string>`
+** If specified, uses Xcode of the given version for relevant build actions. If unspecified, uses the executor default version of Xcode.
+
+* `--xcode_version_config=<a build target label>`
+** default: "@bazel_tools//tools/cpp:host_xcodes"
+** The label of the xcode_config rule to be used for selecting the Xcode version in the build configuration.
+
+
+* `xcrun --sdk macosx --show-sdk-version`
+* `xcrun --sdk macosx --show-sdk-path`
+
+== sdk versions
+
+* `--macos_sdk_version=<version>`
+** Specifies the version of the macOS SDK to use to build macOS applications. If unspecified, uses default macOS SDK version from 'xcode_version'.
+
+== env vars
+
+When using the cc_toolchain (e.g. to build C, C++, objc, ...):
+
+* `SDKROOT`
+* `DEVELOPER_DIR`
+* `XCODE_VERSION_OVERRIDE`
+* `APPLE_SDK_PLATFORM`
+* `APPLE_SDK_VERSION_OVERRIDE`
+
+== macos versions
+
+<version> == a dotted version (for example '2.3' or '3.3alpha2.4')> default: see description
+
+* `--host_macos_minimum_os=<version>`
+** Minimum compatible macOS version for host targets. If unspecified, uses 'macos_sdk_version'.
+
+* `--macos_minimum_os=<version>`
+** Minimum compatible macOS version for targets. If unspecified, uses 'macos_sdk_version'.
+
+== warnings
+
+You may see warnings like the following if your code links to CC libraries:
+
+`ld: warning: object file (bazel-out/darwin-fastbuild/bin/interop/ffi/case110/cclibs/liblibalpha.a(alpha.o)) was built for newer macOS version (12.3) than being linked (12.0)`
+
+This happens because we built `liblibalpha.a` with a Bazel rule (e.g.
+`cc_library`), which automatically adds `--mmacos_version_min=x.y.z`
+to its command line. We then pass it to the OCaml linker (on the
+command line, or using `-cclib`), which proceeds to call the system
+linker. But OCaml does not pass `--macos_version_min` to the linker, so if it has different ideas about the minimum version, you get this warning message.
+
+One way to address this is to add `build --macos_version_min=x.y.z` to
+`.bazelrc`. Another would be to pass `--cclib
+--macos_version_min=x.y.z` to OCaml.
+
+IMPORTANT: The latest version of `rules_ocaml` should eliminate this
+problem. The rules interrogate the Bazel cc toolchain to obtain the
+--macos_version_min option it uses, and then pass it to the OCaml
+linker.
+
+== todo
+
+clang wrapper etc

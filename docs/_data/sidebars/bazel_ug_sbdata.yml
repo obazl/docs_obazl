@@ -1,0 +1,56 @@
+ruleset: Bazel Guide
+entries:
+- title: Bazel Guide
+  part: Home page
+  product: Bazel Guide
+  url:  /docs_obazl/bazel
+  version: 2.0
+  levels: four
+  folders:
+
+  - title: Bazel Features
+    open: true
+    url: "./"
+    output: web
+    folderitems:
+    - title: Top
+      open: true
+      url: "./#"
+      output: web
+    - title: Overview
+      open: true
+      url: "#_overview"
+      output: web
+    - title: Bazel rules
+      open: true
+      url: bazel_rules
+      output: web
+    - title: Bazel
+      open: true
+      url: "#_bazel"
+      output: web
+    - title: Bazel modules
+      open: true
+      url: "#_bzlmod"
+      output: web
+    - title: Aspects
+      open: true
+      url: aspects
+      output: web
+    - title: Setup
+      open: true
+      url: "#_setup"
+      output: web
+    - title: Transparency
+      open: true
+      url: "#transparency"
+      output: web
+    - title: Tips
+      open: true
+      url: "#_useful-tips"
+      output: web
+    - title: MacOS
+      open: true
+      url: macos
+      output: web
+

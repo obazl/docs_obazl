@@ -33,22 +33,48 @@ entries:
       url: ocamlsdk/pkg-mgmt
       output: web
 
-  - title: Bazel for OCaml devs
+  - title: The Bazel Platform
     open: true
     url: bazel
     output: web
     folderitems:
     - title: Table of Contents
-      url: bazel#toc
+      url: bazel
       levels: two
       output: web
-    - title: Transparency
+    - title: Official docs
       levels: two
-      url: bazel#transparency
+      url: bazel#_official-docs
       output: web
-    - title: Bzlmod
+
+  - title: OBazl Guide
+    open: true
+    url: obazl
+    output: web
+    folderitems:
+    - title: Table of Contents
+      url: obazl
       levels: two
-      url: bazel/user-guide#_bazel-modules
+      output: web
+    - title: Overview
+      url: "obazl#_overview"
+      levels: two
+      output: web
+    - title: The OCaml SDK
+      url: "obazl#_the-ocaml-sdk"
+      levels: two
+      output: web
+    - title: The OCaml Platform
+      url: "obazl#_ocaml-platform-support"
+      levels: two
+      output: web
+    - title: Other tools & libs
+      url: "obazl#_other-tools-and-libraries"
+      levels: two
+      output: web
+    - title: Features
+      url: "obazl#_features"
+      levels: two
       output: web
 
   - title: rules_ocaml
@@ -70,34 +96,35 @@ entries:
 
   - title: tools_opam
     open: true
+    external_url: https://github.com/obazl/tools_opam
     output: web
-    folderitems:
-    - title: User Guide
-      levels: two
-      url: tools-opam/user-guide
-      output: web
+    # folderitems:
+    # - title: User Guide
+    #   levels: two
+    #   url: tools-opam
+    #   output: web
 
-    - title: Reference Manual
-      url: tools-opam/reference
-      output: web
+    # - title: Reference Manual
+    #   url: tools-opam/reference
+    #   output: web
 
-    - title: Developer Guide
-      url: tools-opam/dev-guide
-      output: web
+    # - title: Developer Guide
+    #   url: tools-opam/dev-guide
+    #   output: web
 
   - title: rules_ppx
     open: true
     output: web
     folderitems:
-    - title: User Guide
-      url: rules-ppx/user-guide
-      output: web
+    # - title: User Guide
+    #   url: rules-ppx/user-guide
+    #   output: web
     - title: Reference Manual
       url: rules-ppx/reference
       output: web
-    - title: Developer Guide
-      url: rules-ppx/dev-guide
-      output: web
+    # - title: Developer Guide
+    #   url: rules-ppx/dev-guide
+    #   output: web
 
   - title: tools_obazl
     open: true

@@ -32,3 +32,32 @@ Bazel includes a powerful query engine.
 
     bazel run @obazl//inspect:providers --@obazl//tgt=//interop/ffi/case110:Main
 
+
+=== misc
+
+Show all `ocaml_signature` targets:
+
+    bazel query 'kind("ocaml_signature", deps(//..., 1))' --keep_going
+
+Show all .mll files:
+
+    bazel query 'filter("\.mll$", deps("//...", 1))'
+
+
+bazel query 'attr(sig, ".*", kind("ocaml_module", deps(//src/...)))'
+
+
+Show all the `ocaml_module` targets that lack a `sig` attribute (i.e.
+all singleton structfiles.):
+
+    bazel query 'kind("ocaml_module", deps(//mwe/...)) except attr(sig, ".*", kind("ocaml_module", deps(//mwe/...)))'
+
+Run build based on results of query:
+
+    bazel build $(bazel query 'some_pattern')
+
+This can be used to selectively apply an aspect:
+
+    bazel build $(bazel query 'some_pattern') --aspects @rules_ocaml//aspects:aspects.bzl%foo
+
+

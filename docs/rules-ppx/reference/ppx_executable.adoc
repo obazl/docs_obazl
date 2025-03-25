@@ -3,6 +3,7 @@
 :page-permalink: /:path/ppx_executable
 :page-layout: page_rules_ocaml
 :page-pkg: rules_ocaml
+:page-ruleset: rules_ppx
 :page-doc: refman
 :page-sidebar: rules_ppx_refman_sbdata
 :page-parent: ['../reference']
@@ -15,7 +16,8 @@
 [.prototype]
 pass:[
 ppx_executable(<a href="#ppx_executable-name">name</a>, <a href="#ppx_executable-data">data</a>, <a href="#ppx_executable-archive_deps">archive_deps</a>, <a href="#ppx_executable-bin">bin</a>, <a href="#ppx_executable-cc_deps">cc_deps</a>, <a href="#ppx_executable-cc_linkall">cc_linkall</a>, <a href="#ppx_executable-cc_linkopts">cc_linkopts</a>, <a href="#ppx_executable-data_prefix_map">data_prefix_map</a>,
-               <a href="#ppx_executable-env">env</a>, <a href="#ppx_executable-epilogue">epilogue</a>, <a href="#ppx_executable-exe">exe</a>, <a href="#ppx_executable-main">main</a>, <a href="#ppx_executable-opts">opts</a>, <a href="#ppx_executable-ppx_codeps">ppx_codeps</a>, <a href="#ppx_executable-prologue">prologue</a>, <a href="#ppx_executable-runtime">runtime</a>, <a href="#ppx_executable-vm_linkage">vm_linkage</a>)
+               <a href="#ppx_executable-env">env</a>, <a href="#ppx_executable-epilogue">epilogue</a>, <a href="#ppx_executable-exe">exe</a>, <a href="#ppx_executable-exe_name">exe_name</a>, <a href="#ppx_executable-force_archived_libdeps">force_archived_libdeps</a>, <a href="#ppx_executable-main">main</a>, <a href="#ppx_executable-opts">opts</a>, <a href="#ppx_executable-ppx_codeps">ppx_codeps</a>, <a href="#ppx_executable-prologue">prologue</a>,
+               <a href="#ppx_executable-runtime">runtime</a>, <a href="#ppx_executable-vm_linkage">vm_linkage</a>)
 ]
 
 Generates a PPX executable.  Provides: [OcamlExecutableMarker](providers_ppx.md#ppxexecutableprovider).
@@ -72,6 +74,14 @@ Generates a PPX executable.  Provides: [OcamlExecutableMarker](providers_ppx.md#
 |  Name for output executable file.  Overrides 'name' attribute. | +++String+++
 | optional
 | ""
+| +++<a class="rule-attr" id="ppx_executable-exe_name"></a>+++exe_name
+|  By default, executable name is derived from 'name' attribute; use this to override. | +++String+++
+| optional
+| ""
+| +++<a class="rule-attr" id="ppx_executable-force_archived_libdeps"></a>+++force_archived_libdeps
+|  Force archiving of library dependencies | +++Boolean+++
+| optional
+| False
 | +++<a class="rule-attr" id="ppx_executable-main"></a>+++main
 |  A module to be listed after those in 'prologue' and before those in 'epilogue'. For more information see [Main Module](../ug/ppx.md#main_module). | +++<a href="https://bazel.build/concepts/labels">Label</a>+++
 | required

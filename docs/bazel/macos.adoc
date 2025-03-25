@@ -1,8 +1,10 @@
 = macos
 :page-permalink: /:path/macos
-:page-layout: page_bazel
-:page-pkg: bazel
-:page-doc: ug
+:page-layout: page_rules_ocaml
+:page-pkg: rules_ocaml
+:page-doc: bazel
+:page-sidebar: bazel_sbdata
+:page-parent: ['.']
 :page-tags: [bazel,modules]
 :page-keywords: notes, tips, cautions, warnings, admonitions
 :page-last_updated: May 20, 2022

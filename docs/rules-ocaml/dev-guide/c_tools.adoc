@@ -104,6 +104,14 @@ Load command 12
   version 0.0
 ----
 
+=== executable: dynamic libs
+
+To see which dynamic libs are linked into an executable:
+
+export DYLD_PRINT_LIBRARIES=1
+export DYLD_PRINT_LIBRARIES_POST_LAUNCH=1
+export DYLD_PRINT_RPATHS=1
+
 
 
 

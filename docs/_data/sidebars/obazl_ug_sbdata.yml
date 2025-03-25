@@ -1,0 +1,48 @@
+ruleset: OBazl Guide
+entries:
+- title: OBazl Guide
+  part: Home page
+  product: OBazl Guide
+  url:  /docs_obazl/obazl
+  version: 2.0
+  levels: four
+  folders:
+
+  - title: Table of Contents
+    open: true
+    url: "./"
+    output: web
+    folderitems:
+    - title: Overview
+      open: true
+      url: "#_overview"
+      output: web
+    - title: The OCaml SDK
+      open: true
+      url: "#_the-ocaml-sdk"
+      output: web
+      subfolderitems:
+      - title: Toolchains
+        open: true
+        url: "#_toolchains"
+        output: web
+      - title: SDK libraries
+        open: true
+        url: "#_sdk-libraries"
+        output: web
+      - title: SDK tools
+        open: true
+        url: "#_sdk-tools"
+        output: web
+    - title: The OCaml Platform
+      open: true
+      url: "#_ocaml-platform-support"
+      output: web
+    - title: Other tools & libs
+      open: true
+      url: "#_other-tools-and-libraries"
+      output: web
+    - title: Features
+      open: true
+      url: "#_features"
+      output: web

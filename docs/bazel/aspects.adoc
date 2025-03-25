@@ -1,0 +1,79 @@
+= Aspects
+:page-permalink: /:path/aspects
+:page-layout: page_rules_ocaml
+:page-pkg: rules_ocaml
+:page-doc: bazel
+:page-sidebar: bazel_sbdata
+:page-parent: ['.']
+:page-parent: ['../user-guide']
+:page-tags: [bazel]
+:page-keywords: notes, tips, cautions, warnings, admonitions
+:page-last_updated: Mar 24, 2025
+:toc-title:
+:toc: false
+
+An aspect may be thought of as an _extension_ of the normal build
+program. The core of an aspect is one or more build actions that are
+executed in addition to or instead of the normal build actions.
+Typical examples are aspects that run formatters or linters.
+
+There are two ways to implement an aspect in this sense: external and inline.
+
+== External aspects
+
+External aspects use Bazel’s aspect mechanism, which is designed to
+support the use of external tools (tools not included in the
+toolchain) to extend build actions throughout a dependency graph
+defined by the aspect. External aspects specify a set of rule
+attributes that determine a “shadow” dependency graph, and Bazel will
+apply the aspect to all the targets in the dependency graph.
+
+== Inline aspects
+
+The other method, which is not generally recognized, is to use Bazel’s
+`--output_groups` facility to enable _inline aspects_. An inline
+aspect is a build action that is directly supported by a build rule
+but only executed when the user requests a specific output group.
+Inline aspects are local; they do not propagate to additional build
+targets in the way that
+
+For example, the OCaml SDK includes a tool, `ocamlobjinfo`, that dumps
+textual (human-readable) metadata about compiled artifacts to
+`stdout`. To use `ocamlobjinfo`, the developer must first compile the
+object of interest - say, `//foo/bar:A`, producing `foo/bar/a.cmo` -
+and then run `ocamlobjinfo` against the output.
+
+Without an inline aspect, this would be impractical for Bazel users.
+Building a target puts the outputs in a filesystem area controlled by
+Bazel, on a path constructed by Bazel. So to apply `ocamlobjinfo` to
+the output of `$ bazel build foo/bar:A`, one would have to obtain from
+Bazel the path of the output object. This is possible, but very cumbersome.
+
+But an inline aspect makes this almost trivial. The `ocaml_module`
+rule includes in its implementation function a build action to compile
+its input. It also includes an inline aspect that runs `ocamlobjinfo`
+against output of the compile action. The inline aspect is just a
+build action that takes the output of the normal compile action as its
+input, and uses `ctx.actions.run_shell` to run `ocamlobjinfo`. (Use of
+`run_shell` is required in this case because `ocamlobjinfo` writes to
+`stdout` and does not have a parameter like `-o` to redirect output to
+a file.)
+
+What makes this work as an aspect is that the output of the
+`ocamlobinfo` action is listed only in the `OutputGroupInfo` provider,
+as field `modinfo`. That means that the aspect action will only be
+executed if the user passes [nowrap]`+--output_groups=modinfo+` to the build
+command. So a normal `$ bazel build foo/bar:A` will ignore the inline
+aspect and proceed as usual. But `$ bazel build foo/bar:A
+--output_groups=modinfo` tells bazel that only the output specified as
+the `modinfo` field of the `OutputGroupInfo` provider need be built.
+Since that field contains the output of the `ocamlobjinfo` build
+action, which in turn depends on the output of the compile action, the
+result is that the target will be compile as normal, and then the
+`ocamlobjinfo` action will be run against the compilation output,
+producing the `modinfo` requested by the user.
+
+Inline aspects only make sense for actions that use tools provided by
+the toolchain. An inline action that uses an external tool would make
+the ruleset dependent on that tool, whether the user wants to use it
+or not.

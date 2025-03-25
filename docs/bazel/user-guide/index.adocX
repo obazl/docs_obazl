@@ -1,0 +1,94 @@
+= Bazel Overview
+:page-permalink: /:path/index
+:page-layout: page_rules_ocaml
+:page-pkg: rules_ocaml
+:page-doc: bazel
+:page-sidebar: bazel_ug_sbdata
+:page-parent: ['.']
+:page-tags: [bazel]
+:page-keywords: notes, tips, cautions, warnings, admonitions
+:page-last_updated: May 16, 2022
+:toc-title:
+:toc: true
+
+
+== link:working-with-bazel[Working with Bazel]
+
+
+// include::working_with_bazel.adoc[]
+
+
+== link:repositories[Repositories & Workspaces]
+
+== link:macos[MacOS]
+
+== link:queries[Queries]
+
+== link:bazel-modules[Bazel Modules]
+
+== Dune
+
+The most widely-used build system for OCaml is link:https://dune.build/[Dune,window=_blank].  Here are some points of comparison:
+
+* Dune can discover dependencies at build time. For example, if you
+  want to compile `+a.mli+` and `+a.ml+`, you do not need to
+  explicitly tell Dune that the latter depends on the former; it can
+  figure that out at build time. In fact, you don't even have to list
+  the files you want to build; Dune will assume that you want to
+  compile all the source files in the directory containing the
+  `+dune+` file, so it will discover the build inputs at build time.
+  By contrast, Bazel expects all dependencies to be explicitly listed
+  as inputs to the build process. This is to ensure replicable,
+  deterministic builds. (NB: a Bazel rule could be designed to
+  discover dependency relations among explicitly listed input files at
+  build time, but the rules in `+rules_ocaml+` do not do this. That's
+  a possible future enhancement.)
+
+* Dune supports named "build profiles". Bazel does not really have a
+  concept like that, but it does support `--config` groups - named
+  sets of command-line options that may serve a similar function. The
+  difference is that Dune's build profiles are defined as part of the
+  build program, and Bazel's config groups are not.
+
+* Extensibility is the probably the starkest difference between Dune
+  and Bazel. Bazel is designed for extensibility. Users can define
+  their own custom rules to extend `+rules_ocaml+` with new
+  primitives, and they can use Bazel's link:https://bazel.build/extending/macros[symbolic macros] to abstract over common
+  build patterns.
+
+* Integrated support for programming in multiple languages. Bazel
+  rulesets have been implemented for many languages. Of particular
+  interest to many OCaml users are
+  link:https://github.com/bazelbuild/rules_cc[rules_cc] for integrated
+  C/C++ support,
+  link:https://github.com/bazelbuild/rules_rust[rules_rust],
+  link:https://github.com/bazel-contrib/rules_go[rules_go],
+  link:https://github.com/tweag/rules_haskell[rules_haskell],
+  and the
+  several rulesets supporting Javascript integration: see link:https://bazel.build/docs/bazel-and-javascript[Javascript and Bazel].
+
+* Bazel has a sophisticated link:https://bazel.build/query/guide[query] facility that can tell you all sorts of interesting things about your project.
+
+* Another stark difference between Bazel and Dune is Bazel's
+  (relatively recent) integrated package managment system, usually
+  refered to as `bzlmod`. Integrated package management for Dune is
+  under development (I believe it is getting close to completion at
+  the time of writing), but I'm not sure how it compares to `bzlmod`.
+
+* The Bazel package management system includes a "module extension"
+  facility that can be used to integrate external build and package
+  management systems, such as npm or maven. For any OCaml build tool,
+  support for opam dependencies is a fundamental requirement; a new
+  tool, link:https://github.com/obazl/tools_opam[tools_opam] uses
+  Bazel's module extension system to provide integrated opam support for
+  `+rules_ocaml+`.
+
+* Dune builds often include "rule" stanzas that are essentially little
+  shell scripts. Bazel has a predefined rule (called `genrule`,
+  general rule) that can be used in a similar manner. There are also
+  several shell rulesets available that can be used for more complex
+  cases.
+
+* Remote caching and execution.
+
+* Performance profiling.  Bazel supports several methods for link:https://bazel.build/advanced/performance/build-performance-metrics[profiling build performance].

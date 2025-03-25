@@ -1,0 +1,331 @@
+= Bazel for OCaml developers
+:page-permalink: /:path/bazel_ocaml
+:page-layout: page_rules_ocaml
+:page-pkg: rules_ocaml
+:page-doc: bazel
+:page-sidebar: bazel_sbdata
+:page-parent: ['../user-guide']
+:page-tags: [bazel]
+:page-keywords: notes, tips, cautions, warnings, admonitions
+:page-last_updated: Mar 24, 2025
+:toc-title:
+:toc: false
+
+== Overview
+
+Bazel build programs are written in the Starlark language, and Bazel
+is also the name of the build engine (of which there is only one.)
+
+Bazel provides a great deal of information about your build program,
+and it provides fine-grained control over build actions. You can build
+any target in your project, and only it and its dependencies will be
+built. You can parameterize your builds at any level of granularity.
+If you include appropriate test targets, you can modularize your
+development even if your source code is not organized in a modular
+manner.
+
+Furthermore, Bazel includes powerful query facilities that make it
+possible to explore the dependency structures of your code. You can
+easily list the dependency chain between two targets, or list the
+targets that have a certain parameter. You can write a simple query to
+show all `.ml` files that lack a corresponding `.mli` files, or
+vice-versa. You can generate dot or SVG code showing dependency
+graphs of your code.
+
+Bazel also makes it easy to develop multiple, mutually-dependent
+projects simultaneously. If your main project depends on an external
+repository, you can easily configure your build to use a local copy of
+the dependency _without altering your build code_. One benefit of this
+is that it makes it easy to eliminate - or introduce - embedded git submodules.
+
+== OCaml-specific tasks
+
+Some OCaml-specific tasks that must be accomodated by any satisfactory build system:
+
+* Generate an interface file from a `.ml` file (`ocamlc -i`)
+* Build executable variants: `-custom`, `-output-complete-exe`, etc.
+* Custom VM runtimes - `-make-runtime`, `-use-runtime`
+* Dump metadata (`ocamlobjinfo`)
+* Directly depend on `.cmi` files
+* Generate `.cmt`, `.cmti` files (`-bin-annot`)
+* Apply a tool to `.cmt`, `.cmti` files (e.g. `ocamlcmt`)
+* Generate intermediate outputs for inspection, e.g. `-dtypedtree`, `-dlambda`, etc.
+* Apply custom tools to the output of `-d` options like `-dtypedtree`, `-dshape`
+* Run a repl (`ocaml`, `utop`, or a custom repl)
+* Build a custom repl (`ocamlmktop`)
+* PPX processing
+* `-stop-after` compilation phase
+* Run build tools, e.g. `ocamlformat`, `ocamldoc`, etc.
+* etc.
+
+All this is trickier than one might think.  Take `utop` as an example.
+
+== No installation
+
+We don’t need no stinkin’ installation!
+
+== Dependency management
+
+No need for `public_name` v. `name`. Build target labels are always
+fully qualified (though they may be abbreviated).
+
+No distinction between the local build namespace and “installed
+world”, since no concept of “installation”.
+
+NOTE: `tools_opam` integrates the “installed world” (i.e. opam switch)
+into the Bazel environment without user intervention, so that
+libraries installed in an opam switch become available under standard
+Bazel labels, e.g. `@opam.ounit2//lib`.
+
+
+== Tool adapters (runners)
+
+== Platformitis Therapy
+
+SDK v. Platform.
+
+[quote,"some nazi, alas; doesn’t mean it’s not witty. The original had ‘culture‘ for ‘platform’. "]
+When I hear the word ‘platform’, I reach for my revolver.
+
+Here are some well-know and successful platforms: Apple, Google,
+Amazon, Facebook, ... Their main selling point: life is good on the
+plantation! You’ll be “well taken care-of and happy”! Why would you
+want to go elsewhere, when the garden inside our walls is so lovely?
+
+“The OCaml Platform” is code for “the Dune walled garden”. If you
+don’t believe me, just take a gander at the
+https://ocaml.org/tools/platform-roadmap[OCaml Platform Roadmap]. Some
+lip-service to non-Dune tooling, but essentially a Dune advertisement.
+Nothing wrong with Dune, as long as it works for you. The problem is
+that, if the Platform is successful, that will be your only option,
+whether you like it or not. You won’t be able to opt out except at
+great expense. Want to switch to the shiny new doc tool instead of
+`odoc`? Too bad, not supported by Dune. Already people are writing
+tools that only work with Dune.
+
+OBazl is not a platform. It’s more of an SDK - a collection of tools
+that work together. None of them are dependent on Bazel. Bazel uses
+them, not the other way around. It can do everything that “the OCaml
+Platform” can do, and then some, just as easily. Without relying on
+Dune in any way.
+
+What’s in a tool?
+
+* No dependency on a build system - it is the responsibility of the
+  build system to manage the tool, not the other way around.
+  ** In cases where integration with a build system requires something
+     like that, the integration logic must be separated from the tool
+     proper. If your tool needs to use a Dune library, for example,
+     that logic should go in a Dune adapter layer, so that the core
+     functionality of the tool remains independent of Dune. Same goes
+     for Bazel or any other build tool.
+* Output can always be directed to a file, by a command option like
+  `--outfile`. Writing output to stdout by default is fine, so long as
+  the user remains in control - can tell the tool where to write the
+  output. Tools that _only_ write to stdout can be difficult to
+  integrate in some environments - it is not always possible to
+  redirect stdout without substantial effort.
+* No hardwired paths
+* Inputs are all specified by command line options - no assumptions.
+  For example, a tool that assumes its input file is in the current
+  directory is badly designed. That may be fine as a default, but the
+  user should always have the option of specifying the location of
+  input files.
+* Config files (e.g. `.ocamlinit`) are fine
+* Thorough documentation
+
+
+== Bazel
+
+TIP: OBazl recommends using link:https://github.com/bazelbuild/bazelisk[Bazelisk,window="_blank"] (link:https://bazel.build/install/bazelisk[Installing Bazel using Bazelisk,window="_blank"]).
+
+Official Bazel link:https://bazel.build/docs[User Guide,window="_blank"]
+
+TIP: A great deal of Bazel documentation is available, but it
+  is not always easy to find what you need. If you do find it, you probably want to
+  bookmark it.
+
+If you use Bazelisk, you can pin the Bazel version by putting file
+`.bazelversion` in the root directory of your project, containing the
+required version string, e.g. `latest` or `5.1.1`.
+
+To work effectively with OBazl you must master the following material at minimum:
+
+* https://bazel.build/concepts/build-ref["Repositories, workspaces, packages, and targets",window=_blank]
+* https://bazel.build/run/build#bazel-build[Building one target,window=_blank]
+* https://bazel.build/run/build#specifying-build-targets[Building multiple targets,window=_blank] - explains various target “patterns” like `//foo/...:all` and `foo:all`
+* https://bazel.build/concepts/labels[Labels,window="_blank"] (See also: `$ bazel help target-syntax`)
+* https://bazel.build/docs/bazelrc[Write bazelrc configuration files,window="_blank"]
+
+If you are just getting started with Bazel, you should work through one of the link:https://bazel.build/start/bazel-intro#getting-started-tutorials[Tutorials,window="_blank"]
+
+See also  https://bazel.build/run/build[Build programs with Bazel,window=_blank]
+
+=== Bzlmod
+
+* https://bazel.build/external/module[Bazel modues,window=_blank]
+* https://docs.bazel.build/versions/master/external.html[Working with External Dependencies,window=_blank]
+
+* https://bazel.build/external/overview#bzlmod[Manage external dependencies with Bzlmod,window=_blank]
+
+
+
+
+// == OBazl
+
+// * The library rule `ocaml_library` does not build a "separately
+//   compiled module". Instead it provides a simple aggregation
+//   mechanism, so that you can depend on a collection of resources under
+//   a single name. In other words, OBazl takes the term "library" to
+//   mean "collection of resources"; the resources will almost always be
+//   OCaml compiled modules, but may include e.g. runtime data
+//   dependencies. The "library" produced by `ocaml_library` is a
+//   Starlark structure, which has no OCaml counterpart.
+
+// === Prerequisites
+
+// * Platform: Linux or MacOS. Both Bazel and OCaml support windows, so
+//   OBazl may work, but it has not been tested and there are no pplans to
+//   do so. However, it should not be terribly difficult to port it to
+//   Windows. If you have the time and energy to work on this please
+//   reach out on the link:https://discord.gg/PHSAW5DUva[OBazl Discord
+//   server,window="_blank"] and I will be happy to help.
+
+// * Build tools. The OCaml toolchain depends on a C/C++ compiler and
+//   tools.
+
+// * link:https://opam.ocaml.org/[OPAM,window="_blank"] installation. The rules have been used
+//   with version 2.0.7. Earlier versions may work; if not, please link:https://github.com/obazl/rules_opam/issues[file
+//   an issue,window="_blank"].
+
+// * An OPAM link:https://opam.ocaml.org/doc/Usage.html#opam-switch[switch,window="_blank"]
+//   containing the OCaml compiler and OPAM packages your project needs.
+
+== Setup
+
+To get the most out of OBazl and Bazel, you need to decide on some
+conventions and do a little configuration. See link:/docs_obazl/rules-ocaml/user-guide/obazl_conventions[OBazl
+Conventions] for a list.
+
+[#transparency]
+== Transparency
+
+Inspecting the Bazel environment, logs, build actions, etc.
+
+=== bazel info
+
+The `bazel info` command will print a dictionary listing the
+parameters, file locations, etc. that Bazel uses internally. It
+supports a large number of options; run `$ bazel help info` to see them
+all; to see just the keys for the dictionary, run `$ bazel help info-keys`.
+
+Most of entries in the dictionary, most of the time, can be safely
+ignored; but if you run into trouble, two of them can be helpful with
+debugging: `command_log` and `output_base`.
+
+=== command_log
+
+Bazel writes logs to a `command_log` file each time it executes a
+command; it overwrites the file. You can discover the location of the
+file by running `$ bazel info command_log`. Since the output of this
+command will overwrite the log file, you must use an alias or shell
+script to enable easy browsing.  See the link:conventions.md#aliases[aliases]
+recommendation in link:conventions.md[OBazl Conventions] for an example.
+
+=== output_base
+
+The `output_base` directory contains a subdirectory, `external`, that
+contains the external repositories your project has configured. You
+can browse the `BUILD.bazel` files of an external repo, for example,
+to verify that you are using the correct target labels.
+
+=== targets
+
+Bazel can print a source text representation of each target :
+
+`$ bazel query '@ppx_tools//:*' --output build`
+
+This shows what the target looks like to Bazel after it has been
+processed (e.g. variables expanded, etc.).
+
+=== actions
+
+A single build target may generate multiple build _actions_. For
+example, if an `ocaml_module` rule is parameterized with a `ppx`
+argument, it will generate two actions: one to transform the source
+file with the PPX, and one to compile the result. Each action will
+have a command line string.
+
+Normally there is no need to pay these actions any mind, but if
+something goes wrong with your build it may be useful to see exactly
+what a build rule is doing - what the actions are, what commands and
+arguments are used to run the actions, and what the inputs and outputs
+are. Fortunately this is easy to do. You can use the [action query]()
+facility to print all the actions generated by a rule without actually
+running the rule (so it does not trigger any compilation). For
+example, the following will print all the actions (and much additional
+information) generated by the `//foo/bar:baz` target:
+
+```
+$ bazel aquery //foo/bar:baz
+```
+
+See link:transparency.md[Transparency] for more information.
+
+=== packages
+
+To list all the files in the directory containing associated with a package:
+
+`$ bazel query 'kind("source file", @<repo>//<pkg>:*)' --output label_kind`
+
+To include all subpackages (subdirectories containing BUILD.bazel
+file), use `@<repo>//<pkg>/\...:*` instead of  `@<repo>//<pkg>:*`.
+
+E.g.
+
+`$ bazel query 'kind("source file", @ppx_tools//:*)' --output label_kind`
+
+`$ bazel query 'kind("source file", @ppx_tools//metaquot:*)' --output label_kind`
+
+
+
+==== Compile/link commands
+
+todo...
+
+== Useful tips
+
+* The `clean` command "[r]emoves bazel-created output, including all
+  object files, and bazel metadata." It will not refresh repository
+  dependencies. Adding the `--expunge` option will delete everything;
+  it will also stop the server, so that then next build command will
+  start from scratch. You almost never need to do this.
+
+* You should rarely need to run `$ bazel clean`. Bazel caches a
+  complete description of the build, so it always knows what needs to
+  be rebuilt. However, if you change the build structure - especially
+  if you remove build targets - you may need this command to rebuild
+  the cache.
+
+* Do spend some time learning to use the query facilities. On a
+  project of any size you'll be glad you did.
+
+* To experiment with build rules etc. you can avoid cluttering the
+  source tree by creating a `BUILD.bazel` in a work directory like
+  `dev` and putting the rules there. Since dependencies are expressed
+  as target labels, you can reach into the tree anywhere you like,
+  although you may need to adjust the `visibility` attribute of
+  targets.
+
+* Use link:https://github.com/bazelbuild/bazelisk[Bazelisk] to make sure
+  you're always using the latest version of Bazel. You can pin the
+  version you want by using a `.bazelversion` file.
+
+* You can enable link:https://docs.bazel.build/versions/master/completion.html[command-line completion] (also known as tab-completion) in Bash and Zsh. This lets you tab-complete command names, flags names and flag values, and target names.  Caveat: tab-completion may be an issue for Bazelisk; see link:https://github.com/bazelbuild/bazelisk/issues/29[Support bash autocomplete #29].)
+
+* If you need to make some kind of global change, e.g. renaming a
+  target or adding a dependencie to multiple rules, do not
+  search-and-replace. Use
+  link:https://github.com/bazelbuild/buildtools/tree/master/buildozer[buildozer]
+  instead.  (See link:maintenance.md#batch[Batch Editing] for more information.)
+

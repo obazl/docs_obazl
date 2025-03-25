@@ -1,0 +1,16 @@
+
+== Expunge
+
+link:https://github.com/ocaml/ocaml/issues/6704[issue 6704] (2014)
+
+    ... The idea behind expunging is simple: the toplevel itself depends on compiler-libs, however we do not want many of the generic names from compiler-libs to pollute the module namespace. In other words we want to keep the module namespace almost same as in ocamlc (Toploop and Topdirs are also provided).
+
+    Expunging does this by removing the non-stdlib modules from the internal symbol table of the runtime, which is also used by Dynlink, and by Dynlink-like code that loads the newly compiled bytecode into the toplevel. The effect of this is that the toplevel code itself still refers to compiler-libs, however if you load compiler-libs explicitly, you have a "split brain" situation: Dynlink acts as if compiler-libs was never loaded, loads a new copy, and resolves all future references to it.
+
+    However, the toplevel itself leaks outside a few implementation details of compiler-libs, such as: Lexer.Error and Syntaxerr.Error (which would appear if you try to invoke !Toplevel.parse_toplevel_phrase); the many references to Outcometree, Path, Env and Types from Toploop; the behavior of Toplevel-internal Location module, unable to catch any exceptions registered with Location.register_error_of_exn; probably more.
+
+    I now actually wonder if expunging is needed at all, given that compiler-libs are not in default cmi search path anymore (I'm assuming they were).
+
+...
+
+    The point of expunging is to give a clean environment to the toplevel user, but it's probably a good idea to reexport compiler-libs under one module name.

@@ -1,0 +1,54 @@
+== Platformitis Therapy
+
+SDK v. Platform.
+
+[quote,"some nazi, alas; doesn’t mean it’s not witty. The original had ‘culture‘ for ‘platform’. "]
+When I hear the word ‘platform’, I reach for my revolver.
+
+Here are some well-know and successful platforms: Apple, Google,
+Amazon, Facebook, ... Their main selling point: life is good on the
+plantation! You’ll be “well taken care-of and happy”! Why would you
+want to go elsewhere, when the garden inside our walls is so lovely?
+
+“The OCaml Platform” is code for “the Dune walled garden”. If you
+don’t believe me, just take a gander at the
+https://ocaml.org/tools/platform-roadmap[OCaml Platform Roadmap]. Some
+lip-service to non-Dune tooling, but essentially a Dune advertisement.
+Nothing wrong with Dune, as long as it works for you. The problem is
+that, if the Platform is successful, that will be your only option,
+whether you like it or not. You won’t be able to opt out except at
+great expense. Want to switch to the shiny new doc tool instead of
+`odoc`? Too bad, not supported by Dune. Already people are writing
+tools that only work with Dune.
+
+OBazl is not a platform. It’s more of an SDK - a collection of tools
+that work together. None of them are dependent on Bazel. Bazel uses
+them, not the other way around. It can do everything that “the OCaml
+Platform” can do, and then some, just as easily. Without relying on
+Dune in any way.
+
+What’s in a tool?
+
+* No dependency on a build system - it is the responsibility of the
+  build system to manage the tool, not the other way around.
+  ** In cases where integration with a build system requires something
+     like that, the integration logic must be separated from the tool
+     proper. If your tool needs to use a Dune library, for example,
+     that logic should go in a Dune adapter layer, so that the core
+     functionality of the tool remains independent of Dune. Same goes
+     for Bazel or any other build tool.
+* Output can always be directed to a file, by a command option like
+  `--outfile`. Writing output to stdout by default is fine, so long as
+  the user remains in control - can tell the tool where to write the
+  output. Tools that _only_ write to stdout can be difficult to
+  integrate in some environments - it is not always possible to
+  redirect stdout without substantial effort.
+* No hardwired paths
+* Inputs are all specified by command line options - no assumptions.
+  For example, a tool that assumes its input file is in the current
+  directory is badly designed. That may be fine as a default, but the
+  user should always have the option of specifying the location of
+  input files.
+* Config files (e.g. `.ocamlinit`) are fine
+* Thorough documentation
+

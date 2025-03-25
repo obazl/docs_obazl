@@ -69,16 +69,3 @@ entries:
       - title: Attributes
         url: "#_attributes"
         output: web
-
-  - title: Providers
-    open: true
-    output: web
-    folderitems:
-
-    - title: OCamlCcInfo
-      url: OCamlCcInfo
-      output: web
-    - title: OCamlDepsProvider
-      url: OCamlDepsProvider
-      output: web
-
