@@ -6,7 +6,7 @@
 :page-sidebar: rules_ocaml_home_sbdata
 :page-tags: [bazel]
 :page-keywords: notes, tips, cautions, warnings, admonitions
-:page-last_updated: Mar 18, 2025
+:page-last_updated: Mar 27, 2025
 :page-toc: true
 :toc: true
 
@@ -14,7 +14,7 @@ This site documents the OBazl toolsuite, version 3.0.0.
 
 [WARNING]
 ====
-Version 3.0.0.beta.1 scheduled for release on Mar 21, 2025 or thereabouts.
+Version 3.0.0.beta.1 scheduled for release on Mar 28, 2025 or thereabouts.
 
 This documentation is a Work-In-Progress. Things will be a little
 messy and incomplete. The best way to learn how to use the rules is
