@@ -68,8 +68,16 @@ entries:
       url: "obazl#_ocaml-platform-support"
       levels: two
       output: web
-    - title: Other tools & libs
-      url: "obazl#_other-tools-and-libraries"
+    - title: Opam libraries
+      url: "obazl#_opam-libraries"
+      levels: two
+      output: web
+    - title: Other tools
+      url: "obazl#_other-tools"
+      levels: two
+      output: web
+    - title: Dev tasks
+      url: "obazl#_dev-tasks"
       levels: two
       output: web
     - title: Features

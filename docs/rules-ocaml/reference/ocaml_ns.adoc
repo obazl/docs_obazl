@@ -16,12 +16,13 @@
 
 [.prototype]
 pass:[
-ocaml_ns(*, <a href="#ocaml_ns-name">name</a>, <a href="#ocaml_ns-import_as">import_as</a>, <a href="#ocaml_ns-ns_import_as">ns_import_as</a>, <a href="#ocaml_ns-ns_merge">ns_merge</a>, <a href="#ocaml_ns-ns_name">ns_name</a>, <a href="#ocaml_ns-private">private</a>, <a href="#ocaml_ns-submodules">submodules</a>, <a href="#ocaml_ns-visibility">visibility</a>)
+ocaml_ns(*, <a href="#ocaml_ns-name">name</a>, <a href="#ocaml_ns-env">env</a>, <a href="#ocaml_ns-import_as">import_as</a>, <a href="#ocaml_ns-ns_import_as">ns_import_as</a>, <a href="#ocaml_ns-ns_merge">ns_merge</a>, <a href="#ocaml_ns-ns_name">ns_name</a>, <a href="#ocaml_ns-opts">opts</a>, <a href="#ocaml_ns-private">private</a>, <a href="#ocaml_ns-submodules">submodules</a>,
+         <a href="#ocaml_ns-visibility">visibility</a>)
 ]
 
 
 Macro. Expands to an link:ocaml_ns_config[ocaml_ns_config] and an
-link:ocaml_module[ocaml_module] target that together define an OCaml pseudo-namespace.
+link:ocaml_ns_module[ocaml_ns_module] target that together define an OCaml build namespace.
 
 === Attributes
 [.rule_attrs]
@@ -30,13 +31,52 @@ link:ocaml_module[ocaml_module] target that together define an OCaml pseudo-name
 | Name  | Description | Type | Mandatory | Default
 
 | +++<a id="ocaml_ns-name"></a>+++name
-|  +++A unique name for this macro instance. Normally, this is also the name for the macro's main or only target. The names of any other targets that this macro might create will be this name with a string suffix.+++   | +++<a href="https://bazel.build/concepts/labels#target-names">Name</a>+++ | required | | +++<a id="ocaml_ns-import_as"></a>+++import_as
-|  -   | +++<a href="https://bazel.build/rules/lib/dict">Dictionary: Label -> String</a>+++ | optional |  `{}` | +++<a id="ocaml_ns-ns_import_as"></a>+++ns_import_as
-|  -   | +++<a href="https://bazel.build/rules/lib/dict">Dictionary: Label -> String</a>+++ | optional |  `{}` | +++<a id="ocaml_ns-ns_merge"></a>+++ns_merge
-|  -   | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++ | optional |  `[]` | +++<a id="ocaml_ns-ns_name"></a>+++ns_name
-|  +++Namespace name+++   | +++String; <a href="https://bazel.build/reference/be/common-definitions#configurable-attributes">nonconfigurable</a>+++ | optional |  `""` | +++<a id="ocaml_ns-private"></a>+++private
-|  -   | +++Boolean; <a href="https://bazel.build/reference/be/common-definitions#configurable-attributes">nonconfigurable</a>+++ | optional |  `False` | +++<a id="ocaml_ns-submodules"></a>+++submodules
-|  -   | +++List of strings+++ | optional |  `[]` | +++<a id="ocaml_ns-visibility"></a>+++visibility
-|  +++The visibility to be passed to this macro's exported targets. It always implicitly includes the location where this macro is instantiated, so this attribute only needs to be explicitly set if you want the macro's targets to be additionally visible somewhere else.+++   | +++<a href="https://bazel.build/concepts/labels">List of labels</a>; <a href="https://bazel.build/reference/be/common-definitions#configurable-attributes">nonconfigurable</a>+++ | optional | |===
+|  A unique name for this macro instance. Normally, this is also the name for the macro's main or only target. The names of any other targets that this macro might create will be this name with a string suffix. | +++<a href="https://bazel.build/concepts/labels#target-names">Name</a>+++
+| required
+| | +++<a id="ocaml_ns-env"></a>+++env
+|  Env variables | +++<a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a>+++
+| optional
+|  `None` | +++<a id="ocaml_ns-import_as"></a>+++import_as
+|  Import exogenous (non-namepaced) modules.
+
+Exogenous (sub)modules, namespaced or non-namespaced.  Aliased names will not be prefixed with ns name of this ns_config.
+
+Keys: labels of modules;
+Values: alias name to be used in this resolver.
+
+e.g. `import_as = {"//mwe/rgb:R": "Red"}` will generate
+
+module R = Red | +++<a href="https://bazel.build/rules/lib/dict">Dictionary: Label -> String</a>+++
+| optional
+|  `None` | +++<a id="ocaml_ns-ns_import_as"></a>+++ns_import_as
+|  Import exogenous namespaces (`ocaml_ns` targets).
+
+Dictionary: keys are exogenous namespaces (`ocaml_ns` modules),
+values are strings to serve as ns name aliases.
+Example: {"//foo/bar:nsbaz": "FBB"} | +++<a href="https://bazel.build/rules/lib/dict">Dictionary: Label -> String</a>+++
+| optional
+|  `None` | +++<a id="ocaml_ns-ns_merge"></a>+++ns_merge
+|  Merges all submodules of an exogenous namespace. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
+| optional
+|  `None` | +++<a id="ocaml_ns-ns_name"></a>+++ns_name
+|  Use this as the ns name (prefix string) | +++String+++
+| optional
+|  `None` | +++<a id="ocaml_ns-opts"></a>+++opts
+|  List of compile options; overrides configurable default options. Supports `+-no-+` prefix for each option; for example, `-no-linkall`. | +++List of strings+++
+| optional
+|  `None` | +++<a id="ocaml_ns-private"></a>+++private
+|  When True, adds suffix `+__+` to ns name. Use this option when you have a module whose name matches the ns name. Such a module will function as the ns resolver, and may export only a subset of the members of the namespace.
+
+Not to be confused with the https://bazel.build/concepts/visibility[visibility,window=_blank] attribute, which controls visibility of the target within the Bazel environment. | +++Boolean+++
+| optional
+|  `None` | +++<a id="ocaml_ns-submodules"></a>+++submodules
+|  List of strings from which submodule names are to be derived for aliasing. Bazel labels may be used; the submodule name will be derived from the target part. For example, '//a/b:c' normalizes to C. But they are just strings, and will not be checked against any files.
+
+The normalized submodule names must match the names of the modules electing membership via the 'ns_config' attribute. | +++List of strings+++
+| optional
+|  `None` | +++<a id="ocaml_ns-visibility"></a>+++visibility
+|  The visibility to be passed to this macro's exported targets. It always implicitly includes the location where this macro is instantiated, so this attribute only needs to be explicitly set if you want the macro's targets to be additionally visible somewhere else. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>; <a href="https://bazel.build/reference/be/common-definitions#configurable-attributes">nonconfigurable</a>+++
+| optional
+| |===
 
 

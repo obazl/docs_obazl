@@ -29,7 +29,7 @@ ${ruleInfo.docString}
 
 #foreach ($attribute in $ruleInfo.getAttributeList())
 | [[_${ruleName}_${attribute.name}]]$attribute.name
-| #if(!$attribute.docString.isEmpty()) $attribute.docString #else - #end
+| #if(!$attribute.docString.isEmpty()) ${attribute.docString} #else - #end
 ## ProviderNameGroup seems to be broken, we always get "Unknown Provider"
 ## <br/>#if(!${attribute.getProviderNameGroupList().isEmpty()}) Provider Groups: #foreach ($pg in ${attribute.getProviderNameGroupList()})
 ## <br/>Providers: #foreach ($pl in ${pg.getProviderNameList()}) <br/> [${pl}](providers_ocaml.md#${pl.toLowerCase()})#end

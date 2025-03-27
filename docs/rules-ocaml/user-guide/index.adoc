@@ -144,76 +144,18 @@ It adds support for:
      link-time.
 
 
-// == Topics
+== Dev tasks
 
-// * link:accessibility[Accessibility]
-// * link:aggregates[Aggregates]
-// ** link:aggregators#_archives[Archives]
-// ** link:aggregators#_libraries[Libraries]
-// ** link:aggregators#_namespace-libraries[Namespace Libraries]
-// * link:aspects[Aspects]
-// * link:bootstrapping[Bootstrapping]
-// * link:profiles[Build Profiles and Contexts]
-// * link:caching[Caching]
-// * Compilation Mode - bytecode v. native
-// * link:compilers[Compilers]
-// * link:conditional[Conditional Builds]
-// * link:configuration[Configuration]
-// ** link:configuration#bazel[Bazel Configurations]
-// ** link:configuration#opamconfig[OPAM Rules Configuration]
-// ** link:configuration#ocamlconfig[OCaml Rules Configuration]
-// ** link:configrules[Configuration Rules]
-// ** link:configprofiles[Config Profiles]
-// * link:obazl-conventions[Conventions]
-// * link:dependencies[Dependencies]
-// ** link:dependencies-ocaml[OCaml Dependencies]
-// ** [Runtime Dependencies]()
-// ** link:opam#dependencies[OPAM Dependencies]
-// ** [PPX Adjunct Dependencies]()
-// ** link:dependencies-cc[CC Dependencies]
-// * link:deployment[Deployment]
-// ** link:stamping[Stamping binaries]
-// * link:diagnostics[Diagnostics]: Inspecting Build Commands, Actions, etc.
-// * link:executables[Executables]
-// * link:file-generation[File Generation]
-// * link:interop[Interop]
-// * link:https://bazel.build/concepts/labels[Labels,window="_blank"]
-// * link:linking[Linking]
-// * link:maintenance[Maintenance Tasks]
-// * Modules
-// ** link:module-binding[Module Binding]
-// ** link:signatures[Signatures]
-// ** link:structures[Structures]
-// * link:namespacing[Namespacing]
-// * link:offline[Offline development]
-// * link:preprocessing[Preprocessing]
-// * link:profiles[Profiles]
-// * link:/tools_opam/ug[OPAM]
-// * link:optimization[Optimization]
-// * link:providers[Providers]
-// * link:ppx[PPX Support]
-// * link:querying[Querying Dependency Graphs]
-// * link:workspaces[Repositories]
-// * link:refactoring[Refactoring]
-// * Rules
-// ** link:bootstrap#rules[Bootstrapping]
-// ** link:build_rules[Build Rules]
-// ** link:configrules[Configuration Rules]
-// * link:separate-compilation[Separate Compilation]
-// * link:split-dependencies[Split Dependencies]
-// * link:stamping[Stamping]
-// * link:https://bazel.build/concepts/build-ref#targets[Targets,window="_label"]
-// ** `$ bazel help target-syntax`
-// * link:testing[Testing]
-// * link:thread-lib[Thread Library]
-// * link:toolchains[Toolchains]
-// ** link:toolchains#ocamlfind[ocamlfind]
-// ** link:toolchains#ocamlc[ocamlc/ocamlopt]
-// * link:tools[Tools]
-// * link:troubleshooting[Troubleshooting]
-// * link:user-bazelrc[user.bazelrc]
-// * link:visibility[Visibility]
-// * link:workspaces[Workspaces]
+* Compile a signature
+* Compile a module
+* Define a namespace library
+* Assemble a library
+* Archive a library
+* Link an executable
+* Link custom executable variants: `-custom`, `-output-complete-exe`, etc.
+* Build a custom runtime (`-make-runtime`)
+* Link CC code to OCaml code
+
 
 == Additional Topics
 

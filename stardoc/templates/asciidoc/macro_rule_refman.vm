@@ -34,7 +34,10 @@ ${macroInfo.docString}
 
 #foreach ($attribute in $macroInfo.getAttributeList())
 | +++<a id="${macroName}-${attribute.name}"></a>+++$attribute.name
-| #if(!$attribute.docString.isEmpty()) +++${util.markdownCellFormat($attribute.docString)}+++ #else - #end  | +++${util.attributeTypeString($attribute)}+++ | ${util.mandatoryString($attribute)} | #if(!$attribute.defaultValue.isEmpty()) ${util.markdownCodeSpan($attribute.defaultValue)} #end
+| #if(!$attribute.docString.isEmpty()) $attribute.docString #else - #end
+| +++${util.attributeTypeString($attribute)}+++
+| ${util.mandatoryString($attribute)}
+| #if(!$attribute.defaultValue.isEmpty()) ${util.markdownCodeSpan($attribute.defaultValue)} #end
 #end
 #end
 |===

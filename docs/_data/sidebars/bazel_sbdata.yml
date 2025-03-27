@@ -36,9 +36,9 @@ entries:
       open: true
       url: "#_setup"
       output: web
-    - title: Transparency
+    - title: Observability
       open: true
-      url: "#transparency"
+      url: "#_observability"
       output: web
     - title: Tips
       open: true

@@ -96,8 +96,8 @@ $ bazel test //... --show_result=10
 
 == Support
 * Discord: link:https://discord.gg/PHSAW5DUva[OBazl,window=_blank]
-* Twitter: link:https://twitter.com/obazldev[@obazldev,window=_blank]
 
+* Bluesky: https://bsky.app/profile/obazl.bsky.social[obazl.bsky.social,window=_blank]
 
 === Acknowledgements
 

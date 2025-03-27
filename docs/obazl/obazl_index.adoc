@@ -61,18 +61,229 @@ IMPORTANT: The `tools_opam` module extension separately models an opam
 switch, the OCaml distribution it contains, and the packages installed
 in it.
 
-== OBazl help
+== Features
 
-There’s a lot of stuff here.  Help screens (planned):
+[%collapsible]
+.https://github.com/obazl/rules_ocaml[rules_ocaml,window=_blank] features
+====
+[frame=sides,grid=cols,strips=none,cols="2,1,4"]
+|===
+|Feature | Status | Comment
 
-* `bazel run @opam//help`
-* `bazel run @opam.ocamlsdk//help`
-* `bazel run @rules_ocaml//help`
-* `bazel run @rules_ocaml//help:ocaml_module`
+| Signature compilation | supported | link:/docs_obazl/rules-ocaml/reference/ocaml_signature[ocaml_signature]
+| Module compilation | supported | link:/docs_obazl/rules-ocaml/reference/ocaml_module[ocaml_module]
+| Module composition | supported | no filename restrictions; e.g. can bind `a.mli` and `b.ml` to make module `C` (i.e. automatic renaming).
+| Library construction | supported | link:/docs_obazl/rules-ocaml/reference/ocaml_library[ocaml_library]
+| Library composition | supported | no restriction on location of lib components; an `ocaml_library` may contain other `ocaml_library` targets
+|Namespaced libs | supported | link:/docs_obazl/rules-ocaml/reference/ocaml_ns[ocaml_ns] rule; link:/docs_obazl/rules-ocaml/reference/ocaml_module#_ocaml_module_ns[ns] attribute of `ocaml_module`, `ocaml_signature`. Automatic renaming.
+| Archiving | supported | `ocaml_library`; archiving is automatic and context-dependent
+| Executables | supported | link:/docs_obazl/rules-ocaml/reference/ocaml_binary[ocaml_binary]; `ppx_executable` (from `@rules_ppx`)
+| Test executables | supported | link:/docs_obazl/rules-ocaml/reference/ocaml_test[ocaml_test]
+|Custom VM executables | supported | `vm_linkage` attrib of link:/docs_obazl/rules-ocaml/reference/ocaml_binary[ocaml_binary]
+|Custom VM runtimes | supported | rule `ocaml_runtime` (`-make-runtime`); attribute link:/docs_obazl/rules-ocaml/reference/ocaml_binary#_ocaml_binary_runtime[runtime] of link:/docs_obazl/rules-ocaml/reference/ocaml_binary[ocaml_binary]
+| CC library deps | supported | Attached at point of use
+|`.cmt`, `.cmti` generation | supported | `-bin-annot` or global flag
+ `--no@rules_ocaml//cfg:cmt`
+|`ocamlcmt` | supported | build with `--output_groups=cmtinfo`
+|`ocamlobjinfo` | supported | build with `--output_groups`. Any combination of `modinfo`, `siginfo`, `archinfo`
+|developer flags | supported | e.g. `-dlambda`
+| etc. | | 
+|===
+====
 
-Manpages would be nice, but that would invove an installation step. Maybe we should support something like:
+[%collapsible]
+.https://github.com/obazl/tools_opam[tools_opam,window=_blank] features
+====
+[frame=sides,grid=cols,strips=none,cols="1,4"]
+|===
+|Feature  | Comment
 
-    bazel run @rules_ocaml//help -- install
+|zero config | The tool itself requires no configuration; you need only configure your (Bazel) module by listing the packages you need in `opam.deps(pkg= {...})`
+
+|opam pkg dependencies | `pkg.subpkg` available as `@opam.pkg//subpkg/lib`
+
+|opam commands | `$ bazel run @opam -- <cmd>`  Ensures that correct `opam` binary, root, switch, and `CAML_LD_LIBRARY_PATH` are used (no interference from environment variables.)
+|OCaml SDK libs | `@opam.ocamlsdk` packages export SDK libraries; for example, `@opam.ocamlsdk//compiler-libs:common`, `@opam.ocamlsdk//dynlink/lib`, etc.
+|OCaml SDK tools | `ocamlobjinfo`, `ocamlcmt` support implemented as link:/docs_obazl/bazel/user-guide/aspects#_inline-aspects[inline aspects]
+|Platform tools | Integrated support for `utop`: `'$ bazel run @utop'`
+
+|===
+====
+
+
+
+The OBazl rules are deliberately low-level, in keeping with the goal
+of giving the developer complete control (i.e. no magic). OBazl build
+rules correspond more-or-less directly to the build commands they
+construct. The down side of sugar-free rules is a degree of
+inconvenience. For example, OBazl does not analyze implicit
+dependencies, so it is the responsibility of the developer to discover
+and list them. It does not support file globbing, so each source file
+must have a build rule. Most such inconveniences can and will be
+addressed over time by tooling built on the foundation of the
+primitive rules.
+
+=== Aspects
+
+OBazl uses aspects to ..
+
+See link:/docs_obazl/bazel/aspects[Aspects] for more info.
+
+== Dev tasks
+
+Code fragments below assume that the following lines are in the root `MODULE.bazel`:
+
+----
+bazel_dep(name = "rules_ocaml", version = "3.0.0")
+bazel_dep(name = "tools_opam",  version = "1.0.0")
+----
+
+
+[%collapsible]
+.Compile, archive, link
+====
+see link:/docs_obazl/rules-ocaml/user-guide#_dev-tasks[rules_ocaml User Guide: Dev tasks]
+====
+
+[#run_ocaml]
+[%collapsible]
+.Launch an ocaml repl
+====
+[source="starlark",title="MODULE.bazel"]
+----
+opam_dev = use_extension("@tools_opam//extensions:opam.bzl",
+                         "opam", dev_dependency = True)
+opam_dev.ocaml()
+use_repo(opam_dev, "ocaml")
+----
+
+[source="shell",title="cmd line"]
+----
+$ bazel run @ocaml
+----
+====
+
+[#run_utop]
+[%collapsible]
+.Launch a utop repl
+====
+[source="starlark",title="MODULE.bazel"]
+----
+opam_dev = use_extension("@tools_opam//extensions:opam.bzl",
+                         "opam", dev_dependency = True)
+opam_dev.utop(version = "2.15.0-1", ocamlinit = ".config/ocamlinit")
+use_repo(opam_dev, utop="opam.utop")
+----
+
+[source="shell",title="cmd line"]
+----
+$ bazel run @utop
+----
+====
+
+[#run_ocamldebug]
+[%collapsible]
+.Launch `ocamldebug`
+====
+[source="starlark",title="MODULE.bazel"]
+----
+opam_dev = use_extension("@tools_opam//extensions:opam.bzl",
+                         "opam", dev_dependency = True)
+opam_dev.dbg()
+use_repo(opam_dev, "dbg")
+----
+
+[source="shell",title="cmd line"]
+----
+$ bazel run @dbg --@dbg//pgm=bin:hello
+----
+====
+
+[%collapsible]
+.Generate interface code from a `.ml` file
+====
+----
+$ bazel build //pkg:tgt --output_groups=gensig
+----
+====
+
+
+[%collapsible]
+.Generate `.cmt`, `.cmti` files
+====
+----
+$ bazel build //pkg:tgt --output_groups=cmt,cmti
+----
+====
+
+[#apply_ocamlobjinfo]
+[%collapsible]
+.Apply `ocamlobjinfo`
+====
+[source="starlark",title=".bazelrc"]
+----
+build:info --aspects @tools_opam//aspects:ocamlobjinfo.bzl%info
+build:info --output_groups=objinfo
+----
+
+[source="shell",title="cmd line"]
+----
+$ bazel build //src:Hello        --config=modinfo    #  Hello.cmx => Hello.cmx.objinfo
+$ bazel build //src:Hello_cmi    --config=siginfo    #  Hello.cmi => Hello.cmi.objinfo
+$ bazel build //src:libGreetings --config=archinfo   #  Greetings.cmxa => Greeings.cmxa.objinfo
+----
+May be applied to opam packages:
+----
+$ bazel build @opam.ounit2//lib --config=archinfo    #  oUnit.cmxa => oUnit.cmxa.objinfo
+----
+====
+
+
+
+[#apply_ocamlcmt]
+[%collapsible]
+.Apply `ocamlcmt`
+====
+[source="starlark",title=".bazelrc"]
+----
+build:cmt_info --aspects @tools_opam//aspects:ocamlcmt.bzl%cmt
+build:cmt_info --output_groups=cmtinfo
+build:cmti_info --aspects @tools_opam//aspects:ocamlcmt.bzl%cmti
+build:cmti_info --output_groups=cmtinfo
+----
+[source="shell",title="cmd line"]
+----
+$ bazel build //src:Hello --config=cmt_info       # Hello.cmt  => Hello.cmt.info
+$ bazel build //src:Hello --config=cmti_info       # Hello.cmti => Hello.cmti.info
+----
+====
+
+[#run_opam]
+[%collapsible]
+.Run an `opam` command
+====
+[source="starlark",title="MODULE.bazel"]
+----
+opam = use_extension("@tools_opam//extensions:opam.bzl", "opam")
+use_repo(opam, "opam")
+----
+
+[source="shell",title="cmd line"]
+----
+$ bazel run @opam -- list
+----
+====
+
+=== Other tasks
+
+* `<3rd party tool> <file>` (e.g. https://www.typerex.org/ocp-index.html[ocp-indent])
+* Apply a tool to `.cmt`, `.cmti` files
+* Generate intermediate diagnostic files, e.g. `-dparsetree`, `-dlambda`, etc.
+* PPX processing - see link:/docs_obazl/rules-ppx/user-guide#_dev-tasks[rules_ppx User Guide: Dev tasks]
+* `-stop-after` compilation phase
+* Run build tools, e.g. `ocamlobjinfo`, `ocamldoc`, etc.
+* etc.
+
 
 == https://ocaml.org/[The OCaml SDK]
 
@@ -90,7 +301,7 @@ required toolchain definitions (implementations). That’s part of what
 [%collapsible]
 .SDK Compilers
 ====
-* `ocamlopt` => `ocamlopt.opt`  `bazel build --tc=ocamlopt.opt` (default)
+* `ocamlopt` => `ocamlopt.opt`  `bazel build --tc=ocamlopt` (default)
 * `ocamlopt.opt`    - `bazel build --tc=ocamlopt.opt`
 * `ocamlc.opt` => `ocamlc.opt`    - `bazel build --tc=ocamlc` or `--tc=ocamlc.opt`
 * `ocamlc.opt`
@@ -127,11 +338,11 @@ SDK libraries are modeled as Bazel packges within the `@opam.ocamlsdk` module:
 === SDK Tools
 
 SDK tools (`ocamdebug`, `ocamlobjinfo`, etc.) are modeled a little differently.
-[%collapsible%open]
+[%collapsible]
 .SDK tools
 ====
-* https://ocaml.org/manual/5.3/toplevel.html[ocaml] (repl/toplevel)   -  `bazel run @ocaml`
-* https://ocaml.org/manual/5.3/debugger.html[ocamldebug]: `bazel run @dbg`
+* https://ocaml.org/manual/5.3/toplevel.html[ocaml] (repl/toplevel) see link:#run_ocaml[Launch an ocaml repl]
+* https://ocaml.org/manual/5.3/debugger.html[ocamldebug]: see link:#run_ocamldebug[Launch ocamldebug]
 * https://ocaml.org/manual/5.3/ocamldoc.html[ocamldoc]:  planned aspect: `bazel build foo/bar --aspects @tools_opam//aspects.bzl%ocamldoc`?
 * https://ocaml.org/manual/5.3/profil.html[ocamlprof]: planned aspect:  `bazel build foo/bar --aspects @tools_opam//aspects.bzl%ocamlprof`?
 * https://ocaml.org/manual/5.3/toplevel.html#s%3Acustom-toplevel[ocamlmktop] planned rule in `rules_ocaml`: `ocaml_toplevel` or similar
@@ -141,10 +352,13 @@ SDK tools (`ocamdebug`, `ocamlobjinfo`, etc.) are modeled a little differently.
 * https://ocaml.org/manual/5.3/lexyacc.html#s%3Aocamlyacc-overview[ocamlyacc,window=_blank] - see https://github.com/obazl/rules_ocaml[rules_ocaml,window=_blank]
 * https://ocaml.org/manual/5.3/intfc.html[FFI] (C interface) - `deps = ["@opam.ocamlsdk//ffi/lib"]`
 
-* `ocamlobjinfo` inline aspect: `bazel build foo/bar --output_groups=modinfo`
-* `ocamlcmt` inline aspect  `bazel build foo/bar --output_groups=cmtinfo`
+* `ocamlobjinfo` see link:#apply_ocamlobjinfo[Apply ocamlobjinfo]
+* `ocamlcmt`  see link:#apply_ocamlcmt[Apply ocamlcmt]
 
-Unsupported: `ocamlmklib`
+Unsupported: `ocamlbuild`, `ocamlmklib`
+
+Maybe: `ocamlfind`, `findlib`. Supported as an ordinary opam pkg, but
+no special adapter for running `ocamlfind`.
 ====
 
 Related:
@@ -155,11 +369,11 @@ Related:
 == https://ocaml.org/platform[OCaml Platform] support
 
 
-[%collapsible%open]
+[%collapsible]
 .OCaml platform tools
 ====
-* https://opam.ocaml.org/[opam]  - `bazel run @opam` (https://github.com/obazl/tools_opam[tools_opam,window=_blank])
-* https://github.com/ocaml-community/utop[utop]   -  `bazel run @utop` (https://github.com/obazl/tools_opam[tools_opam,window=_blank])
+* https://opam.ocaml.org/[opam]  see link:#run_opam[Run an opam command]
+* https://github.com/ocaml-community/utop[utop]   see link:#run_utop[Launch a utop repl]
 * https://github.com/ocaml-ppx/ppxlib[ppxlib] - https://github.com/obazl/rules_ppx[rules_ppx]
 * https://github.com/ocaml/odoc[odoc]: planned  `bazel build foo/bar --aspects @tools_opam//aspects.bzl%odoc`?
 * https://github.com/ocaml-ppx/ocamlformat[ocamlformat]:  planned  `bazel build foo/bar --aspects @tools_opam//aspects.bzl%ocamlformat`?
@@ -170,7 +384,21 @@ Related:
 ====
 
 
-== Other tools and libraries
+== Opam libraries
+
+Opam libraries are modeled as Bazel repos. The name conversion is
+straightforward:
+
+== Other tools
+
+Ordinary libraries are easy to use. You just list them as
+dependencies, and then refer to them in your `BUILD.bazel` files.
+
+Tools and libraries that generate build tools (e.g. `ctypes`) require a
+more elaborate build protocol, so they’re good candidates for Bazel
+customization using either custom rules or macros.
+
+Examples:  `menhir`; `ctypes`.
 
 === Tool integration: adapter v. plugin
 
@@ -195,7 +423,7 @@ relatively little effort.  Here are some examples:
 
 
 
-[%collapsible%open]
+[%collapsible]
 .Other tools and libraries
 ====
 [frame=sides,grid=cols,strips=none,cols="2,3,1,3,3"]
@@ -223,89 +451,19 @@ relatively little effort.  Here are some examples:
 ====
 
 
-== OCaml-specific tasks
 
-Some OCaml-specific tasks that must be accomodated by any satisfactory build system:
+== Help
 
-* Building executable variants: `-custom`, `-output-complete-exe`, etc.
-* Custom VM runtimes - `-make-runtime`, `-use-runtime`
-* Directly depend on `.cmi` files
-* Generate interface code from `.ml` file (`-i`)
-* Generate `.cmt`, `.cmti` files (`-bin-annot`)
-* Directly depend on `.cmt`, `.cmti` files
-* Generate intermediate diagnostic files, e.g. `-dparsetree`, `-dlambda`, etc.
-* PPX processing
-* `-stop-after` compilation phase
-* Run build tools, e.g. `ocamlobjinfo`, `ocamldoc`, etc.
+There’s a lot of stuff here.  Help screens (planned):
+
+* `bazel run @rules_ocaml//help`
+* `bazel run @rules_ocaml//help:ocaml_module`
+* `bazel run @opam.ocamlsdk//help`
+* `bazel run @opam.ocamlsdk//ffi:help`
+* `bazel run @opam//help`
 * etc.
 
-All this is trickier than one might think.  Take `utop` as an example.
+Manpages would be nice, but that would invove an installation step. Maybe we should support something like:
 
+    bazel run @rules_ocaml//help -- install
 
-== Features
-
-[%collapsible]
-.https://github.com/obazl/rules_ocaml[rules_ocaml,window=_blank] features
-====
-[frame=sides,grid=cols,strips=none,cols="2,1,4"]
-|===
-|Feature | Status | Comment
-
-| Signature compilation | supported | link:/docs_obazl/rules-ocaml/reference/ocaml_signature[ocaml_signature]
-| Module compilation | supported | link:/docs_obazl/rules-ocaml/reference/ocaml_module[ocaml_module]
-| Module composition | supported | no filename restrictions; e.g. can bind `a.mli` and `b.ml` to make module `C` (i.e. automatic renaming).
-| Library construction | supported | link:/docs_obazl/rules-ocaml/reference/ocaml_library[ocaml_library]
-| Library composition | supported | no restriction on location of lib components; an `ocaml_library` may contain other `ocaml_library` targets
-|Namespaced libs | supported | link:/docs_obazl/rules-ocaml/reference/ocaml_ns[ocaml_ns] rule; link:/docs_obazl/rules-ocaml/reference/ocaml_module#_ocaml_module_ns[ns] attribute of `ocaml_module`, `ocaml_signature`. Automatic renaming.
-| Archiving | supported | `ocaml_library`; archiving is automatic and context-dependent
-| Executables | supported | link:/docs_obazl/rules-ocaml/reference/ocaml_binary[ocaml_binary]; `ppx_executable` (from `@rules_ppx`)
-| Test executables | supported | link:/docs_obazl/rules-ocaml/reference/ocaml_test[ocaml_test]
-|Custom VM executables | supported | `vm_linkage` attrib of link:/docs_obazl/rules-ocaml/reference/ocaml_binary[ocaml_binary]
-|Custom VM runtimes | supported | rule `ocaml_runtime` (`-make-runtime`); attribute link:/docs_obazl/rules-ocaml/reference/ocaml_binary#_ocaml_binary_runtime[runtime] of link:/docs_obazl/rules-ocaml/reference/ocaml_binary[ocaml_binary]
-| CC library deps | supported | Attached at point of use
-|`.cmt`, `.cmti` generation | supported | `-bin-annot` or global flag
- `--no@rules_ocaml//cfg:cmt`
-|`ocamlcmt` | supported | build with `--output_groups=cmtinfo`
-|`ocamlobjinfo` | supported | build with `--output_groups`. Any combination of `modinfo`, `siginfo`, `archinfo`
-|developer flags | supported | e.g. `-dlambda`
-| etc. | | 
-|===
-====
-
-[%collapsible%open]
-.https://github.com/obazl/tools_opam[tools_opam,window=_blank] features
-====
-[frame=sides,grid=cols,strips=none,cols="1,4"]
-|===
-|Feature  | Comment
-
-|zero config | The tool itself requires no configuration; you need only configure your (Bazel) module by listing the packages you need in `opam.deps(pkg= {...})`
-
-|opam pkg dependencies | `pkg.subpkg` available as `@opam.pkg//subpkg/lib`
-
-|opam commands | `$ bazel run @opam -- <cmd>`  Ensures that correct `opam` binary, root, switch, and `CAML_LD_LIBRARY_PATH` are used (no interference from environment variables.)
-|OCaml SDK libs | `@opam.ocamlsdk` packages export SDK libraries; for example, `@opam.ocamlsdk//compiler-libs:common`, `@opam.ocamlsdk//dynlink/lib`, etc.
-|OCaml SDK tools | `ocamlobjinfo`, `ocamlcmt` support implemented as link:/docs_obazl/bazel/user-guide/aspects#_inline-aspects[inline aspects]
-|Platform tools | Integrated support for `utop`: `'$ bazel run @utop'`
-
-|===
-====
-
-
-
-The OBazl rules are deliberately low-level, in keeping with the goal
-of giving the developer complete control (i.e. no magic). OBazl build
-rules correspond more-or-less directly to the build commands they
-construct. The down side of sugar-free rules is a degree of
-inconvenience. For example, OBazl does not analyze implicit
-dependencies, so it is the responsibility of the developer to discover
-and list them. It does not support file globbing, so each source file
-must have a build rule. Most such inconveniences can and will be
-addressed over time by tooling built on the foundation of the
-primitive rules.
-
-== Aspects
-
-OBazl uses aspects to ..
-
-See link:/docs_obazl/bazel/aspects[Aspects] for more info.

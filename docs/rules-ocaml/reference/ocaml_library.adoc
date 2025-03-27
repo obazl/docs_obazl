@@ -17,51 +17,47 @@ pass:[
 ocaml_library(<a href="#ocaml_library-name">name</a>, <a href="#ocaml_library-archive_name">archive_name</a>, <a href="#ocaml_library-env">env</a>, <a href="#ocaml_library-linkage">linkage</a>, <a href="#ocaml_library-manifest">manifest</a>, <a href="#ocaml_library-opts">opts</a>)
 ]
 
-Aggregates a collection of OCaml modules. (link:../ug/ocaml_library.md[User Guide]). Provides: [OCamlLibraryProvider](providers_ocaml.md#ocamllibraryprovider).
+Aggregates a collection of OCaml modules.
 
 An `ocaml_library` is a collection of modules packaged into an OBazl
-target; it is not a single binary file. It is a OBazl convenience rule
+target; it is not a single binary file. It is an OBazl convenience rule
 that allows a target to depend on a collection of deps under a single
 label, rather than having to list each individually.
 
-Be careful not to confuse `ocaml_library` with `ocaml_archive`. The
-latter generates OCaml binaries (`.cma`, `.cmxa`, '.a' archive files);
-the former does not generate anything, it just passes on its
-dependencies under a single label, packaged in a
-[OCamlLibraryProvider](providers_ocaml.md#ocamllibraryprovider). For
-more information see [Collections: Libraries, Archives and
-Packages](../ug/collections.md).
+By default, libraries are not archived unless the client explicitly requests archiving.  If you build a library directly from the command line, you'll get an archive.  But if a rule depends on an `ocaml_library` target, no archive will be produced. This default policy can be overridden. For example, an `ocaml_binary` target can set `force_archived_libdeps` to True.
+
+WARNING: This feature - context-dependent archiving - is still under development.
 
 
 == Attributes
 
 [.rule_attrs]
-[cols="1,3,1,1,1"]
+[cols="1,4,2,1,1"]
 |===
 | Name  | Description | Type | Mandatory | Default
 
-| +++<a class="rule-attr" id="ocaml_library-name"></a>+++name
+| [[_ocaml_library_name]]name
 |  A unique name for this target. | +++<a href="https://bazel.build/concepts/labels#target-names">Name</a>+++
 | required
 | 
-| +++<a class="rule-attr" id="ocaml_library-archive_name"></a>+++archive_name
-|  Name of generated archive file, without extension. If not provided, name will be derived from target 'name' attribute.  Ignored if archived == False. | +++String+++
+| [[_ocaml_library_archive_name]]archive_name
+|  Name of generated archive file, without extension. If not provided, name will be derived from target 'name' attribute. | +++String+++
 | optional
 | ""
-| +++<a class="rule-attr" id="ocaml_library-env"></a>+++env
+| [[_ocaml_library_env]]env
 |  Env variables | +++<a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a>+++
 | optional
 | {}
-| +++<a class="rule-attr" id="ocaml_library-linkage"></a>+++linkage
-|  Static: build archive; shared: build cmxs;
-Overrides hidden _linkage | +++String+++
+| [[_ocaml_library_linkage]]linkage
+|  By default, libraries are not packaged as archives or cmxs files.
+"static": archive the library; "shared": build cmxs. | +++String+++
 | optional
 | ""
-| +++<a class="rule-attr" id="ocaml_library-manifest"></a>+++manifest
-|  List of component modules, for libraries and archives. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
+| [[_ocaml_library_manifest]]manifest
+|  List of component modules for libraries. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
 | optional
 | []
-| +++<a class="rule-attr" id="ocaml_library-opts"></a>+++opts
+| [[_ocaml_library_opts]]opts
 |  List of compile options; overrides configurable default options. Supports `+-no-+` prefix for each option; for example, `-no-linkall`. | +++List of strings+++
 | optional
 | []

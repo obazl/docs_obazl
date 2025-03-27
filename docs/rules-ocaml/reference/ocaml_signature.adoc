@@ -43,67 +43,67 @@ the difference between '/' and ':' in such labels):
 == Attributes
 
 [.rule_attrs]
-[cols="1,1,1,1,1"]
+[cols="1,4,2,1,1"]
 |===
 | Name  | Description | Type | Mandatory | Default
 
-| +++<a class="rule-attr" id="ocaml_signature-name"></a>+++name
+| [[_ocaml_signature_name]]name
 |  A unique name for this target. | +++<a href="https://bazel.build/concepts/labels#target-names">Name</a>+++
 | required
 | 
-| +++<a class="rule-attr" id="ocaml_signature-deps"></a>+++deps
+| [[_ocaml_signature_deps]]deps
 |  List of OCaml dependencies. Use this for compiling a .mli source file with deps. See [Dependencies](#deps) for details. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
 | optional
 | []
-| +++<a class="rule-attr" id="ocaml_signature-src"></a>+++src
+| [[_ocaml_signature_src]]src
 |  A single .mli source file label | +++<a href="https://bazel.build/concepts/labels">Label</a>+++
 | optional
 | None
-| +++<a class="rule-attr" id="ocaml_signature-env"></a>+++env
+| [[_ocaml_signature_env]]env
 |  Env variables | +++<a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a>+++
 | optional
 | {}
-| +++<a class="rule-attr" id="ocaml_signature-module_name"></a>+++module_name
+| [[_ocaml_signature_module_name]]module_name
 |  Set module (sig) name to this string | +++String+++
 | optional
 | ""
-| +++<a class="rule-attr" id="ocaml_signature-ns"></a>+++ns
+| [[_ocaml_signature_ns]]ns
 |  Bottom-up namespacing | +++<a href="https://bazel.build/concepts/labels">Label</a>+++
 | optional
 | None
-| +++<a class="rule-attr" id="ocaml_signature-open"></a>+++open
+| [[_ocaml_signature_open]]open
 |  List of OCaml dependencies to be passed with -open. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
 | optional
 | []
-| +++<a class="rule-attr" id="ocaml_signature-opts"></a>+++opts
+| [[_ocaml_signature_opts]]opts
 |  List of compile options; overrides configurable default options. Supports `+-no-+` prefix for each option; for example, `-no-linkall`. | +++List of strings+++
 | optional
 | []
-| +++<a class="rule-attr" id="ocaml_signature-pack"></a>+++pack
+| [[_ocaml_signature_pack]]pack
 |  Experimental | +++String+++
 | optional
 | ""
-| +++<a class="rule-attr" id="ocaml_signature-ppx"></a>+++ppx
+| [[_ocaml_signature_ppx]]ppx
 |  Label of `ppx_executable` target to be used to transform source before compilation. | +++<a href="https://bazel.build/concepts/labels">Label</a>+++
 | optional
 | None
-| +++<a class="rule-attr" id="ocaml_signature-ppx_args"></a>+++ppx_args
+| [[_ocaml_signature_ppx_args]]ppx_args
 |  Options to pass to PPX executable passed by the `ppx` attribute. | +++List of strings+++
 | optional
 | []
-| +++<a class="rule-attr" id="ocaml_signature-ppx_data"></a>+++ppx_data
+| [[_ocaml_signature_ppx_data]]ppx_data
 |  PPX runtime data dependencies. List of labels of files needed by the PPX executable passed via the `ppx` attribute when it is executed to transform the source file. For example, a source file using link:https://github.com/janestreet/ppx_optcomp[ppx_optcomp] may import a file using extension `[%%import ]`; this file should be listed in this attribute. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
 | optional
 | []
-| +++<a class="rule-attr" id="ocaml_signature-ppx_print"></a>+++ppx_print
+| [[_ocaml_signature_ppx_print]]ppx_print
 |  Format of output of PPX transform: binary (default) or text. Value must be one of `@rules_ocaml//ppx/print:binary!` or `@rules_ocaml//ppx/print:text!`. | +++<a href="https://bazel.build/concepts/labels">Label</a>+++
 | optional
 | None
-| +++<a class="rule-attr" id="ocaml_signature-ppx_verbose"></a>+++ppx_verbose
+| [[_ocaml_signature_ppx_verbose]]ppx_verbose
 |  - | +++Boolean+++
 | optional
 | False
-| +++<a class="rule-attr" id="ocaml_signature-xmo"></a>+++xmo
+| [[_ocaml_signature_xmo]]xmo
 |  Cross-module optimization. If false, compile with -opaque | +++Boolean+++
 | optional
 | True

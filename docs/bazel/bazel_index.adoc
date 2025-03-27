@@ -212,8 +212,7 @@ or not.
 // * An OPAM link:https://opam.ocaml.org/doc/Usage.html#opam-switch[switch,window="_blank"]
 //   containing the OCaml compiler and OPAM packages your project needs.
 
-[#transparency]
-== Transparency
+== Observability
 
 Inspecting the Bazel environment, logs, build actions, etc.
 

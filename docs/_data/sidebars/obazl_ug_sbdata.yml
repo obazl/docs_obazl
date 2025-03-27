@@ -17,6 +17,14 @@ entries:
       open: true
       url: "#_overview"
       output: web
+    - title: Features
+      open: true
+      url: "#_features"
+      output: web
+    - title: Dev tasks
+      open: true
+      url: "#_dev-tasks"
+      output: web
     - title: The OCaml SDK
       open: true
       url: "#_the-ocaml-sdk"
@@ -38,11 +46,15 @@ entries:
       open: true
       url: "#_ocaml-platform-support"
       output: web
-    - title: Other tools & libs
+    - title: Opam libraries
       open: true
-      url: "#_other-tools-and-libraries"
+      url: "#_opam-libraries"
       output: web
-    - title: Features
+    - title: Other tools
       open: true
-      url: "#_features"
+      url: "#_other-tools"
+      output: web
+    - title: Help
+      open: true
+      url: "#_help"
       output: web

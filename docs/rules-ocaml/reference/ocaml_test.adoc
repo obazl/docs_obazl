@@ -39,75 +39,81 @@ In addition to the [OCaml configurable defaults](#configdefs) that apply to all
 == Attributes
 
 [.rule_attrs]
-[cols="1,3,1,1,1"]
+[cols="1,4,2,1,1"]
 |===
 | Name  | Description | Type | Mandatory | Default
 
-| +++<a class="rule-attr" id="ocaml_test-name"></a>+++name
+| [[_ocaml_test_name]]name
 |  A unique name for this target. | +++<a href="https://bazel.build/concepts/labels#target-names">Name</a>+++
 | required
 | 
-| +++<a class="rule-attr" id="ocaml_test-data"></a>+++data
+| [[_ocaml_test_data]]data
 |  Runtime dependencies: list of labels of data files needed by this executable at runtime. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
 | optional
 | []
-| +++<a class="rule-attr" id="ocaml_test-cc_deps"></a>+++cc_deps
+| [[_ocaml_test_cc_deps]]cc_deps
 |  Dictionary specifying C/C++ library dependencies. Key: a target label; value: a linkmode string, which determines which file to link. Valid linkmodes: 'default', 'static', 'dynamic', 'shared' (synonym for 'dynamic'). For more information see [CC Dependencies: Linkmode](../ug/cc_deps.md#linkmode). | +++<a href="https://bazel.build/rules/lib/dict">Dictionary: Label -> String</a>+++
 | optional
 | {}
-| +++<a class="rule-attr" id="ocaml_test-cc_libs"></a>+++cc_libs
+| [[_ocaml_test_cc_libs]]cc_libs
 |  - | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
 | optional
 | []
-| +++<a class="rule-attr" id="ocaml_test-cc_linkall"></a>+++cc_linkall
+| [[_ocaml_test_cc_linkall]]cc_linkall
 |  True: use `-whole-archive` (GCC toolchain) or `-force_load` (Clang toolchain). Deps in this attribute must also be listed in cc_deps. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
 | optional
 | []
-| +++<a class="rule-attr" id="ocaml_test-cc_linkopts"></a>+++cc_linkopts
+| [[_ocaml_test_cc_linkopts]]cc_linkopts
 |  List of C/C++ link options. E.g. ["-lstd++"]. | +++List of strings+++
 | optional
 | []
-| +++<a class="rule-attr" id="ocaml_test-data_prefix_map"></a>+++data_prefix_map
+| [[_ocaml_test_data_prefix_map]]data_prefix_map
 |  Map for replacing path prefixes of data files | +++<a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a>+++
 | optional
 | {}
-| +++<a class="rule-attr" id="ocaml_test-diff_cmd"></a>+++diff_cmd
+| [[_ocaml_test_diff_cmd]]diff_cmd
 |  - | +++<a href="https://bazel.build/concepts/labels">Label</a>+++
 | optional
 | None
-| +++<a class="rule-attr" id="ocaml_test-env"></a>+++env
+| [[_ocaml_test_env]]env
 |  Env variables | +++<a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a>+++
 | optional
 | {}
-| +++<a class="rule-attr" id="ocaml_test-epilogue"></a>+++epilogue
-|  List of OCaml dependencies. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
+| [[_ocaml_test_epilogue]]epilogue
+|  List of OCaml dependencies to be linked after `main`. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
 | optional
 | []
-| +++<a class="rule-attr" id="ocaml_test-exe_name"></a>+++exe_name
+| [[_ocaml_test_exe_name]]exe_name
 |  By default, executable name is derived from 'name' attribute; use this to override. | +++String+++
 | optional
 | ""
-| +++<a class="rule-attr" id="ocaml_test-force_archived_libdeps"></a>+++force_archived_libdeps
+| [[_ocaml_test_force_archived_libdeps]]force_archived_libdeps
 |  Force archiving of library dependencies | +++Boolean+++
 | optional
 | False
-| +++<a class="rule-attr" id="ocaml_test-main"></a>+++main
+| [[_ocaml_test_main]]main
 |  Label of module containing entry point of executable. In the list of dependencies, this will be placed after 'prologue' deps and before 'epilogue' deps. | +++<a href="https://bazel.build/concepts/labels">Label</a>+++
 | required
 | 
-| +++<a class="rule-attr" id="ocaml_test-opts"></a>+++opts
+| [[_ocaml_test_opts]]opts
 |  List of compile options; overrides configurable default options. Supports `+-no-+` prefix for each option; for example, `-no-linkall`. | +++List of strings+++
 | optional
 | []
-| +++<a class="rule-attr" id="ocaml_test-prologue"></a>+++prologue
-|  List of OCaml dependencies. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
+| [[_ocaml_test_prologue]]prologue
+|  List of OCaml dependencies to be linked before `main`. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>+++
 | optional
 | []
-| +++<a class="rule-attr" id="ocaml_test-runtime"></a>+++runtime
-|  runtime to use | +++<a href="https://bazel.build/concepts/labels">Label</a>+++
+| [[_ocaml_test_runtime]]runtime
+|  Runtime to use. One of @rules_ocaml//rt:std,
+@rules_ocaml//rt:dbg, @rules_ocaml//rt:instrumented; or,
+label of an `ocaml_runtime` target creating a custom runtime.
+
+@rules_ocaml//rt:dbg will set `-runtime-variant d`;
+@rules_ocaml//rt:instrumented will set `-runtime-variant i`;
+a custom label will set `-use-runtime`. | +++<a href="https://bazel.build/concepts/labels">Label</a>+++
 | optional
 | "@rules_ocaml//rt:std"
-| +++<a class="rule-attr" id="ocaml_test-vm_linkage"></a>+++vm_linkage
+| [[_ocaml_test_vm_linkage]]vm_linkage
 |  custom, dynamic or static. Custom means link with -custom flag; static with -output-complete-exe | +++String+++
 | optional
 | "custom"
