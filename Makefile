@@ -1,8 +1,10 @@
 .PHONY: import lib module ns rt test
 
-default: ns lib
+default: ocaml tools_opam ppx
 
 xdefault: rules_ocaml sidebars tools_ocaml providers
+
+ocaml: binary import lib module ns rt sig test
 
 binary:
 	bazel build //stardoc:ocaml_binary --show_result=20 \
@@ -74,6 +76,8 @@ functions:
 	&& sudo cp -v .bazel/bin/stardoc/functions.adoc docs/rules-ocaml/reference
 
 ################
+ppx: ppx_executable ppx_expect_test ppx_inline_test ppx_transform
+
 ppx_executable:
 	bazel build //stardoc:ppx_executable --show_result=20 \
 	 && cp -fv .bazel/bin/stardoc/ppx_executable.adoc \

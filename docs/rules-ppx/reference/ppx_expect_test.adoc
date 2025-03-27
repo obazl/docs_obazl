@@ -3,12 +3,13 @@
 :page-permalink: /:path/ppx_expect_test
 :page-layout: page_rules_ocaml
 :page-pkg: rules_ocaml
+:page-ruleset: rules_ppx
 :page-doc: refman
 :page-sidebar: rules_ppx_refman_sbdata
 :page-parent: ['../reference']
 :page-tags: [tools,ocaml]
 :page-keywords: notes, tips, cautions, warnings, admonitions
-:page-last_updated: May 25, 2022
+:page-last_updated: Mar 27, 2025
 
 `load("@rules_ppx//build:rules.bzl", "ppx_expect_test")`
 
