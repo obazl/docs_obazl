@@ -45,28 +45,33 @@ $ git clone https://github.com/obazl/demo_hello.git
 $ cd demo_hello
 $ bazel run bin:greetings
 $ bazel test test
-$ bazel build //...                                <1>
-$ bazel test //...                                 <2>
-$ bazel test //... --build_tests_only              <3>
-$ bazel build lib/hello:Hello --config=modinfo     <4>
-$ bazel build lib/hello:Hello --config=siginfo     <5>
-$ bazel build lib/hello:Hello --config=cmtinfo     <6>
-$ bazel build lib/hello:Hello --config=cmtiinfo    <7>
-$ bazel build lib/goodbye:Goodbye --config=gensig  <8>
+$ bazel run @opam                                  <1>
+$ bazel clean                                      <2>
+$ bazel build //...                                <3>
+$ bazel test //...                                 <4>
+$ bazel test //... --build_tests_only              <5>
+
+$ bazel build lib/hello:Hello --config=modinfo     <6>
+$ bazel build lib/hello:Hello --config=siginfo     <7>
+$ bazel build lib/hello:Hello --config=cmtinfo     <8>
+$ bazel build lib/hello:Hello --config=cmtiinfo    <9>
+$ bazel build lib/goodbye:Goodbye --config=gensig  <10>
+
 $ bazel run @ocaml
 $ bazel run @utop
-$ bazel run @dbg --pgm=bin:hello                   <9>
-$ bazel run @opam -- list
+$ bazel run @dbg --pgm=bin:greetings               <11>
 ----
-<1>  Builds all targets
-<2>  Builds all targets and runs all tests
-<3>  Runs all tests but only builds targets required by the tests
-<4> Runs `ocamlobjinfo` against hello.cmx (see .bazelrc)
-<5> Runs `ocamlobjinfo` against hello.cmi (see .bazelrc)
-<6> Runs `ocamlcmt` against hello.cmt (see .bazelrc)
-<7> Runs `ocamlcmt` against hello.cmti (see .bazelrc)
-<8> Generate interface for goodbye.ml (`ocamlc -i`) (see .bazelrc)
-<9> Runs `ocamldebug`. See .bazelrc
+<1> Runs opam; shows location of switch.
+<2>  Forces rebuild. Rarely needed in practice.
+<3>  Builds all targets
+<4>  Builds all targets and runs all tests
+<5>  Runs all tests but only builds targets required by the tests
+<6> Runs `ocamlobjinfo` against hello.cmx (see .bazelrc)
+<7> Runs `ocamlobjinfo` against hello.cmi (see .bazelrc)
+<8> Runs `ocamlcmt` against hello.cmt (see .bazelrc)
+<9> Runs `ocamlcmt` against hello.cmti (see .bazelrc)
+<10> Generate interface for goodbye.ml (`ocamlc -i`) (see .bazelrc)
+<11> Runs `ocamldebug`. See .bazelrc
 ====
 
 Other demos:
