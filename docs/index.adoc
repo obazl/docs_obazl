@@ -44,6 +44,7 @@ take a while; thereafter builds should be reasonably fast.
 $ git clone https://github.com/obazl/demo_hello.git
 $ cd demo_hello
 $ bazel run bin:greetings
+$ bazel run bin:greetings --tc=ocamlc              <0>
 $ bazel test test
 $ bazel run @opam                                  <1>
 $ bazel clean                                      <2>
@@ -52,6 +53,7 @@ $ bazel test //...                                 <4>
 $ bazel test //... --build_tests_only              <5>
 
 $ bazel build lib/hello:Hello --config=modinfo     <6>
+$ bazel build lib/hello:Hello --config=modinfo --tc=ocamlc
 $ bazel build lib/hello:Hello --config=siginfo     <7>
 $ bazel build lib/hello:Hello --config=cmtinfo     <8>
 $ bazel build lib/hello:Hello --config=cmtiinfo    <9>
@@ -60,7 +62,13 @@ $ bazel build lib/goodbye:Goodbye --config=gensig  <10>
 $ bazel run @ocaml
 $ bazel run @utop
 $ bazel run @dbg --pgm=bin:greetings               <11>
+
+$ dune build                                       <12>
+$ dune run bin/main.exe                            <13>
+$ dune test
+
 ----
+<0> Uses `ocamlc.opt` compiler.  `--tc=<compiler>` can be used with all cmds here.
 <1> Runs opam; shows location of switch.
 <2>  Forces rebuild. Rarely needed in practice.
 <3>  Builds all targets
@@ -72,6 +80,8 @@ $ bazel run @dbg --pgm=bin:greetings               <11>
 <9> Runs `ocamlcmt` against hello.cmti (see .bazelrc)
 <10> Generate interface for goodbye.ml (`ocamlc -i`) (see .bazelrc)
 <11> Runs `ocamldebug`. See .bazelrc
+<12> Dune and Bazel play nice together.
+<13> Dune requires that the executable name match a module name.
 ====
 
 Other demos:
