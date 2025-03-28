@@ -222,13 +222,18 @@ $ bazel build //pkg:tgt --output_groups=cmt,cmti
 ====
 [source="starlark",title=".bazelrc"]
 ----
-build:info --aspects @tools_opam//aspects:ocamlobjinfo.bzl%info
-build:info --output_groups=objinfo
+build:modinfo --aspects @tools_opam//aspects:ocamlobjinfo.bzl%modinfo
+build:modinfo --output_groups=objinfo
+build:siginfo --aspects @tools_opam//aspects:ocamlobjinfo.bzl%siginfo
+build:siginfo --output_groups=objinfo
+build:archinfo --aspects @tools_opam//aspects:ocamlobjinfo.bzl%archinfo
+build:archinfo --output_groups=objinfo
 ----
 
 [source="shell",title="cmd line"]
 ----
 $ bazel build //src:Hello        --config=modinfo    #  Hello.cmx => Hello.cmx.objinfo
+$ bazel build //src:Hello        --config=siginfo    #  Hello.cmi => Hello.cmi.objinfo
 $ bazel build //src:Hello_cmi    --config=siginfo    #  Hello.cmi => Hello.cmi.objinfo
 $ bazel build //src:libGreetings --config=archinfo   #  Greetings.cmxa => Greeings.cmxa.objinfo
 ----
