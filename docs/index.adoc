@@ -6,15 +6,14 @@
 :page-sidebar: rules_ocaml_home_sbdata
 :page-tags: [bazel]
 :page-keywords: notes, tips, cautions, warnings, admonitions
-:page-last_updated: Mar 27, 2025
+:page-last_updated: Mar 31, 2025
 :page-toc: true
 :toc: true
 
-This site documents the OBazl toolsuite, version 3.0.0.
+This site documents the OBazl toolsuite, version 3.0.0.beta.1
 
 [WARNING]
 ====
-Version 3.0.0.beta.1 scheduled for release on Mar 28, 2025 or thereabouts.
 
 This documentation is a Work-In-Progress. Things will be a little
 messy and incomplete. The best way to learn how to use the rules is
@@ -32,7 +31,7 @@ you can also use the `@obazl//new` tool to generate a project from a template.
 === Demo projects
 
 NOTE: The demo projects use the `xdg` opam toolchain strategy
-(explained in link:tools-opam/user-guide[tools-opam]); this means the initial build will create an opam root
+(explained in https://github.com/obazl/tools_opam[tools-opam,window=_blank]); this means the initial build will create an opam root
 and switch in `$XDG_DATA_HOME`. This only happens once, and `xdg`
 toolchains are shared by all OBazl projects. So the initial build may
 take a while; thereafter builds should be reasonably fast.

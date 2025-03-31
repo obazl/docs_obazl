@@ -5,31 +5,22 @@
 :page-keywords: notes, tips, cautions, warnings, admonitions
 :page-last_updated: May 2, 2022
 :page-sidebar: false
-:page-last_updated: Feb 12, 2024
+:page-last_updated: Mar 31, 2025
 :page-toc: true
 :toc: true
 ---
 
-// layout: rules_ocaml_ug
-// title: Status
-// permalink: /status
-// tags: [status]
-// keywords: notes, tips, cautions, warnings, admonitions
-// last_updated: Feb 12, 2024
-// sidebar: false
-// :pa
-// toc: true
-// ---
-
-
-
 == link:https://github.com/obazl/rules_ocaml[rules_ocaml,window=_blank]
 
-Version 3.0.0.beta.1 available for testing 3/19/2025.  See link:https://github.com/obazl/rules_ocaml/tree/3.0.0.beta/docs[rules_ocaml/docs,window=_blank] for status information and roadmap.
+Version 3.0.0.beta.1 prereleased 3/31/2025.  See link:https://github.com/obazl/rules_ocaml/tree/3.0.0.beta/docs[rules_ocaml/docs,window=_blank] for status information and roadmap.
 
 == link:https://github.com/obazl/tools_opam[tools_opam,window=_blank]
 
-OPAM integration. Version 1.0.0.alpha available for testing Feb 10 2025.
+OPAM integration. Version 1.0.0.beta.1 prereleased Mar 31 2025.
+
+== link:https://github.com/obazl/tools_obazl[tools_obazl,window=_blank]
+
+Version 3.0.0.beta.1 prereleased Mar 31 2025.
 
 == link:https://github.com/obazl/coswitch[coswitch,window=_blank]
 
@@ -43,4 +34,3 @@ IMPORTANT: Retired!  Replaced by `tools_opam`.
 === link:https://github.com/obazl/mibl[mibl,window=_blank]
 
 
-=== link:https://github.com/obazl/tools_obazl[tools_obazl,window=_blank]

@@ -43,6 +43,10 @@ toc: false
 * https://github.com/obazl/rules_ctypes[rules_ctypes] - support for https://github.com/yallop/ocaml-ctypes[ocaml-ctypes] package.
 * https://github.com/obazl/rules_cppo[rules_cppo] - support for the https://github.com/ocaml-community/cppo[cppo] tool
 
+=== New tools
+
+Support added for the tools in the standard SDK (`ocamldebug`, `ocamlobjinfo`, etc.) and for a subset of the OCaml Platform tools (`opam`, `utop`, `ppxlib`).
+
 === Deprecations
 * `ocaml_ns_library` is deprecated and will be removed in the next version.
 
