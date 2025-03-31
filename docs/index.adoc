@@ -103,7 +103,7 @@ common --registry=https://bcr.bazel.build
 EOF
 $ cat > MODULE.bazel <<EOF
 module(name="myproj")
-bazel_dep(name = "tools_obazl", version = "3.0.0", repo_name = "obazl")
+bazel_dep(name = "tools_obazl", version = "3.0.0.beta.1", repo_name = "obazl")
 EOF
 $ bazel run @obazl//new -- --help
 $ bazel run @obazl//new -- --list
