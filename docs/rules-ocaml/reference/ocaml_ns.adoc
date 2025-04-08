@@ -72,7 +72,7 @@ Not to be confused with the https://bazel.build/concepts/visibility[visibility,w
 |  `None` | +++<a id="ocaml_ns-submodules"></a>+++submodules
 |  List of strings from which submodule names are to be derived for aliasing. Bazel labels may be used; the submodule name will be derived from the target part. For example, '//a/b:c' normalizes to C. But they are just strings, and will not be checked against any files.
 
-The normalized submodule names must match the names of the modules electing membership via the 'ns_config' attribute. | +++List of strings+++
+The normalized submodule names must match the names of the modules electing membership via the `ns` attribute. | +++List of strings+++
 | optional
 |  `None` | +++<a id="ocaml_ns-visibility"></a>+++visibility
 |  The visibility to be passed to this macro's exported targets. It always implicitly includes the location where this macro is instantiated, so this attribute only needs to be explicitly set if you want the macro's targets to be additionally visible somewhere else. | +++<a href="https://bazel.build/concepts/labels">List of labels</a>; <a href="https://bazel.build/reference/be/common-definitions#configurable-attributes">nonconfigurable</a>+++

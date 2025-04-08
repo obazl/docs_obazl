@@ -1,10 +1,10 @@
 .PHONY: import lib module ns rt test
 
-default: ocaml tools_opam ppx
+default: rules_ocaml tools_opam ppx
 
 xdefault: rules_ocaml sidebars tools_ocaml providers
 
-ocaml: binary import lib module ns rt sig test
+rules_ocaml: binary import lib module ns rt sig test
 
 binary:
 	bazel build //stardoc:ocaml_binary --show_result=20 \
@@ -52,8 +52,6 @@ providers:
 
 
 
-
-rules_ocaml: binary import lib module ns rt sig test
 
 sidebars:
 	bazel build //stardoc:rules_ocaml_sidebar \

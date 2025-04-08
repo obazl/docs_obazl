@@ -1,3 +1,8 @@
+# bug:
+# 18:19: error: 'get<std::function<bool ()>, std::string, std::function<bool ()>>' is unavailable: introduced in macOS 10.13
+
+build --host_cxxopt=-std=c++14 --cxxopt=-std=c++14
+
 try-import %workspace%/.config/registries.bazelrc
 common --registry=https://raw.githubusercontent.com/obazl/registry/main/
 common --registry=https://bcr.bazel.build

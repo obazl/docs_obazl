@@ -46,9 +46,13 @@ entries:
       open: true
       url: "#_ocaml-platform-support"
       output: web
-    - title: Opam libraries
+    - title: Opam
       open: true
-      url: "#_opam-libraries"
+      url: "#_opam"
+      output: web
+    - title: Nix
+      open: true
+      url: "#_nix"
       output: web
     - title: Other tools
       open: true

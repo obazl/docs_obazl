@@ -389,10 +389,33 @@ Related:
 ====
 
 
-== Opam libraries
+== Opam
 
 Opam libraries are modeled as Bazel repos. The name conversion is
 straightforward:
+
+== Nix
+
+* https://xeiaso.net/blog/how-i-start-nix-2020-03-08/[How I Start: Nix] excellent blog article for getting started. 2020/03/08
+
+* https://dimitrije.website/posts/2023-03-04-nix-ocaml.html[Nix-powered development with OCaml] Blog article, 2023-03-04
+
+Installing manpages: https://nixos.org/manual/nixpkgs/stable/#sec-getting-documentation[Getting documentation] (nixpkgs manual)
+
+Empty the store:
+
+    sudo nix-collect-garbage
+
+Emits messages like `deleting '/nix/store/pg7zsw894hv5v6q5h1cmqibs2jis2mkb-libmpack-1.0.5.drv'
+`
+
+but lots of stuff remains in /nix/store/
+
+
+=== MacOS
+
+* https://checkoway.net/musings/nix/[Using Nix on macOS] Blog article, 2022-07-23. Contains excellent detailed info about dealing with `zsh` (https://checkoway.net/musings/nix/#fixing-shell-integration[Fixing shell integration]).
+
 
 == Other tools
 
